@@ -8,7 +8,15 @@
     "test": "vitest",
     "typecheck": "tsc --noEmit",
     "validate": "tsx agent/penpot-sync/src/cli.ts validate",
-    "sync:dry": "tsx agent/penpot-sync/src/cli.ts sync:dry"
+    "sync:dry": "tsx agent/penpot-sync/src/cli.ts sync:dry",
+    "penpot:check": "tsx agent/penpot-sync/src/liveCli.ts check",
+    "penpot:plan": "tsx agent/penpot-sync/src/liveCli.ts plan",
+    "penpot:sync": "tsx agent/penpot-sync/src/liveCli.ts sync",
+    "penpot:verify": "tsx agent/penpot-sync/src/liveCli.ts verify"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "dotenv": "^16.4.7"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
