@@ -9,10 +9,6 @@ function normalize(value: unknown): unknown {
   return value;
 }
 
-function managedPayload(op: PenpotOperation): unknown {
-  return op.kind === 'ensure-page' ? { name: op.name } : op.payload;
-}
-
 export function buildLivePlan(desired: PenpotOperation[], current: PenpotRemoteObject[], capabilities: PenpotCapabilities): LivePlanItem[] {
   const byId = new Map(current.filter(x=>x.repoId).map(x=>[x.repoId!, x]));
   const desiredIds = new Set(desired.map(x=>x.repoId));
@@ -23,7 +19,7 @@ export function buildLivePlan(desired: PenpotOperation[], current: PenpotRemoteO
     if (!cur) { out.push({repoId:op.repoId,action:'create',operation:op}); continue; }
     const sameKind = cur.kind === op.kind;
     const sameName = op.kind !== 'ensure-page' || cur.name === op.name;
-    const samePayload = JSON.stringify(normalize(cur.payload)) === JSON.stringify(normalize(managedPayload(op)));
+    const samePayload = op.kind === 'ensure-page' || JSON.stringify(normalize(cur.payload)) === JSON.stringify(normalize(op.payload));
     out.push({repoId:op.repoId,action:sameKind && sameName && samePayload?'unchanged':'update',operation:op,current:cur});
   }
   for (const cur of current.filter(x=>x.repoId && !desiredIds.has(x.repoId)).sort((a,b)=>a.repoId!.localeCompare(b.repoId!))) out.push({repoId:cur.repoId!,action:'orphan',current:cur});
