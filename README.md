@@ -6,8 +6,8 @@ This repository is the versioned control plane for the PinCommerce Penpot design
 
 - **GitHub** stores the canonical design specification, tokens, component catalog, screen manifests, prototype routes, and sync code.
 - **Penpot** is the live visual workspace.
-- **Sync direction (phase 1):** GitHub → deterministic Penpot operation plan → Penpot adapter.
-- The live Penpot transport is deliberately not assumed. A concrete adapter is added only after the deployment environment's actual Penpot MCP/API contract is confirmed.
+- **Local Windows sync client** connects to Penpot's Remote MCP endpoint and acts on the file/page currently connected through Penpot's MCP plugin.
+- Live writes are explicit, read-before-write, idempotent for managed state, and non-destructive in v1.
 
 ## Themes
 
@@ -16,10 +16,32 @@ This repository is the versioned control plane for the PinCommerce Penpot design
 
 Both themes share one component hierarchy. Theme-specific component duplication is prohibited.
 
-## Commands
+## Local Windows live Penpot flow
+
+Prerequisites: Node.js 20+ and a Remote Penpot MCP key. In Penpot, open the intended target file and use **File → MCP Server → Connect** before running the commands below.
+
+```powershell
+git pull
+npm install
+Copy-Item .env.example .env
+# edit .env and set PENPOT_MCP_URL to the full Remote MCP URL from Penpot
+# optionally set PENPOT_FILE_ID to guard against writing to the wrong file
+npm run penpot:check
+npm run penpot:plan
+npm run penpot:sync -- --apply
+npm run penpot:verify
+```
+
+`penpot:check`, `penpot:plan`, and `penpot:verify` are read-only. `penpot:sync` refuses to write unless `--apply` is present. V1 never deletes Penpot content; unmanaged/orphaned content is reported and left untouched. Prototype links are reported unsupported if the currently exposed Penpot MCP/Plugin API cannot safely express them.
+
+### Remote MCP implementation
+
+The official Penpot Remote MCP exposes `execute_code`, which runs Penpot Plugin API JavaScript against the active connected file. The sync gateway discovers that capability at runtime. Managed identity is recorded in the current file's local library plugin data so repeated syncs can distinguish create/update/unchanged operations without relying only on human-readable names. Supported token-set operations also create/update real Penpot design tokens; component and screen operations create managed Penpot boards/components on the active page as the current bootstrap representation.
+
+## Offline/control-plane commands
 
 ```bash
-npm ci
+npm install
 npm test -- --run
 npm run typecheck
 npm run validate
@@ -30,7 +52,7 @@ npm run sync:dry -- --out artifacts/penpot-plan.json
 
 ## Security
 
-Never commit OpenAI, GitHub, or Penpot credentials. Use local environment variables or CI secrets. `.env.example` contains names only.
+Never paste the MCP key into GitHub, commit `.env`, or include the full Remote MCP URL in issues/logs. `PENPOT_MCP_URL` is local-only. The client redacts common credential query parameters in connection errors. GitHub Actions does not run live Penpot commands and requires no Penpot secret.
 
 ## CI contract
 
