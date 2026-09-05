@@ -1,0 +1,15 @@
+{
+  "screens": [
+    {"id":"b2c-home","components":["header","search-bar","category-chip","brand-chip","product-card","bottom-nav"]},
+    {"id":"b2c-search","components":["header","search-bar","product-card","bottom-nav"]},
+    {"id":"b2c-category","components":["header","category-chip","brand-chip","product-card","bottom-nav"]},
+    {"id":"b2c-product","components":["header","price-block","quantity-control","button","bottom-nav"]},
+    {"id":"b2c-cart","components":["header","cart-row","order-summary","button","bottom-nav"]},
+    {"id":"b2c-checkout","components":["header","address-card","payment-row","order-summary","button"]},
+    {"id":"b2c-confirmation","components":["header","badge","button"]},
+    {"id":"b2c-tracking","components":["header","tracking-status","button"]},
+    {"id":"b2c-orders","components":["header","badge","order-summary","bottom-nav"]},
+    {"id":"b2c-login","components":["input","button"]},
+    {"id":"b2c-signup","components":["input","button"]}
+  ]
+}
