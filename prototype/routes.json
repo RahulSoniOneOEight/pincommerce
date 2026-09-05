@@ -1,0 +1,15 @@
+{
+  "routes": [
+    {"id":"b2c-1","flow":"b2c","from":"b2c-home","to":"b2c-category"},
+    {"id":"b2c-2","flow":"b2c","from":"b2c-category","to":"b2c-product"},
+    {"id":"b2c-3","flow":"b2c","from":"b2c-product","to":"b2c-cart"},
+    {"id":"b2c-4","flow":"b2c","from":"b2c-cart","to":"b2c-checkout"},
+    {"id":"b2c-5","flow":"b2c","from":"b2c-checkout","to":"b2c-confirmation"},
+    {"id":"b2c-6","flow":"b2c","from":"b2c-confirmation","to":"b2c-tracking"},
+    {"id":"b2b-1","flow":"b2b","from":"b2b-home","to":"b2b-category"},
+    {"id":"b2b-2","flow":"b2b","from":"b2b-category","to":"b2b-product"},
+    {"id":"b2b-3","flow":"b2b","from":"b2b-product","to":"b2b-cart"},
+    {"id":"b2b-4","flow":"b2b","from":"b2b-cart","to":"b2b-checkout"},
+    {"id":"b2b-5","flow":"b2b","from":"b2b-checkout","to":"b2b-confirmation"}
+  ]
+}

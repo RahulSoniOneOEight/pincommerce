@@ -1,0 +1,21 @@
+{
+  "components": [
+    {"id":"button","variants":["primary","secondary","ghost"]},
+    {"id":"input","variants":["default","error","disabled"]},
+    {"id":"search-bar","variants":["default","active"]},
+    {"id":"category-chip","variants":["default","selected"]},
+    {"id":"brand-chip","variants":["default","selected"]},
+    {"id":"product-card","variants":["b2c","b2b"]},
+    {"id":"price-block","variants":["retail","tiered"]},
+    {"id":"quantity-control","variants":["default"]},
+    {"id":"b2b-moq-block","variants":["default"]},
+    {"id":"badge","variants":["discount","status","info"]},
+    {"id":"header","variants":["home","detail"]},
+    {"id":"bottom-nav","variants":["b2c","b2b"]},
+    {"id":"cart-row","variants":["b2c","b2b"]},
+    {"id":"address-card","variants":["default","selected"]},
+    {"id":"payment-row","variants":["default","selected"]},
+    {"id":"order-summary","variants":["b2c","b2b"]},
+    {"id":"tracking-status","variants":["default"]}
+  ]
+}

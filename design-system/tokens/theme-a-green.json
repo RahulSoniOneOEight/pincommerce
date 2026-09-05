@@ -1,0 +1,17 @@
+{
+  "id": "theme-a-green",
+  "name": "BuildKart Green",
+  "colors": {
+    "primary": "#0F8A78",
+    "primaryForeground": "#FFFFFF",
+    "background": "#F7F8F2",
+    "surface": "#FFFFFF",
+    "surfaceMuted": "#EEF4EC",
+    "text": "#13231F",
+    "textMuted": "#66746F",
+    "border": "#DCE5E0",
+    "accent": "#F2A23A",
+    "accentForeground": "#2B1A00"
+  },
+  "decoration": {"watermarkOpacity": 0, "motifs": []}
+}
