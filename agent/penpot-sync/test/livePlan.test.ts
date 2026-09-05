@@ -12,7 +12,7 @@ describe('buildLivePlan',()=>{
       {kind:'ensure-prototype-link',repoId:'route:a',payload:{}}
     ];
     const current:any[]=[
-      {repoId:'page:a',remoteId:'1',kind:'ensure-page',name:'A',payload:{name:'A'}},
+      {repoId:'page:a',remoteId:'1',kind:'ensure-page',name:'A'},
       {repoId:'tokens:a',remoteId:'2',kind:'ensure-token-set',payload:{colors:{primary:'#FFFFFF'}}},
       {repoId:'orphan:x',remoteId:'3',kind:'ensure-screen',payload:{}}
     ];
@@ -22,5 +22,13 @@ describe('buildLivePlan',()=>{
     expect(plan.find(x=>x.repoId==='route:a')?.action).toBe('unsupported');
     expect(plan.find(x=>x.repoId==='orphan:x')?.action).toBe('orphan');
     expect(plan.some(x=>(x.action as string)==='delete')).toBe(false);
+  });
+
+  it('treats a page read back from the managed registry as unchanged when its name matches',()=>{
+    const desired:any[]=[{kind:'ensure-page',repoId:'page:components',name:'02 Components'}];
+    const current:any[]=[{repoId:'page:components',remoteId:'board-1',kind:'ensure-page',name:'02 Components'}];
+    const plan=buildLivePlan(desired,current,caps);
+    expect(plan).toHaveLength(1);
+    expect(plan[0].action).toBe('unchanged');
   });
 });
