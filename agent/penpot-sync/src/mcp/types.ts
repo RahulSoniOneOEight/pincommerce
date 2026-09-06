@@ -1,4 +1,5 @@
 import type { VisualRegistryMeta } from '../visual/registry.js';
+import type { WorkspaceTarget } from '../workspace/layout.js';
 
 export type McpTool = { name: string; description?: string; inputSchema?: unknown };
 
@@ -17,4 +18,4 @@ export type PenpotCapabilities = {
 };
 
 export type PenpotTarget = { fileId?: string; pageId?: string; fileName?: string; pageName?: string };
-export type PenpotRemoteObject = { repoId?: string; remoteId: string; kind: string; name?: string; payload?: unknown; visual?: VisualRegistryMeta };
+export type PenpotRemoteObject = { repoId?: string; remoteId: string; kind: string; name?: string; payload?: unknown; visual?: VisualRegistryMeta; workspace?: WorkspaceTarget };
