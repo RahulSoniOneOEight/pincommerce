@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import type { RenderNode, VisualProjectInput } from './schema.js';
-import { VISUAL_RENDER_VERSION } from './registry.js';
+import { VISUAL_RENDER_BUILD, VISUAL_RENDER_VERSION } from './registry.js';
 
 export type VisualRenderTarget = {
   repoId:string;
@@ -37,17 +37,21 @@ function materialize(node: RenderNode, componentMap: Map<string,RenderNode>): Re
   return node;
 }
 
+function fingerprint(themeId:string, tree:RenderNode): string {
+  return stableVisualFingerprint({theme:themeId,version:VISUAL_RENDER_VERSION,build:VISUAL_RENDER_BUILD,tree});
+}
+
 export function buildVisualRenderTargets(input: VisualProjectInput): VisualRenderTarget[] {
   const componentMap = new Map(input.components.map(c=>[c.id,c.root]));
   const components = input.components.map(component => {
     const tree = materialize(component.root, componentMap);
     const base = {repoId:`component:${component.id}`,targetKind:'component' as const,renderVersion:VISUAL_RENDER_VERSION,tree};
-    return {...base,fingerprint:stableVisualFingerprint({theme:input.theme.id,version:VISUAL_RENDER_VERSION,tree})};
+    return {...base,fingerprint:fingerprint(input.theme.id,tree)};
   });
   const screens = input.screens.map(screen => {
     const tree: RenderNode = {id:'screen-root',type:'frame',width:input.theme.canvas.width,height:input.theme.canvas.height,fill:input.theme.colors.background,children:screen.sections.map(s=>materialize(s.root,componentMap))};
     const base = {repoId:`screen:${screen.id}`,targetKind:'screen' as const,renderVersion:VISUAL_RENDER_VERSION,tree};
-    return {...base,fingerprint:stableVisualFingerprint({theme:input.theme.id,version:VISUAL_RENDER_VERSION,tree})};
+    return {...base,fingerprint:fingerprint(input.theme.id,tree)};
   });
   return [...components,...screens];
 }
