@@ -15,4 +15,20 @@ describe('visual render model',()=>{
     expect(stableVisualFingerprint({b:2,a:[2,1]})).toBe(stableVisualFingerprint({a:[2,1],b:2}));
     expect(stableVisualFingerprint({a:[2,1]})).not.toBe(stableVisualFingerprint({a:[1,2]}));
   });
+  it('keeps component child coordinates local when placing an instance on a screen',async()=>{
+    const project=await loadVisualProject(process.cwd());
+    const home=buildVisualRenderTargets(project).find(x=>x.repoId==='screen:b2c-home')!;
+    expect(home.tree.type).toBe('frame');
+    if(home.tree.type!=='frame') throw new Error('expected frame');
+    const header=home.tree.children.find(x=>x.id==='header-inst.root');
+    expect(header?.type).toBe('frame');
+    if(!header || header.type!=='frame') throw new Error('expected header frame');
+    expect(header.x).toBe(16);
+    expect(header.y).toBe(16);
+    const brand=header.children.find(x=>x.id==='header-inst.brand');
+    expect(brand?.type).toBe('text');
+    if(!brand || brand.type!=='text') throw new Error('expected brand text');
+    expect(brand.x).toBe(16);
+    expect(brand.y).toBe(14);
+  });
 });
