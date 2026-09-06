@@ -20,4 +20,10 @@ describe('PenpotMcpGateway visual rendering',()=>{
     const gateway=new PenpotMcpGateway(fake,config);
     await expect(gateway.renderVisual(target,{repoId:target.repoId,remoteId:'',kind:'ensure-screen'} as any)).rejects.toThrow('VISUAL_TARGET_ERROR');
   });
+  it('does not record a fingerprint when execute_code reports an error result',async()=>{
+    const fake=new FakeMcpTransport(undefined,()=>({isError:true,content:[{type:'text',text:'TypeError: s.appendChild is not a function'}]}));
+    const gateway=new PenpotMcpGateway(fake,config);
+    await expect(gateway.renderVisual(target,{repoId:target.repoId,remoteId:'screen-root',kind:'ensure-screen',payload:{}} as any)).rejects.toThrow('VISUAL_RENDER_ERROR');
+    expect(fake.calls).toHaveLength(1);
+  });
 });
