@@ -3,6 +3,7 @@ import type { PenpotConfig } from '../config.js';
 import { redactText } from '../redact.js';
 import { compileVisualRenderCode } from '../visual/compiler.js';
 import type { VisualRenderTarget } from '../visual/renderModel.js';
+import type { WorkspaceTarget } from '../workspace/layout.js';
 import type { McpTransport, PenpotCapabilities, PenpotRemoteObject, PenpotTarget } from './types.js';
 
 const REGISTRY_KEY = 'pincommerce.managed.v1';
@@ -91,6 +92,14 @@ export class PenpotMcpGateway {
     if (op.kind === 'ensure-prototype-link') throw new Error(`MCP_CAPABILITY_ERROR: prototype links are unsupported`);
     const encoded = js(op);
     await this.execute(`const op=${encoded}; const key=${js(REGISTRY_KEY)}; const raw=penpot.library.local.getPluginData(key); let reg=[]; try{reg=raw?JSON.parse(raw):[]}catch{}; const cur=reg.find(x=>x.repoId===op.repoId); if(!cur) throw new Error('managed object missing'); if(op.kind==='ensure-token-set'){const cat=penpot.library.local.tokens; const s=cat.sets.find(x=>x.id===cur.remoteId)||cat.sets.find(x=>x.name==='PinCommerce/'+op.repoId); if(s){const colors=op.payload?.colors||{}; for(const [n,v] of Object.entries(colors)){let tok=s.tokens.find(x=>x.name===n); if(!tok)tok=s.addToken({type:'color',name:n,value:String(v)}); else tok.value=String(v);}}} cur.kind=op.kind; cur.name=op.name; cur.payload=op.payload; penpot.library.local.setPluginData(key,JSON.stringify(reg)); return true;`);
+  }
+
+  async positionWorkspace(target: WorkspaceTarget, current: PenpotRemoteObject): Promise<void> {
+    if (!current.remoteId) throw new Error(`WORKSPACE_TARGET_ERROR: managed root is missing for ${target.repoId}`);
+    const code=`const repoId=${js(target.repoId)}; const remoteRootId=${js(current.remoteId)}; const target=${js(target)}; const key=${js(REGISTRY_KEY)}; ` +
+      `let root=penpot.currentPage?.getShapeById(remoteRootId)||null; if(!root){root=penpot.currentPage?.findShapes({name:'PC::'+repoId})?.[0]||null;} if(!root) throw new Error('WORKSPACE_TARGET_ERROR: managed root not found '+repoId); ` +
+      `root.x=target.x; root.y=target.y; const raw=penpot.library.local.getPluginData(key); let reg=[]; try{reg=raw?JSON.parse(raw):[]}catch{}; const cur=reg.find(x=>x.repoId===repoId); if(!cur) throw new Error('WORKSPACE_TARGET_ERROR: registry entry missing'); cur.workspace=target; penpot.library.local.setPluginData(key,JSON.stringify(reg)); return {repoId,x:root.x,y:root.y};`;
+    await this.execute(code);
   }
 
   async renderVisual(target: VisualRenderTarget, current: PenpotRemoteObject): Promise<void> {
