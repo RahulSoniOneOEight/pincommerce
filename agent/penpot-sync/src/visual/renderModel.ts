@@ -20,17 +20,18 @@ export function stableVisualFingerprint(value: unknown): string {
   return createHash('sha256').update(JSON.stringify(normalize(value))).digest('hex');
 }
 
-function shift(node: RenderNode, dx:number, dy:number, prefix:string): RenderNode {
-  if (node.type === 'frame') return {...node,id:`${prefix}.${node.id}`,x:(node.x??0)+dx,y:(node.y??0)+dy,children:node.children.map(c=>shift(c,dx,dy,prefix))};
-  if (node.type === 'component-instance') return {...node,id:`${prefix}.${node.id}`,x:node.x+dx,y:node.y+dy};
-  return {...node,id:`${prefix}.${node.id}`,x:node.x+dx,y:node.y+dy};
+function prefixIds(node: RenderNode, prefix:string): RenderNode {
+  if (node.type === 'frame') return {...node,id:`${prefix}.${node.id}`,children:node.children.map(c=>prefixIds(c,prefix))};
+  return {...node,id:`${prefix}.${node.id}`};
 }
 
 function materialize(node: RenderNode, componentMap: Map<string,RenderNode>): RenderNode {
   if (node.type === 'component-instance') {
     const source = componentMap.get(node.componentId);
     if (!source) return {id:node.id,type:'frame',x:node.x,y:node.y,width:120,height:44,children:[]};
-    return materialize(shift(source,node.x,node.y,node.id),componentMap);
+    const cloned = prefixIds(source,node.id);
+    const positioned = cloned.type === 'frame' ? {...cloned,x:node.x,y:node.y} : cloned;
+    return materialize(positioned,componentMap);
   }
   if (node.type === 'frame') return {...node,children:node.children.map(c=>materialize(c,componentMap))};
   return node;
