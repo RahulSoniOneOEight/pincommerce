@@ -1,0 +1,52 @@
+import { createHash } from 'node:crypto';
+import type { RenderNode, VisualProjectInput } from './schema.js';
+import { VISUAL_RENDER_VERSION } from './registry.js';
+
+export type VisualRenderTarget = {
+  repoId:string;
+  targetKind:'component'|'screen';
+  renderVersion:'v1';
+  tree:RenderNode;
+  fingerprint:string;
+};
+
+function normalize(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(normalize);
+  if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value as Record<string,unknown>).sort(([a],[b])=>a.localeCompare(b)).map(([k,v])=>[k,normalize(v)]));
+  return value;
+}
+
+export function stableVisualFingerprint(value: unknown): string {
+  return createHash('sha256').update(JSON.stringify(normalize(value))).digest('hex');
+}
+
+function shift(node: RenderNode, dx:number, dy:number, prefix:string): RenderNode {
+  if (node.type === 'frame') return {...node,id:`${prefix}.${node.id}`,x:(node.x??0)+dx,y:(node.y??0)+dy,children:node.children.map(c=>shift(c,dx,dy,prefix))};
+  if (node.type === 'component-instance') return {...node,id:`${prefix}.${node.id}`,x:node.x+dx,y:node.y+dy};
+  return {...node,id:`${prefix}.${node.id}`,x:node.x+dx,y:node.y+dy};
+}
+
+function materialize(node: RenderNode, componentMap: Map<string,RenderNode>): RenderNode {
+  if (node.type === 'component-instance') {
+    const source = componentMap.get(node.componentId);
+    if (!source) return {id:node.id,type:'frame',x:node.x,y:node.y,width:120,height:44,children:[]};
+    return materialize(shift(source,node.x,node.y,node.id),componentMap);
+  }
+  if (node.type === 'frame') return {...node,children:node.children.map(c=>materialize(c,componentMap))};
+  return node;
+}
+
+export function buildVisualRenderTargets(input: VisualProjectInput): VisualRenderTarget[] {
+  const componentMap = new Map(input.components.map(c=>[c.id,c.root]));
+  const components = input.components.map(component => {
+    const tree = materialize(component.root, componentMap);
+    const base = {repoId:`component:${component.id}`,targetKind:'component' as const,renderVersion:VISUAL_RENDER_VERSION,tree};
+    return {...base,fingerprint:stableVisualFingerprint({theme:input.theme.id,version:VISUAL_RENDER_VERSION,tree})};
+  });
+  const screens = input.screens.map(screen => {
+    const tree: RenderNode = {id:'screen-root',type:'frame',width:input.theme.canvas.width,height:input.theme.canvas.height,fill:input.theme.colors.background,children:screen.sections.map(s=>materialize(s.root,componentMap))};
+    const base = {repoId:`screen:${screen.id}`,targetKind:'screen' as const,renderVersion:VISUAL_RENDER_VERSION,tree};
+    return {...base,fingerprint:stableVisualFingerprint({theme:input.theme.id,version:VISUAL_RENDER_VERSION,tree})};
+  });
+  return [...components,...screens];
+}
