@@ -13,4 +13,12 @@ describe('compileVisualRenderCode',()=>{
     const code=compileVisualRenderCode(target,'root-123');
     expect(code).not.toMatch(/fetch\(|XMLHttpRequest|https?:\/\//);
   });
+  it('uses a container shape for icons before appending glyph children',()=>{
+    const iconTarget:any={repoId:'component:test-icon',targetKind:'component',renderVersion:'v1',fingerprint:'icon-fp',tree:{id:'root',type:'frame',width:64,height:64,children:[{id:'icon',type:'icon',x:8,y:8,width:32,height:32,recipe:'utility',color:'#173B72'}]}};
+    const code=compileVisualRenderCode(iconTarget,'root-123');
+    const iconBranch=code.slice(code.indexOf("else if(node.type==='icon')"),code.indexOf("if(!s)return null"));
+    expect(iconBranch).toContain('penpot.createBoard()');
+    expect(iconBranch).not.toContain('penpot.createRectangle()');
+    expect(iconBranch).toContain('s.appendChild(g)');
+  });
 });
