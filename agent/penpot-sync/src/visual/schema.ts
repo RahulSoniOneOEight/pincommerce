@@ -11,11 +11,11 @@ export type RenderNode =
   | { id:string; type:'component-instance'; x:number; y:number; componentId:string; variant?:string; props:Record<string,unknown> };
 
 export const RenderNodeSchema: z.ZodType<RenderNode> = z.lazy(() => z.discriminatedUnion('type', [
-  z.object({ id:z.string().min(1), type:z.literal('frame'), x:z.number().optional(), y:z.number().optional(), width:z.number().positive(), height:z.number().positive(), fill:HexSchema.optional(), radius:z.number().nonnegative().optional(), opacity:z.number().min(0).max(1).optional(), children:z.array(RenderNodeSchema).default([]) }),
+  z.object({ id:z.string().min(1), type:z.literal('frame'), x:z.number().optional(), y:z.number().optional(), width:z.number().positive(), height:z.number().positive(), fill:HexSchema.optional(), radius:z.number().nonnegative().optional(), opacity:z.number().min(0).max(1).optional(), children:z.array(RenderNodeSchema) }),
   z.object({ id:z.string().min(1), type:z.literal('rect'), x:z.number(), y:z.number(), width:z.number().positive(), height:z.number().positive(), fill:HexSchema, radius:z.number().nonnegative().optional(), opacity:z.number().min(0).max(1).optional() }),
   z.object({ id:z.string().min(1), type:z.literal('text'), x:z.number(), y:z.number(), width:z.number().positive().optional(), text:z.string(), role:TextRoleSchema, color:HexSchema.optional(), size:z.number().positive().optional(), weight:z.number().min(100).max(900).optional(), opacity:z.number().min(0).max(1).optional() }),
   z.object({ id:z.string().min(1), type:z.literal('icon'), x:z.number(), y:z.number(), width:z.number().positive(), height:z.number().positive(), recipe:z.string().min(1), color:HexSchema.optional(), opacity:z.number().min(0).max(1).optional() }),
-  z.object({ id:z.string().min(1), type:z.literal('component-instance'), x:z.number(), y:z.number(), componentId:z.string().min(1), variant:z.string().optional(), props:z.record(z.unknown()).default({}) })
+  z.object({ id:z.string().min(1), type:z.literal('component-instance'), x:z.number(), y:z.number(), componentId:z.string().min(1), variant:z.string().optional(), props:z.record(z.unknown()) })
 ]));
 
 export const VisualThemeSchema = z.object({
