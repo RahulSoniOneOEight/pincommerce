@@ -1,3 +1,5 @@
+import type { VisualRegistryMeta } from '../visual/registry.js';
+
 export type McpTool = { name: string; description?: string; inputSchema?: unknown };
 
 export interface McpTransport {
@@ -15,4 +17,4 @@ export type PenpotCapabilities = {
 };
 
 export type PenpotTarget = { fileId?: string; pageId?: string; fileName?: string; pageName?: string };
-export type PenpotRemoteObject = { repoId?: string; remoteId: string; kind: string; name?: string; payload?: unknown };
+export type PenpotRemoteObject = { repoId?: string; remoteId: string; kind: string; name?: string; payload?: unknown; visual?: VisualRegistryMeta };
