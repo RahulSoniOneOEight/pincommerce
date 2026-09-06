@@ -19,6 +19,15 @@ function textResult(value: any): any {
   } catch { return text; }
 }
 
+function toolErrorText(value:any): string {
+  const content=value?.content;
+  if(Array.isArray(content)) {
+    const text=content.find((x:any)=>x?.type==='text')?.text;
+    if(typeof text==='string' && text.trim()) return text;
+  }
+  return 'Penpot execute_code failed';
+}
+
 function js(value: unknown): string { return JSON.stringify(value); }
 
 export class PenpotMcpGateway {
@@ -45,7 +54,9 @@ export class PenpotMcpGateway {
   }
 
   private async execute(code: string): Promise<any> {
-    return textResult(await this.transport.callTool('execute_code', { code }));
+    const raw=await this.transport.callTool('execute_code', { code });
+    if((raw as any)?.isError===true) throw new Error(toolErrorText(raw));
+    return textResult(raw);
   }
 
   async inspectTarget(): Promise<PenpotTarget> {
