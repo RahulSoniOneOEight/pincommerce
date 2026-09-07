@@ -9,5 +9,11 @@
     "resolveJsonModule": true,
     "types": ["node", "vitest/globals"]
   },
-  "include": ["agent/penpot-sync/src/**/*.ts", "agent/penpot-sync/test/**/*.ts", "vitest.config.ts"]
+  "include": [
+    "agent/penpot-sync/src/**/*.ts",
+    "agent/penpot-sync/test/**/*.ts",
+    "agent/design-control/src/**/*.ts",
+    "agent/design-control/test/**/*.ts",
+    "vitest.config.ts"
+  ]
 }
