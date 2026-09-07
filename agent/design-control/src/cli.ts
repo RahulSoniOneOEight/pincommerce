@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { loadDesignAgent } from './loadDesignAgent.js';
 import { buildHandoff } from './handoff.js';
 import { buildRunManifest, stableManifestJson } from './runManifest.js';
@@ -54,6 +55,5 @@ export async function run(args:string[],rootDir=process.cwd()):Promise<number> {
   }
 }
 
-if(import.meta.url===`file://${process.argv[1]?.replaceAll('\\','/')}`) {
-  process.exitCode=await run(process.argv.slice(2));
-}
+const self=fileURLToPath(import.meta.url);
+if(process.argv[1] && path.resolve(process.argv[1])===path.resolve(self)) process.exit(await run(process.argv.slice(2)));
