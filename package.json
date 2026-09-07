@@ -12,7 +12,10 @@
     "penpot:check": "tsx agent/penpot-sync/src/liveCli.ts check",
     "penpot:plan": "tsx agent/penpot-sync/src/liveCli.ts plan",
     "penpot:sync": "tsx agent/penpot-sync/src/liveCli.ts sync",
-    "penpot:verify": "tsx agent/penpot-sync/src/liveCli.ts verify"
+    "penpot:verify": "tsx agent/penpot-sync/src/liveCli.ts verify",
+    "design:validate": "tsx agent/design-control/src/cli.ts validate",
+    "design:brief": "tsx agent/design-control/src/cli.ts brief",
+    "design:run-manifest": "tsx agent/design-control/src/cli.ts run-manifest"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
