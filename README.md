@@ -4,7 +4,7 @@ This repository is the versioned control plane for the PinCommerce Penpot design
 
 ## Operating model
 
-- **GitHub** stores the canonical design specification, tokens, component catalog, screen manifests, prototype routes, and sync code.
+- **GitHub** stores the canonical design specification, tokens, component catalog, screen manifests, visual renderer manifests, prototype routes, and sync code.
 - **Penpot** is the live visual workspace.
 - **Local Windows sync client** connects to Penpot's Remote MCP endpoint and acts on the file/page currently connected through Penpot's MCP plugin.
 - Live writes are explicit, read-before-write, idempotent for managed state, and non-destructive in v1.
@@ -16,27 +16,43 @@ This repository is the versioned control plane for the PinCommerce Penpot design
 
 Both themes share one component hierarchy. Theme-specific component duplication is prohibited.
 
+## Visual Renderer v1
+
+The first visual-renderer wave upgrades the managed Penpot scaffolding into native editable Theme B UI for the core reusable commerce components plus B2C **Home**, **Category**, and **Product** screens.
+
+The renderer uses a hybrid offline asset strategy:
+
+- category imagery is drawn from deterministic editable Penpot-native geometry;
+- product media uses deterministic neutral placeholders that can later be replaced by real product assets;
+- no stock-photo or network image dependency is required;
+- prototype links remain intentionally unsupported in this wave.
+
+Visual children are owned only when their names begin with `PCV1::<repoId>::`. Re-rendering reconciles that owned subtree while leaving unrelated user-created Penpot content untouched. A visual fingerprint is stored alongside the existing managed registry entry so repeated identical syncs produce zero visual updates.
+
 ## Local Windows live Penpot flow
 
 Prerequisites: Node.js 20+ and a Remote Penpot MCP key. In Penpot, open the intended target file and use **File → MCP Server → Connect** before running the commands below.
 
-```powershell
+```cmd
+git checkout feat/penpot-visual-renderer-v1
 git pull
 npm install
-Copy-Item .env.example .env
-# edit .env and set PENPOT_MCP_URL to the full Remote MCP URL from Penpot
-# optionally set PENPOT_FILE_ID to guard against writing to the wrong file
 npm run penpot:check
 npm run penpot:plan
 npm run penpot:sync -- --apply
 npm run penpot:verify
+npm run penpot:plan
 ```
 
-`penpot:check`, `penpot:plan`, and `penpot:verify` are read-only. `penpot:sync` refuses to write unless `--apply` is present. V1 never deletes Penpot content; unmanaged/orphaned content is reported and left untouched. Prototype links are reported unsupported if the currently exposed Penpot MCP/Plugin API cannot safely express them.
+While PR #3 is under review, use the feature branch above. After merge, use `main` instead.
+
+Before the first visual apply on an already structurally synced Penpot file, `penpot:plan` should report `create:0` and updates only for the visual targets whose fingerprints are absent or stale. After a successful apply, the final `penpot:plan` should report `create:0` and `update:0` for supported objects.
+
+`penpot:check`, `penpot:plan`, and `penpot:verify` are read-only. `penpot:sync` refuses to write unless `--apply` is present. V1 never deletes managed roots or unrelated Penpot content; unmanaged/orphaned content is reported and left untouched. Prototype links are reported unsupported if the currently exposed Penpot MCP/Plugin API cannot safely express them.
 
 ### Remote MCP implementation
 
-The official Penpot Remote MCP exposes `execute_code`, which runs Penpot Plugin API JavaScript against the active connected file. The sync gateway discovers that capability at runtime. Managed identity is recorded in the current file's local library plugin data so repeated syncs can distinguish create/update/unchanged operations without relying only on human-readable names. Supported token-set operations also create/update real Penpot design tokens; component and screen operations create managed Penpot boards/components on the active page as the current bootstrap representation.
+The official Penpot Remote MCP exposes `execute_code`, which runs Penpot Plugin API JavaScript against the active connected file. The sync gateway discovers that capability at runtime. Managed identity is recorded in the current file's local library plugin data so repeated syncs can distinguish create/update/unchanged operations without relying only on human-readable names. Supported token-set operations create/update real Penpot design tokens; the visual renderer now enriches existing managed component and screen roots with editable native shapes.
 
 ## Offline/control-plane commands
 
@@ -48,7 +64,7 @@ npm run validate
 npm run sync:dry -- --out artifacts/penpot-plan.json
 ```
 
-`npm run validate` loads and cross-validates all manifests. `npm run sync:dry` emits a deterministic operation plan and makes **no network calls** and **no Penpot writes**.
+`npm run validate` loads and cross-validates the structural manifests. The live commands additionally validate the visual renderer manifests before planning or applying visual updates. `npm run sync:dry` emits the deterministic structural operation plan and makes **no network calls** and **no Penpot writes**.
 
 ## Security
 

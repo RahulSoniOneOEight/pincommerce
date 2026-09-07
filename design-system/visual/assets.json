@@ -1,0 +1,12 @@
+{
+  "assets": [
+    {"id":"category-plumbing","kind":"category-icon","recipe":"plumbing"},
+    {"id":"category-electrical","kind":"category-icon","recipe":"electrical"},
+    {"id":"category-sanitary","kind":"category-icon","recipe":"sanitary"},
+    {"id":"category-paints-construction","kind":"category-icon","recipe":"paints-construction"},
+    {"id":"category-hardware-tools","kind":"category-icon","recipe":"hardware-tools"},
+    {"id":"category-agriculture","kind":"category-icon","recipe":"agriculture"},
+    {"id":"product-placeholder-primary","kind":"product-placeholder","recipe":"primary"},
+    {"id":"product-placeholder-secondary","kind":"product-placeholder","recipe":"secondary"}
+  ]
+}

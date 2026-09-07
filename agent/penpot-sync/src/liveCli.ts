@@ -9,6 +9,9 @@ import { RemoteMcpTransport } from './mcp/transport.js';
 import { PenpotMcpGateway } from './mcp/gateway.js';
 import { McpPenpotAdapter } from './adapters/mcp.js';
 import type { McpTransport } from './mcp/types.js';
+import { loadVisualProject } from './visual/loadVisualProject.js';
+import { buildVisualRenderTargets } from './visual/renderModel.js';
+import { buildWorkspaceTargets } from './workspace/layout.js';
 
 export type LiveCliDeps = { transport?: McpTransport; env?: NodeJS.ProcessEnv; log?: (value:string)=>void; error?: (value:string)=>void };
 
@@ -35,19 +38,22 @@ export async function runLive(argv = process.argv.slice(2), root = process.cwd()
     }
     const project = await loadProject(root);
     const desired = buildPlan(project);
+    const visualProject = await loadVisualProject(root);
+    const visualTargets = buildVisualRenderTargets(visualProject);
+    const workspaceTargets = buildWorkspaceTargets(desired);
     if (command === 'plan') {
       const current = await gateway.listManagedObjects();
-      log(JSON.stringify(counts(buildLivePlan(desired,current,capabilities))));
+      log(JSON.stringify(counts(buildLivePlan(desired,current,capabilities,visualTargets,workspaceTargets))));
       return 0;
     }
     if (command === 'sync') {
-      const result = await new McpPenpotAdapter(gateway).apply(desired);
+      const result = await new McpPenpotAdapter(gateway).apply(desired,visualTargets,workspaceTargets);
       log(JSON.stringify(result));
       return result.failed === 0 ? 0 : 1;
     }
     if (command === 'verify') {
       const current = await gateway.listManagedObjects();
-      const live = buildLivePlan(desired,current,capabilities);
+      const live = buildLivePlan(desired,current,capabilities,visualTargets,workspaceTargets);
       const drift = live.filter(x=>x.action==='create'||x.action==='update');
       if (drift.length) { error(`VERIFY_ERROR: ${drift.length} managed object(s) differ`); return 1; }
       log(JSON.stringify({ verified:true, ...counts(live) }));
