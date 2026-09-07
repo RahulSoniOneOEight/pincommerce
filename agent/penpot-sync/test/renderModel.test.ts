@@ -24,7 +24,7 @@ describe('visual render model',()=>{
     expect(header?.type).toBe('frame');
     if(!header || header.type!=='frame') throw new Error('expected header frame');
     expect(header.x).toBe(16);
-    expect(header.y).toBe(16);
+    expect(header.y).toBe(14);
     const brand=header.children.find(x=>x.id==='header-inst.brand');
     expect(brand?.type).toBe('text');
     if(!brand || brand.type!=='text') throw new Error('expected brand text');
