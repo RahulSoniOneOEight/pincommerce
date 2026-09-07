@@ -1,0 +1,17 @@
+{
+  "version": "v1",
+  "provider": "penpot-ai-kit",
+  "defaultWorkflow": "brief-to-screen",
+  "requiredCheckpoints": [
+    "direction-approval",
+    "design-quality",
+    "accessibility",
+    "visual-approval"
+  ],
+  "allowedThemes": ["theme-a-green", "theme-b-blue"],
+  "preferredViewport": "390x844",
+  "upstream": {
+    "repository": "penpot/penpot-ai-kit",
+    "mode": "external"
+  }
+}

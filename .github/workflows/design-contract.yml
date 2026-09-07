@@ -21,10 +21,14 @@ jobs:
       - run: npm test -- --run
       - run: npm run typecheck
       - run: npm run validate
+      - run: npm run design:validate
+      - run: npm run design:run-manifest -- --screen b2c-home --out artifacts/design-run.json
       - run: npm run sync:dry -- --out artifacts/penpot-plan.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: penpot-plan
-          path: artifacts/penpot-plan.json
+          name: design-contract-artifacts
+          path: |
+            artifacts/design-run.json
+            artifacts/penpot-plan.json
           if-no-files-found: ignore
