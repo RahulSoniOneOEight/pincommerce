@@ -42,7 +42,11 @@ Baseline checks include:
 - reconciliation
 - provider health
 
-Not-run or failed blocking checks prevent a passed hardening record.
+Blocking policy: `pass` is acceptable; `warning` is blocking unless the check id is explicitly
+declared in `non_blocking_checks`; `fail` and `not-run` are blocking; an unknown status is an error.
+A required check that is **omitted** from a hardening record is treated as `not-run` and is blocking,
+and an unknown check id is blocking — so a hardening record can never pass by silently dropping
+checks.
 
 ## Human gates
 

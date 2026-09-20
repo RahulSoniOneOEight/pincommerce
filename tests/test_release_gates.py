@@ -1,11 +1,13 @@
 from pathlib import Path
 import tempfile
+from typing import Any
 import unittest
 import yaml
 
 from tooling.release.candidate import create_candidate
 from tooling.release.gates import GateError, verify_release_readiness
 from tooling.release.hardening import (
+    DEFAULT_CHECKS,
     HardeningError,
     build_hardening_evidence,
     evaluate_hardening,
@@ -32,7 +34,10 @@ def base_evidence() -> dict:
         "hardening": {
             "evidence_id": "HARD-1",
             "candidate_id": CANDIDATE_ID,
-            "checks": [],
+            "checks": [
+                {"id": check_id, "status": "pass", "evidence": "ok"}
+                for check_id in DEFAULT_CHECKS
+            ],
             "status": "passed",
         },
         "staging": {
@@ -78,7 +83,7 @@ class ReleaseGateTests(unittest.TestCase):
         return paths
 
     def _verify(self, paths: dict[str, Path], **overrides):
-        kwargs = dict(
+        kwargs: dict[str, Any] = dict(
             candidate_path=paths["candidate"],
             hardening_path=paths["hardening"],
             staging_path=paths["staging"],
@@ -174,6 +179,42 @@ class ReleaseGateTests(unittest.TestCase):
             with self.assertRaises(GateError):
                 self._verify(paths)
 
+    def test_release_fails_when_hardening_missing_required_check(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            evidence = base_evidence()
+            evidence["hardening"]["checks"] = [
+                {"id": "unit-tests", "status": "pass", "evidence": "ok"}
+            ]
+            evidence["hardening"]["status"] = "passed"
+            paths = self._write_bundle(Path(tmp), evidence)
+            with self.assertRaises(GateError):
+                self._verify(paths)
+
+    def test_release_fails_when_hardening_omits_a_check(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            evidence = base_evidence()
+            evidence["hardening"]["checks"] = [
+                check
+                for check in evidence["hardening"]["checks"]
+                if check["id"] != "security-secrets"
+            ]
+            paths = self._write_bundle(Path(tmp), evidence)
+            with self.assertRaises(GateError):
+                self._verify(paths)
+
+    def test_reference_fixture_bundle_passes_release_gate(self):
+        base = Path(__file__).resolve().parents[1] / "client-projects" / "reference-retail"
+        result = verify_release_readiness(
+            candidate_path=base / "release/candidates/RC-reference-retail-ref001.yaml",
+            hardening_path=base / "release/hardening/RC-reference-retail-ref001.yaml",
+            staging_path=base / "release/staging/RC-reference-retail-ref001.yaml",
+            observability_path=base / "release/observability/RC-reference-retail-ref001.yaml",
+            uat_path=base / "uat/RC-reference-retail-ref001.yaml",
+            authorization_path=base / "release/production-authorization.yaml",
+        )
+        self.assertTrue(result["ready"])
+        self.assertEqual(result["candidate_id"], "RC-reference-retail-ref001")
+
     def test_recovery_plan(self):
         record = make_recovery_record(
             recovery_id="REC-1",
@@ -246,6 +287,23 @@ class HardeningPolicyTests(unittest.TestCase):
         }
         with self.assertRaises(HardeningError):
             evaluate_hardening(evidence)
+
+    def test_evaluate_missing_required_check_is_blocking(self):
+        evidence = {
+            "candidate_id": "RC-demo-1",
+            "checks": [{"id": "unit-tests", "status": "pass"}],
+            "status": "passed",
+        }
+        result = evaluate_hardening(evidence)
+        self.assertEqual(result["status"], "failed")
+        self.assertIn("security-secrets", result["missing_checks"])
+
+    def test_evaluate_empty_checks_is_blocking(self):
+        result = evaluate_hardening(
+            {"candidate_id": "RC-demo-1", "checks": [], "status": "passed"}
+        )
+        self.assertEqual(result["status"], "failed")
+        self.assertEqual(result["missing_checks"], list(DEFAULT_CHECKS))
 
     def test_evaluate_treats_unknown_check_id_as_blocking(self):
         evidence = {

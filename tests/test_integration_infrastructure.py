@@ -4,9 +4,10 @@ import tempfile
 import threading
 import time
 import unittest
+from unittest import mock
 
 from tooling.integration.durable import SQLiteRuntimeStore
-from tooling.integration.nats_client import close_nats
+from tooling.integration.nats_client import close_nats, nats_connection
 from tooling.integration.nats_transport import publish_event
 from tooling.integration.production_runtime import ProductionIntegrationRuntime
 from tooling.integration.runtime import DeliveryResult, DomainCommand, DomainEvent
@@ -191,6 +192,7 @@ class IntegrationInfrastructureTests(unittest.TestCase):
                 replay = store.claim("retry-key")
                 self.assertFalse(replay.acquired)
                 self.assertEqual(replay.state, "completed")
+                assert replay.result is not None
                 self.assertEqual(replay.result.external_id, "EXT")
 
     def test_claim_release_allows_retry(self):
@@ -214,6 +216,25 @@ class IntegrationInfrastructureTests(unittest.TestCase):
 
     def test_nats_close_accepts_none(self):
         asyncio.run(close_nats(None))
+
+    def test_nats_connection_context_manager_drains_and_closes(self):
+        connection = LifecycleNATS()
+
+        async def fake_connect(url):
+            self.assertEqual(url, "nats://example")
+            return connection
+
+        async def run():
+            with mock.patch(
+                "tooling.integration.nats_client.connect_nats", fake_connect
+            ):
+                async with nats_connection("nats://example") as conn:
+                    self.assertIs(conn, connection)
+                    self.assertEqual(connection.closed, 0)
+
+        asyncio.run(run())
+        self.assertEqual(connection.drained, 1)
+        self.assertEqual(connection.closed, 1)
 
     def test_webhook_canonicalization(self):
         event = canonicalize_webhook(

@@ -94,6 +94,7 @@ def evaluate_hardening(
 
     blocking: list[str] = []
     unknown: list[str] = []
+    present: set[str] = set()
     for check in checks:
         check_id = check.get("id")
         status = check.get("status")
@@ -101,6 +102,7 @@ def evaluate_hardening(
             raise HardeningError(
                 f"Unknown hardening status {status!r} for check {check_id!r}"
             )
+        present.add(str(check_id))
         if check_id not in DEFAULT_CHECKS:
             unknown.append(str(check_id))
             blocking.append(str(check_id))
@@ -108,8 +110,14 @@ def evaluate_hardening(
         if _is_blocking(status, check_id, non_blocking_set):
             blocking.append(check_id)
 
+    # A record that silently omits a required check must not pass: absent checks
+    # are treated as ``not-run`` and are always blocking.
+    missing = [check_id for check_id in DEFAULT_CHECKS if check_id not in present]
+    blocking.extend(missing)
+
     return {
         "status": "passed" if not blocking else "failed",
         "blocking": blocking,
         "unknown_checks": unknown,
+        "missing_checks": missing,
     }
