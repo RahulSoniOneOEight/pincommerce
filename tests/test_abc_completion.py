@@ -13,6 +13,8 @@ from tooling.onboarding.abc_completion import (
     enrich_capability_gap,
 )
 from tooling.review.freeze import FreezeError, build_scope_baseline
+from tooling.review.visual_qa import evaluate_visual_qa, plan_visual_qa
+from tooling.review.impact import analyze_change
 
 
 class ABCCompletionTests(unittest.TestCase):
@@ -129,6 +131,61 @@ class ABCCompletionTests(unittest.TestCase):
                     "demo", review_file="review.yaml", visual_qa_files=["qa.yaml"],
                     approved_by="client-owner", approved_at="2026-09-22T00:00:00Z", root=root
                 )
+
+
+    def test_visual_qa_planner_covers_business_and_visual_checks(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            qa_dir = root / "client-projects/demo/experience/visual-qa"
+            qa_dir.mkdir(parents=True)
+            capture = {
+                "capture_id": "CAP-DEMO", "client_id": "demo", "build_id": "BLD-DEMO",
+                "direction_id": "DIR-DEMO-A",
+                "targets": [
+                    {"surface": "customer-app", "runtime": "flutter", "viewport": "390x844",
+                     "state": "default", "output": "review/demo.png"},
+                    {"surface": "customer-app", "runtime": "flutter", "viewport": "390x844",
+                     "state": "failure", "output": "review/demo-failure.png"},
+                ],
+                "status": "planned",
+            }
+            (qa_dir / "capture.yaml").write_text(yaml.safe_dump(capture), encoding="utf-8")
+            planned = plan_visual_qa("demo", "capture.yaml", root)
+            record = next(iter(planned.values()))
+            ids = {item["id"] for item in record["checks"]}
+            self.assertIn("business-rules", ids)
+            self.assertIn("journey-coverage", ids)
+            for item in record["checks"]:
+                item["status"] = "pass"
+            evaluated = evaluate_visual_qa(record)
+            self.assertEqual(evaluated["status"], "passed")
+
+    def test_change_impact_uses_dependency_entity_and_integration_maps(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            derived = root / "client-projects/demo/derived"
+            derived.mkdir(parents=True)
+            (derived / "dependency-map.yaml").write_text(
+                "client_id: demo\ncritical_cross_domain_flows:\n"
+                "  - id: checkout-to-accounting\n"
+                "    domains: [experience, commerce, integration, erp]\n",
+                encoding="utf-8",
+            )
+            (derived / "entity-map.yaml").write_text(
+                "client_id: demo\nentities:\n"
+                "  order: {owner_capability: checkout}\n",
+                encoding="utf-8",
+            )
+            (derived / "integration-map.yaml").write_text(
+                "client_id: demo\nintegrations:\n"
+                "  - {id: payment, domain: payments, provider_candidates: [razorpay], direction: bidirectional, criticality: critical, data_classes: [operational], fallback_strategy: queue-and-retry}\n",
+                encoding="utf-8",
+            )
+            impact = analyze_change("demo", ["checkout"], ["customer-app"], root)
+            self.assertIn("commerce", impact["affected_domains"])
+            self.assertIn("order", impact["affected_entities"])
+            self.assertTrue(impact["approval_required"])
+            self.assertIn("e2e", impact["required_tests"])
 
 
 if __name__ == "__main__":
