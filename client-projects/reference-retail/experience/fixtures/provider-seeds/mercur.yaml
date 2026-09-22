@@ -1,0 +1,8 @@
+provider: mercur
+source_dataset: DEMO-reference-retail-v1
+sellers:
+  - {id: SELLER-001, name: Demo Seller One, status: active, commission_percent: 10}
+seller_settlements:
+  - {id: SET-001, seller_id: SELLER-001, gross: 17500, commission: 1750, payable: 15750, status: pending}
+orders:
+  - {id: ORD-1010, customer_id: CUST-B2C-001, seller_id: SELLER-001, status: seller_settlement_pending, total: 17500}
