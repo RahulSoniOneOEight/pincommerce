@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Prototype Implementation Evidence",
+  "type": "object",
+  "required": ["implementation_id","client_id","direction_id","surfaces","status"],
+  "properties": {
+    "implementation_id":{"type":"string","pattern":"^IMP-[A-Za-z0-9._-]+$"},
+    "client_id":{"type":"string","minLength":1},
+    "direction_id":{"type":"string","minLength":1},
+    "surfaces":{
+      "type":"array",
+      "items":{
+        "type":"object",
+        "required":["surface","runtime_ref","screens","components","states","status"],
+        "properties":{
+          "surface":{"type":"string","minLength":1},
+          "runtime_ref":{"type":"string","minLength":1},
+          "screens":{"type":"array","items":{"$ref":"#/$defs/evidenceItem"}},
+          "components":{"type":"array","items":{"$ref":"#/$defs/evidenceItem"}},
+          "states":{"type":"array","items":{"$ref":"#/$defs/evidenceItem"}},
+          "status":{"enum":["pending","in-progress","complete"]}
+        },
+        "additionalProperties":false
+      }
+    },
+    "status":{"enum":["draft","in-progress","complete"]}
+  },
+  "$defs":{
+    "evidenceItem":{
+      "type":"object",
+      "required":["id","status","evidence_ref"],
+      "properties":{
+        "id":{"type":"string","minLength":1},
+        "status":{"enum":["pending","implemented","not-applicable"]},
+        "evidence_ref":{"type":["string","null"]}
+      },
+      "additionalProperties":false
+    }
+  },
+  "additionalProperties":false
+}
