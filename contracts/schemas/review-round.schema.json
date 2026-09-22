@@ -1,0 +1,33 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Review Round",
+  "type":"object",
+  "required":["round_id","client_id","sequence","prototype_revision_ref","review_session_ref","previous_round_ref","next_revision_ref","required_surfaces","required_journeys","feedback_refs","live_review_refs","change_refs","qa_refs","surface_decisions","journey_decisions","outcome"],
+  "properties":{
+    "round_id":{"type":"string","pattern":"^ROUND-[A-Za-z0-9._-]+$"},
+    "client_id":{"type":"string","minLength":1},
+    "sequence":{"type":"integer","minimum":1},
+    "prototype_revision_ref":{"type":"string","minLength":1},
+    "review_session_ref":{"type":"string","minLength":1},
+    "previous_round_ref":{"type":["string","null"]},
+    "next_revision_ref":{"type":["string","null"]},
+    "required_surfaces":{"type":"array","items":{"type":"string"},"minItems":1},
+    "required_journeys":{"type":"array","items":{"type":"string"},"minItems":1},
+    "feedback_refs":{"type":"array","items":{"type":"string"}},
+    "live_review_refs":{"type":"array","items":{"type":"string"}},
+    "change_refs":{"type":"array","items":{"type":"string"}},
+    "qa_refs":{"type":"array","items":{"type":"string"}},
+    "surface_decisions":{"type":"array","items":{
+      "type":"object","required":["surface","status"],
+      "properties":{"surface":{"type":"string"},"status":{"enum":["pending","approved","changes-requested","rejected"]}},
+      "additionalProperties":false
+    }},
+    "journey_decisions":{"type":"array","items":{
+      "type":"object","required":["journey","status"],
+      "properties":{"journey":{"type":"string"},"status":{"enum":["pending","approved","changes-requested","rejected"]}},
+      "additionalProperties":false
+    }},
+    "outcome":{"enum":["planned","in-review","changes-requested","approved","superseded"]}
+  },
+  "additionalProperties":false
+}
