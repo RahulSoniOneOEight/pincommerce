@@ -1,0 +1,30 @@
+baseline_id: mercur-standard-v1
+provider: mercur
+role: marketplace-core
+mode: real-core
+activation:
+  when_business_model_any: [marketplace, b2b-marketplace, multi-vendor]
+capabilities:
+  seller-onboarding:
+    enabled: true
+    components: [seller-profile, approval-status, business-details]
+  seller-catalogue:
+    enabled: true
+    components: [products, offers, seller-pricing]
+  seller-inventory:
+    enabled: true
+    components: [stock, availability]
+  marketplace-orders:
+    enabled: true
+    components: [seller-order-view, fulfilment, returns]
+  commissions:
+    enabled: true
+    components: [commission-rule, commission-breakdown]
+  settlements:
+    enabled: true
+    components: [settlement-cycle, payable, paid, hold]
+prototype_defaults:
+  seller_count: 3
+  settlement_cycle: weekly
+  commission_percent: 10
+override_policy: client-brief-over-standard
