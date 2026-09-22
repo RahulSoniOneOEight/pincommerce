@@ -309,7 +309,8 @@ def build_blueprint(client_id: str, root: Path = ROOT) -> GeneratedBlueprint:
     industry_profile = load_industry_profile(root, industry)
     archetypes = [load_archetype(root, a) for a in archetype_ids]
     benchmark = resolve_benchmark(client_input, industry_profile, archetypes)
-    capability_gap = enrich_capability_gap(resolve_capability_gap(client_input, benchmark))
+    capability_gap = resolve_capability_gap(client_input, benchmark)
+    capability_gap_analysis = enrich_capability_gap(capability_gap)
     capability_map = resolve_capability_map(client_input, benchmark)
     journey_map = resolve_journey_map(client_input, benchmark)
     surface_map = resolve_surface_map(client_input, benchmark)
@@ -327,13 +328,6 @@ def build_blueprint(client_id: str, root: Path = ROOT) -> GeneratedBlueprint:
         client_id, active_capabilities, all_surfaces, root
     )
     decisions = architecture_decisions(client_id, solution)
-    solution["capabilities"] = active_capabilities
-    solution["surfaces"] = all_surfaces
-    solution["entity_ref"] = "derived/entity-map.yaml"
-    solution["integration_ref"] = "derived/integration-map.yaml"
-    solution["dependency_ref"] = "derived/dependency-map.yaml"
-    solution["decision_refs"] = [f"{d['decision_id']}.yaml" for d in decisions]
-    solution["status"] = "draft"
     reuse = resolve_reuse_decisions(solution)
 
     client_profile = {
@@ -360,7 +354,6 @@ def build_blueprint(client_id: str, root: Path = ROOT) -> GeneratedBlueprint:
             f"intelligence/industries/{industry}/profile.yaml",
             *[f"intelligence/archetypes/{a}.yaml" for a in archetype_ids],
         ],
-        "classification": classification_evidence(business_models, archetype_ids),
     }
 
     truth_register = build_truth_register(client_input)
@@ -369,8 +362,13 @@ def build_blueprint(client_id: str, root: Path = ROOT) -> GeneratedBlueprint:
         "derived/truth-register.yaml": truth_register,
         "derived/client-profile.yaml": client_profile,
         "derived/industry-profile.yaml": industry_profile_out,
+        "derived/classification-evidence.yaml": {
+            "client_id": client_id,
+            **classification_evidence(business_models, archetype_ids),
+        },
         "derived/benchmark-report.yaml": benchmark,
         "derived/capability-gap.yaml": capability_gap,
+        "derived/capability-gap-analysis.yaml": capability_gap_analysis,
         "derived/reuse-decisions.yaml": reuse,
         "derived/capability-map.yaml": capability_map,
         "derived/journey-map.yaml": journey_map,
