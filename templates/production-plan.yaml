@@ -1,0 +1,33 @@
+production_plan_id: PRODPLAN-example-v1
+client_id: ""
+scope:
+  current_scope_ref: approved/current-scope.yaml
+  baseline_ref: approved/scope-baselines/BASE-example-v1.yaml
+  baseline_id: BASE-example-v1
+  version: 1
+source:
+  solution_ref: solution/solution-contract.yaml
+  business_contract_ref: contracts/business-contract.yaml
+  data_contract_ref: contracts/data-contract.yaml
+  prototype_revision_ref: null
+  review_round_ref: null
+  architecture_decision_refs: []
+capabilities: []
+surfaces: []
+runtimes: []
+integrations: []
+data:
+  demo_data_action: replace
+  master_data_action: migrate
+  opening_inventory_action: load
+  opening_finance_action: load
+  entity_ownership: []
+configuration:
+  strategy: standard-baseline-plus-approved-overlays
+  approved_overlays: []
+  deferred_capabilities: []
+  excluded_capabilities: []
+acceptance:
+  required_checks: []
+blocking_items: []
+status: draft
