@@ -7,13 +7,13 @@ const referenceScreens = <String>[
   'home','category','search','search-results','product-list','product-detail',
   'cart','checkout','address','delivery','payment','order-confirmation','orders',
   'order-detail','return-request','return-status','rfq','quote-detail','account',
-  'approval-status','support'
+  'approval-status','support','profile','inventory'
 ];
 
 const referenceStates = <String>[
   'default','loading','empty','failure','out-of-stock','no-results','coupon-valid',
   'coupon-invalid','payment-failed','order-success','approval-pending','approved',
-  'rejected','refunded','available','partially-used','limit-exceeded','draft','submitted'
+  'rejected','refunded','available','partially-used','limit-exceeded','draft','submitted','in-stock','low-stock'
 ];
 
 class PrototypeApp extends StatelessWidget {
