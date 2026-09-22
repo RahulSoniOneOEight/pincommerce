@@ -210,7 +210,7 @@
         "repeat-order",
         "credit-order"
       ],
-      "status": "complete"
+      "status": "incomplete"
     },
     {
       "surface": "web-store",
@@ -308,7 +308,7 @@
         "repeat-order",
         "credit-order"
       ],
-      "status": "complete"
+      "status": "incomplete"
     },
     {
       "surface": "commerce-admin",
@@ -389,7 +389,7 @@
         "repeat-order",
         "credit-order"
       ],
-      "status": "complete"
+      "status": "incomplete"
     },
     {
       "surface": "analytics",
@@ -446,7 +446,7 @@
         "repeat-order",
         "credit-order"
       ],
-      "status": "complete"
+      "status": "incomplete"
     },
     {
       "surface": "erp",
@@ -502,9 +502,12 @@
         "repeat-order",
         "credit-order"
       ],
-      "status": "complete"
+      "status": "incomplete"
     }
   ],
-  "blocking_items": [],
-  "status": "client-review-ready"
+  "blocking_items": [
+    "prototype implementation evidence missing: experience/prototypes/a-implementation.yaml"
+  ],
+  "status": "incomplete",
+  "implementation_ref": null
 }
