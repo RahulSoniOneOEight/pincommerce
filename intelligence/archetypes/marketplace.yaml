@@ -1,0 +1,39 @@
+id: marketplace
+industry_agnostic: true
+business_models:
+  - marketplace
+  - b2b-marketplace
+  - multi-vendor
+expected_surfaces:
+  - web-store
+  - commerce-admin
+  - seller-portal
+  - erp
+optional_surfaces:
+  - customer-app
+  - warehouse
+  - customer-support
+  - ops-console
+  - analytics
+journeys:
+  - browse-to-buy
+  - seller-onboarding
+  - seller-catalogue
+  - marketplace-order
+  - seller-fulfilment
+  - seller-return
+  - seller-settlement
+core_capabilities:
+  - catalogue
+  - pricing
+  - orders
+  - seller-onboarding
+  - seller-catalogue
+  - seller-inventory
+  - marketplace-orders
+  - commissions
+  - settlements
+recommended_capabilities:
+  - seller-analytics
+  - seller-approval
+  - payout-reconciliation
