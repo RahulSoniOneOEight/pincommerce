@@ -1,0 +1,64 @@
+{
+  "session_id": "LIVE-reference-retail-NOWA-001",
+  "client_id": "reference-retail",
+  "review_id": "REV-BLD-reference-retail-a-ref001-approved",
+  "source_build_id": "BLD-reference-retail-a-ref001",
+  "tool": "nowa",
+  "started_by": "agency-reviewer",
+  "started_at": "2026-09-22T10:00:00Z",
+  "participants": [
+    "agency-reviewer",
+    "client-reviewer"
+  ],
+  "edits": [
+    {
+      "edit_id": "EDIT-0001",
+      "category": "spacing",
+      "summary": "Reduce product-card vertical spacing",
+      "surface": "customer-app",
+      "target": "ProductCard.padding",
+      "before": "24",
+      "after": "20",
+      "classification": "minor-live",
+      "route": "apply-in-nowa",
+      "status": "qa-passed",
+      "git_paths": [
+        "apps/prototype_app/lib/main.dart",
+        "packages/agency_flutter_ui/lib/agency_flutter_ui.dart"
+      ],
+      "git_diff_ref": "reference-diff:nowa-spacing-001",
+      "resulting_revision": "ref002",
+      "change_contract_ref": null,
+      "qa_required": true,
+      "client_confirmed": true
+    },
+    {
+      "edit_id": "EDIT-0002",
+      "category": "business-rule",
+      "summary": "Require manager approval above order threshold",
+      "surface": "customer-app",
+      "target": "checkout-approval",
+      "before": null,
+      "after": null,
+      "classification": "material-change",
+      "route": "change-contract",
+      "status": "change-contract-created",
+      "git_paths": [],
+      "git_diff_ref": null,
+      "resulting_revision": null,
+      "change_contract_ref": "changes/CHG-001.yaml",
+      "qa_required": true,
+      "client_confirmed": false
+    }
+  ],
+  "resulting_revision": "ref002",
+  "visual_qa_refs": [
+    "experience/visual-qa/VQA-BLD-reference-retail-a-ref001.yaml"
+  ],
+  "client_confirmed_by": "client-reviewer",
+  "client_confirmed_at": "2026-09-22T10:30:00Z",
+  "status": "client-confirmed",
+  "notes": [
+    "Reference fixture demonstrating governed live Nowa visual refinement."
+  ]
+}
