@@ -2,7 +2,7 @@
   "decision_id": "ADR-reference-retail-003",
   "client_id": "reference-retail",
   "title": "Select postgresql for database",
-  "status": "proposed",
+  "status": "accepted",
   "context": "Resolve provider for solution domain database.",
   "decision": "Use provider postgresql behind the data boundary.",
   "alternatives": [],
@@ -17,6 +17,6 @@
   "evidence_refs": [
     "solution/solution-contract.yaml"
   ],
-  "approved_by": null,
-  "approved_at": null
+  "approved_by": "reference-acceptance",
+  "approved_at": "2026-09-22T18:00:00Z"
 }
