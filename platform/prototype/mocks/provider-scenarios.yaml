@@ -1,0 +1,36 @@
+version: 1
+policy: external-providers-may-be-mocked-in-prototype
+providers:
+  razorpay:
+    role: payment
+    scenarios:
+      payment-success: {status: captured, external_id_prefix: pay_demo}
+      payment-failed: {status: failed, error: payment_declined}
+      payment-pending: {status: pending}
+      refund-success: {status: refunded, external_id_prefix: rfnd_demo}
+  cashfree:
+    role: payment
+    scenarios:
+      payment-success: {status: success, external_id_prefix: cf_demo}
+      payment-failed: {status: failed, error: bank_declined}
+      payment-pending: {status: pending}
+  shiprocket:
+    role: logistics
+    scenarios:
+      shipment-created: {status: created, courier: Delhivery, awb_prefix: SRDEMO}
+      picked-up: {status: picked_up, courier: Delhivery}
+      in-transit: {status: in_transit, courier: Delhivery}
+      delivered: {status: delivered, courier: Delhivery}
+      exception: {status: exception, reason: address_issue}
+  delhivery:
+    role: logistics
+    scenarios:
+      shipment-created: {status: manifested, awb_prefix: DLVDEMO}
+      in-transit: {status: in_transit}
+      delivered: {status: delivered}
+  meta-whatsapp-cloud:
+    role: messaging
+    scenarios:
+      sent: {status: sent, message_id_prefix: wamid.demo}
+      delivered: {status: delivered}
+      failed: {status: failed, error: simulated_provider_error}
