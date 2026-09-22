@@ -113,6 +113,7 @@ class FunctionalPrototypeRuntimeTests(unittest.TestCase):
             if module["required"]:
                 module["status"] = "healthy"
                 module["health"]["evidence_ref"] = f"runtime/health/{module['provider']}.json"
+                module["seed_evidence_ref"] = f"runtime/seeds/{module['provider']}.json"
         value["status"] = "prototype-ready"
         (self.project / "experience/prototype-core-runtime.yaml").write_text(
             yaml.safe_dump(value), encoding="utf-8"
