@@ -63,13 +63,27 @@ Only reviewed artifacts should progress toward experience directions and product
 
 ## 6. Complete the A/B/C experience and freeze
 
-Generate experience directions and prototype manifests:
+Capture client-specific UX requirements in `input/client-input.yaml#experience_requirements`. Requirements may identify requested surfaces, screens, components and required states. A free-text UX requirement is allowed, but it remains unmapped and blocks client review until mapped or explicitly deferred/not-applicable.
+
+Generate experience directions, prototype manifests and coverage:
 
 `python -m tooling.experience.generator --client acme-retail`
+
+Generate an implementation-evidence plan for the selected direction:
+
+`python -m tooling.experience.implementation --client acme-retail --direction a.yaml`
+
+As prototype screens/components/states are implemented, mark them `implemented` in `a-implementation.yaml` with concrete source/runtime evidence references. Then check completeness:
+
+`python -m tooling.experience.coverage --client acme-retail --direction a.yaml --check`
+
+The check passes only when every UX-impacting client requirement is mapped and all required surfaces/screens/components/states have implementation evidence.
 
 Create an immutable build/capture/review bundle:
 
 `python -m tooling.review.session --client acme-retail --direction a.yaml --source-revision <git-sha> --created-by <actor>`
+
+The Review Session command independently re-runs the prototype completeness gate and refuses to open client review if coverage or implementation evidence is incomplete.
 
 Plan governed Visual + Business QA from the generated capture manifest:
 
