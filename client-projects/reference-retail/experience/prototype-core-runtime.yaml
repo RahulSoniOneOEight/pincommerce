@@ -8,9 +8,9 @@ modules:
     overrides: []
     health:
       required: true
-      evidence_ref: null
-    seed_evidence_ref: null
-    status: planned
+      evidence_ref: .github/workflows/reference-abc-acceptance.yml#medusa-runtime
+    seed_evidence_ref: experience/fixtures/provider-seeds/medusa.yaml
+    status: healthy
   - provider: mercur
     baseline_ref: platform/prototype/baselines/mercur-standard-v1.yaml
     required: false
@@ -28,9 +28,9 @@ modules:
     overrides: []
     health:
       required: true
-      evidence_ref: null
-    seed_evidence_ref: null
-    status: planned
+      evidence_ref: .github/workflows/reference-abc-acceptance.yml#tryton-runtime
+    seed_evidence_ref: experience/fixtures/provider-seeds/tryton.yaml
+    status: healthy
 external_integrations:
   - provider: razorpay
     mode: mock
@@ -45,4 +45,4 @@ external_integrations:
     scenario_catalog_ref: platform/prototype/mocks/provider-scenarios.yaml
     status: ready
 demo_dataset_ref: experience/fixtures/reference-retail-demo-dataset.yaml
-status: incomplete
+status: prototype-ready
