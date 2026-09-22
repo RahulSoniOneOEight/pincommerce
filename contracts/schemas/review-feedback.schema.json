@@ -1,0 +1,28 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Review Feedback",
+  "type":"object",
+  "required":["feedback_id","client_id","round_id","prototype_revision_ref","surface","journey","screen","component","feedback_type","comment","classification","route","action","status"],
+  "properties":{
+    "feedback_id":{"type":"string","pattern":"^FB-[A-Za-z0-9._-]+$"},
+    "client_id":{"type":"string","minLength":1},
+    "round_id":{"type":"string","pattern":"^ROUND-[A-Za-z0-9._-]+$"},
+    "prototype_revision_ref":{"type":"string","minLength":1},
+    "surface":{"type":"string","minLength":1},
+    "journey":{"type":["string","null"]},
+    "screen":{"type":["string","null"]},
+    "component":{"type":["string","null"]},
+    "feedback_type":{"enum":["visual","content","business-rule","integration","data","finance","security","workflow","other"]},
+    "comment":{"type":"string","minLength":1},
+    "classification":{"enum":["minor-change","material-change","discussion","approval"]},
+    "route":{"enum":["nowa","change-contract","discuss","none"]},
+    "action":{"enum":["request-change","approve","discuss"]},
+    "status":{"enum":["open","routed","resolved","accepted","rejected"]},
+    "evidence_ref":{"type":["string","null"]},
+    "live_review_ref":{"type":["string","null"]},
+    "change_contract_ref":{"type":["string","null"]},
+    "created_by":{"type":["string","null"]},
+    "created_at":{"type":["string","null"]}
+  },
+  "additionalProperties":false
+}
