@@ -1,6 +1,8 @@
 client_id: reference-retail
 direction_id: DIR-REFERENCE-RETAIL-B
 build_identity: unbuilt
+requirements_source: input/client-input.yaml#experience_requirements
+coverage_ref: experience/prototypes/b-coverage.yaml
 surfaces:
 - id: customer-app
   runtime: flutter
