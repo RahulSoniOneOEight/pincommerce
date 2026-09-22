@@ -118,3 +118,14 @@ It blocks when:
 Unrelated historical/live-review sessions no longer block a later review round merely because they exist in the feedback directory.
 
 Use `python -m tooling.validation.abc_seam --client <client> --direction a.yaml` to inspect A/B/C readiness before attempting client review/freeze.
+
+
+## Phase D1 production planning
+
+| Artifact | Location | Status | Enforcement |
+|---|---|---|---|
+| Production Plan | `contracts/schemas/production-plan.schema.json`, `client-projects/*/production/production-plan.yaml` | Enforced now | Compiled from `approved/current-scope.yaml`; maps approved capabilities, surfaces, runtimes, integrations, data and overlays |
+| Production Migration Plan | `contracts/schemas/production-migration-plan.schema.json`, `client-projects/*/production/data-migration.yaml` | Enforced now | Demo replacement, master migration, opening inventory and opening finance strategy |
+| Production Readiness | `contracts/schemas/production-readiness.schema.json`, `client-projects/*/production/production-readiness.yaml` | Enforced now | Blocks D2 when scope, provider selection, runtime pinning, credentials, data ownership, migration or test planning is incomplete |
+
+Phase D1 consumes the immutable baseline referenced by `approved/current-scope.yaml`. It does not re-interpret the original brief. Multiple connector candidates require an explicit production selection; prototype runtimes with unpinned versions are deliberately blocked until a production version is selected.
