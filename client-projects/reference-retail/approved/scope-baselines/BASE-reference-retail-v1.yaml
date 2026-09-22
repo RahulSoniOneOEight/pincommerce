@@ -1,0 +1,33 @@
+{
+  "baseline_id": "BASE-reference-retail-v1",
+  "client_id": "reference-retail",
+  "version": 1,
+  "solution_ref": "solution/solution-contract.yaml",
+  "experience_ref": "experience/directions/a.yaml",
+  "review_ref": "feedback/REV-BLD-reference-retail-a-ref001-approved.yaml",
+  "visual_qa_refs": [
+    "experience/visual-qa/VQA-BLD-reference-retail-a-ref001.yaml"
+  ],
+  "included_capabilities": [
+    "authentication","audit","catalogue","search","pricing","promotions","cart","checkout",
+    "orders","inventory-availability","fulfilment","return-refund","analytics","b2b-account",
+    "quote-rfq","loyalty","customer-support","lifecycle-automation","ops-exceptions",
+    "credit-management","approval-workflow","reorder"
+  ],
+  "excluded_capabilities": [],
+  "deferred_capabilities": [],
+  "architecture_decisions": [
+    "solution/decisions/ADR-reference-retail-001.yaml",
+    "solution/decisions/ADR-reference-retail-002.yaml",
+    "solution/decisions/ADR-reference-retail-003.yaml",
+    "solution/decisions/ADR-reference-retail-004.yaml",
+    "solution/decisions/ADR-reference-retail-005.yaml",
+    "solution/decisions/ADR-reference-retail-006.yaml",
+    "solution/decisions/ADR-reference-retail-007.yaml",
+    "solution/decisions/ADR-reference-retail-008.yaml"
+  ],
+  "open_non_blocking_items": [],
+  "approved_by": "reference-approver",
+  "approved_at": "2026-09-22T00:00:00Z",
+  "immutable": true
+}
