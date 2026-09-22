@@ -7,6 +7,7 @@ from typing import Any
 import yaml
 
 from tooling.validation.identifiers import IdentifierError, validate_identifier
+from tooling.experience.coverage import CoverageError, assert_client_review_ready
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -132,6 +133,12 @@ def write_review_bundle(
     created_by: str,
     root: Path = ROOT,
 ) -> list[Path]:
+    try:
+        assert_client_review_ready(client_id, direction_file, root)
+    except CoverageError as exc:
+        raise ReviewError(
+            "Client review blocked by prototype completeness gate: " + str(exc)
+        ) from exc
     build = create_build_identity(client_id, direction_file, source_revision, created_by, root=root)
     fixture = load_yaml(root / "client-projects" / client_id / "experience" / "fixtures" / "commerce-baseline.yaml")
     states = [item["id"] for item in fixture["states"]]
