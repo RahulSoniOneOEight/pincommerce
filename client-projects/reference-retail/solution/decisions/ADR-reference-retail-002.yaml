@@ -2,7 +2,7 @@
   "decision_id": "ADR-reference-retail-002",
   "client_id": "reference-retail",
   "title": "Select medusa for commerce",
-  "status": "proposed",
+  "status": "accepted",
   "context": "Resolve provider for solution domain commerce.",
   "decision": "Use provider medusa behind the commerce boundary.",
   "alternatives": [],
@@ -17,6 +17,6 @@
   "evidence_refs": [
     "solution/solution-contract.yaml"
   ],
-  "approved_by": null,
-  "approved_at": null
+  "approved_by": "reference-acceptance",
+  "approved_at": "2026-09-22T18:00:00Z"
 }
