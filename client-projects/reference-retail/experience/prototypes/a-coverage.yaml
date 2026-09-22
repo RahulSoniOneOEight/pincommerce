@@ -1,0 +1,510 @@
+{
+  "coverage_id": "COV-reference-retail-a",
+  "client_id": "reference-retail",
+  "direction_id": "DIR-REFERENCE-RETAIL-A",
+  "prototype_manifest_ref": "experience/prototypes/a-manifest.yaml",
+  "requirements": [
+    {
+      "requirement_id": "REQ-REF-001",
+      "statement": "Customer should see available credit and approval status during checkout",
+      "ux_impact": true,
+      "source_refs": [
+        "brief:reference-retail"
+      ],
+      "prototype_coverage": [
+        {
+          "surface": "customer-app",
+          "screens": [
+            "checkout",
+            "approval-status"
+          ],
+          "components": [
+            "credit-limit-card",
+            "approval-banner"
+          ],
+          "states": [
+            "available",
+            "limit-exceeded",
+            "approval-pending",
+            "approved"
+          ]
+        },
+        {
+          "surface": "web-store",
+          "screens": [
+            "checkout",
+            "approval-status"
+          ],
+          "components": [
+            "credit-limit-card",
+            "approval-banner"
+          ],
+          "states": [
+            "available",
+            "limit-exceeded",
+            "approval-pending",
+            "approved"
+          ]
+        }
+      ],
+      "decision_reason": null,
+      "status": "covered"
+    },
+    {
+      "requirement_id": "REQ-REF-002",
+      "statement": "Commerce admin should review orders, inventory, promotions and returns",
+      "ux_impact": true,
+      "source_refs": [
+        "brief:reference-retail"
+      ],
+      "prototype_coverage": [
+        {
+          "surface": "commerce-admin",
+          "screens": [
+            "orders",
+            "inventory",
+            "promotions",
+            "returns"
+          ],
+          "components": [
+            "data-table",
+            "filter-bar",
+            "status-chip",
+            "bulk-actions"
+          ],
+          "states": [
+            "default",
+            "loading",
+            "empty",
+            "failure"
+          ]
+        }
+      ],
+      "decision_reason": null,
+      "status": "covered"
+    },
+    {
+      "requirement_id": "REQ-REF-003",
+      "statement": "Operations team needs visibility into failed payment and shipment exceptions",
+      "ux_impact": true,
+      "source_refs": [
+        "brief:reference-retail"
+      ],
+      "prototype_coverage": [
+        {
+          "surface": "analytics",
+          "screens": [
+            "operations-overview",
+            "exceptions"
+          ],
+          "components": [
+            "metric-card",
+            "exception-table",
+            "status-chip"
+          ],
+          "states": [
+            "default",
+            "open",
+            "resolved",
+            "failed"
+          ]
+        }
+      ],
+      "decision_reason": null,
+      "status": "covered"
+    }
+  ],
+  "surface_coverage": [
+    {
+      "surface": "customer-app",
+      "required": true,
+      "screens": [
+        "home",
+        "category",
+        "search",
+        "search-results",
+        "product-list",
+        "product-detail",
+        "cart",
+        "checkout",
+        "address",
+        "delivery",
+        "payment",
+        "order-confirmation",
+        "orders",
+        "order-detail",
+        "return-request",
+        "return-status",
+        "rfq",
+        "quote-detail",
+        "account",
+        "approval-status",
+        "support"
+      ],
+      "components": [
+        "navigation",
+        "search-bar",
+        "search-suggestions",
+        "filter-control",
+        "sort-control",
+        "category-navigation",
+        "product-card",
+        "product-gallery",
+        "variant-selector",
+        "promotion-banner",
+        "coupon-entry",
+        "discount-breakdown",
+        "cart-line",
+        "quantity-selector",
+        "price-summary",
+        "address-card",
+        "delivery-option",
+        "payment-method",
+        "order-summary",
+        "order-card",
+        "order-status",
+        "order-timeline",
+        "return-reason",
+        "pickup-option",
+        "refund-status",
+        "credit-limit-card",
+        "credit-balance",
+        "credit-status",
+        "approval-banner",
+        "approver-status",
+        "approval-action",
+        "rfq-form",
+        "quote-line",
+        "quote-status",
+        "support-entry",
+        "whatsapp-cta",
+        "ticket-status"
+      ],
+      "states": [
+        "default",
+        "loading",
+        "empty",
+        "failure",
+        "out-of-stock",
+        "no-results",
+        "coupon-valid",
+        "coupon-invalid",
+        "payment-failed",
+        "order-success",
+        "approval-pending",
+        "approved",
+        "rejected",
+        "refunded",
+        "available",
+        "partially-used",
+        "limit-exceeded",
+        "draft",
+        "submitted"
+      ],
+      "journeys": [
+        "browse-to-buy",
+        "search-to-buy",
+        "order-tracking",
+        "return-refund",
+        "quote-to-order",
+        "repeat-order",
+        "credit-order"
+      ],
+      "status": "complete"
+    },
+    {
+      "surface": "web-store",
+      "required": true,
+      "screens": [
+        "home",
+        "category",
+        "search",
+        "search-results",
+        "product-list",
+        "product-detail",
+        "cart",
+        "checkout",
+        "address",
+        "delivery",
+        "payment",
+        "order-confirmation",
+        "account",
+        "orders",
+        "order-detail",
+        "return-request",
+        "return-status",
+        "rfq",
+        "quote-detail",
+        "approval-status",
+        "support"
+      ],
+      "components": [
+        "header",
+        "navigation",
+        "search-bar",
+        "search-suggestions",
+        "filter-control",
+        "sort-control",
+        "category-navigation",
+        "product-card",
+        "product-gallery",
+        "variant-selector",
+        "promotion-banner",
+        "coupon-entry",
+        "discount-breakdown",
+        "cart-line",
+        "quantity-selector",
+        "price-summary",
+        "address-card",
+        "delivery-option",
+        "payment-method",
+        "order-summary",
+        "order-card",
+        "order-status",
+        "order-timeline",
+        "return-reason",
+        "pickup-option",
+        "refund-status",
+        "credit-limit-card",
+        "credit-balance",
+        "credit-status",
+        "approval-banner",
+        "approver-status",
+        "approval-action",
+        "rfq-form",
+        "quote-line",
+        "quote-status",
+        "support-entry",
+        "whatsapp-cta",
+        "ticket-status"
+      ],
+      "states": [
+        "default",
+        "loading",
+        "empty",
+        "failure",
+        "out-of-stock",
+        "no-results",
+        "coupon-valid",
+        "coupon-invalid",
+        "payment-failed",
+        "order-success",
+        "approval-pending",
+        "approved",
+        "rejected",
+        "refunded",
+        "available",
+        "partially-used",
+        "limit-exceeded",
+        "draft",
+        "submitted"
+      ],
+      "journeys": [
+        "browse-to-buy",
+        "search-to-buy",
+        "order-tracking",
+        "return-refund",
+        "quote-to-order",
+        "repeat-order",
+        "credit-order"
+      ],
+      "status": "complete"
+    },
+    {
+      "surface": "commerce-admin",
+      "required": true,
+      "screens": [
+        "dashboard",
+        "products",
+        "orders",
+        "inventory",
+        "promotions",
+        "returns",
+        "customers",
+        "settings",
+        "search",
+        "search-results",
+        "product-detail",
+        "checkout",
+        "return-request",
+        "return-status",
+        "rfq",
+        "quote-detail",
+        "support"
+      ],
+      "components": [
+        "data-table",
+        "filter-bar",
+        "form",
+        "status-chip",
+        "bulk-actions",
+        "search-bar",
+        "filter-control",
+        "sort-control",
+        "promotion-banner",
+        "coupon-entry",
+        "discount-breakdown",
+        "order-card",
+        "order-status",
+        "order-timeline",
+        "return-reason",
+        "refund-status",
+        "availability-indicator",
+        "warehouse-availability",
+        "credit-limit-card",
+        "credit-status",
+        "approval-banner",
+        "approval-action",
+        "rfq-form",
+        "quote-status",
+        "support-entry"
+      ],
+      "states": [
+        "default",
+        "loading",
+        "empty",
+        "failure",
+        "no-results",
+        "coupon-valid",
+        "coupon-invalid",
+        "approval-pending",
+        "approved",
+        "rejected",
+        "refunded",
+        "in-stock",
+        "low-stock",
+        "out-of-stock",
+        "available",
+        "partially-used",
+        "limit-exceeded",
+        "draft",
+        "submitted"
+      ],
+      "journeys": [
+        "browse-to-buy",
+        "search-to-buy",
+        "order-tracking",
+        "return-refund",
+        "quote-to-order",
+        "repeat-order",
+        "credit-order"
+      ],
+      "status": "complete"
+    },
+    {
+      "surface": "analytics",
+      "required": true,
+      "screens": [
+        "dashboard",
+        "sales",
+        "orders",
+        "inventory",
+        "fulfilment",
+        "customers",
+        "operations-overview",
+        "exceptions",
+        "search",
+        "search-results",
+        "return-status",
+        "approval-status"
+      ],
+      "components": [
+        "metric-card",
+        "trend-chart",
+        "filter-bar",
+        "data-table",
+        "exception-table",
+        "status-chip",
+        "search-bar",
+        "filter-control",
+        "sort-control",
+        "order-status",
+        "return-status",
+        "credit-status",
+        "approval-banner"
+      ],
+      "states": [
+        "default",
+        "loading",
+        "empty",
+        "failure",
+        "open",
+        "resolved",
+        "failed",
+        "no-results",
+        "approval-pending",
+        "approved",
+        "rejected",
+        "refunded"
+      ],
+      "journeys": [
+        "browse-to-buy",
+        "search-to-buy",
+        "order-tracking",
+        "return-refund",
+        "quote-to-order",
+        "repeat-order",
+        "credit-order"
+      ],
+      "status": "complete"
+    },
+    {
+      "surface": "erp",
+      "required": true,
+      "screens": [
+        "products",
+        "sales-orders",
+        "purchases",
+        "inventory",
+        "warehouse",
+        "invoices",
+        "orders",
+        "returns",
+        "rfq",
+        "quote-detail",
+        "approval-status"
+      ],
+      "components": [
+        "data-table",
+        "form",
+        "status-chip",
+        "document-lines",
+        "order-status",
+        "return-reason",
+        "refund-status",
+        "warehouse-availability",
+        "credit-status",
+        "approval-action",
+        "rfq-form",
+        "quote-status"
+      ],
+      "states": [
+        "default",
+        "loading",
+        "empty",
+        "failure",
+        "in-stock",
+        "low-stock",
+        "out-of-stock",
+        "approval-pending",
+        "approved",
+        "rejected",
+        "refunded",
+        "draft",
+        "submitted"
+      ],
+      "journeys": [
+        "browse-to-buy",
+        "search-to-buy",
+        "order-tracking",
+        "return-refund",
+        "quote-to-order",
+        "repeat-order",
+        "credit-order"
+      ],
+      "status": "complete"
+    }
+  ],
+  "blocking_items": [],
+  "status": "client-review-ready"
+}
