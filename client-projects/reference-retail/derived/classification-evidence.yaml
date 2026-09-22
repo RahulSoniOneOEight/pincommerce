@@ -1,0 +1,20 @@
+{
+  "client_id": "reference-retail",
+  "archetypes": [
+    "d2c-commerce",
+    "b2b-commerce"
+  ],
+  "confidence": 1,
+  "method": "deterministic-rules",
+  "evidence": [
+    {
+      "business_model": "d2c",
+      "rule": "business-model-to-archetype"
+    },
+    {
+      "business_model": "b2b",
+      "rule": "business-model-to-archetype"
+    }
+  ],
+  "human_override": null
+}
