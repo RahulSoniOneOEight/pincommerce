@@ -92,6 +92,45 @@
       "items": {
         "type": "string"
       }
+    },
+    "truth_ref": {
+      "type": "string"
+    },
+    "prototype_coverage_ref": {
+      "type": "string"
+    },
+    "prototype_implementation_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "core_runtime_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "demo_dataset_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "build_id": {
+      "type": "string"
+    },
+    "approved_surfaces": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "approved_journeys": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
   },
   "additionalProperties": false
