@@ -6,6 +6,7 @@ business_models:
 goals: []
 requested_capabilities: []
 experience_requirements: []
+core_module_requirements: []
 required_integrations: []
 existing_systems: []
 channels: []
