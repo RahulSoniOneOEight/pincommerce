@@ -140,6 +140,8 @@ def create_review_session(
         "implementation_ref": coverage["implementation_ref"],
         "core_runtime_ref": "experience/prototype-core-runtime.yaml" if core_runtime else None,
         "demo_dataset_ref": core_runtime.get("demo_dataset_ref") if core_runtime else None,
+        "prototype_revision_ref": None,
+        "review_round_ref": None,
         "surface_approvals": [
             {"surface": surface, "status": "pending"} for surface in surfaces
         ],
