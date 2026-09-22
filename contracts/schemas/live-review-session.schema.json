@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Live Client Review Session",
+  "type": "object",
+  "required": ["session_id","client_id","review_id","source_build_id","tool","started_by","participants","edits","status"],
+  "properties": {
+    "session_id": {"type":"string","pattern":"^LIVE-[A-Za-z0-9._-]+$"},
+    "client_id": {"type":"string","minLength":1},
+    "review_id": {"type":"string","minLength":1},
+    "source_build_id": {"type":"string","minLength":1},
+    "tool": {"const":"nowa"},
+    "started_by": {"type":"string","minLength":1},
+    "started_at": {"type":["string","null"]},
+    "participants": {"type":"array","items":{"type":"string"},"minItems":1},
+    "edits": {
+      "type":"array",
+      "items":{
+        "type":"object",
+        "required":["edit_id","category","summary","surface","target","classification","route","status","qa_required"],
+        "properties":{
+          "edit_id":{"type":"string","pattern":"^EDIT-[A-Za-z0-9._-]+$"},
+          "category":{"enum":[
+            "spacing","layout","typography","content","component-style","navigation-presentation",
+            "business-rule","integration","data","security","architecture","permission","financial","state-machine","workflow"
+          ]},
+          "summary":{"type":"string","minLength":1},
+          "surface":{"type":"string","minLength":1},
+          "target":{"type":"string","minLength":1},
+          "before":{"type":["string","null"]},
+          "after":{"type":["string","null"]},
+          "classification":{"enum":["minor-live","material-change"]},
+          "route":{"enum":["apply-in-nowa","change-contract"]},
+          "status":{"enum":["proposed","applied","deferred","rejected","change-contract-created","qa-passed"]},
+          "git_paths":{"type":"array","items":{"type":"string"}},
+          "git_diff_ref":{"type":["string","null"]},
+          "resulting_revision":{"type":["string","null"]},
+          "change_contract_ref":{"type":["string","null"]},
+          "qa_required":{"const":true},
+          "client_confirmed":{"type":"boolean"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "resulting_revision":{"type":["string","null"]},
+    "visual_qa_refs":{"type":"array","items":{"type":"string"}},
+    "client_confirmed_by":{"type":["string","null"]},
+    "client_confirmed_at":{"type":["string","null"]},
+    "status":{"enum":["planned","live","changes-applied","qa-required","qa-passed","client-confirmed","closed"]},
+    "notes":{"type":"array","items":{"type":"string"}}
+  },
+  "additionalProperties": false
+}
