@@ -9,6 +9,7 @@ modules:
     health:
       required: true
       evidence_ref: null
+    seed_evidence_ref: null
     status: planned
   - provider: mercur
     baseline_ref: platform/prototype/baselines/mercur-standard-v1.yaml
@@ -18,6 +19,7 @@ modules:
     health:
       required: false
       evidence_ref: null
+    seed_evidence_ref: null
     status: not-required
   - provider: tryton
     baseline_ref: platform/prototype/baselines/tryton-standard-v1.yaml
@@ -27,6 +29,7 @@ modules:
     health:
       required: true
       evidence_ref: null
+    seed_evidence_ref: null
     status: planned
 external_integrations:
   - provider: razorpay
