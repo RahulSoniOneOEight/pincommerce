@@ -1,16 +1,47 @@
-review_id: REV-BLD-reference-retail-a-ref001
-client_id: reference-retail
-build_id: BLD-reference-retail-a-ref001
-direction_id: DIR-REFERENCE-RETAIL-A
+review_id: "REV-BLD-reference-retail-a-ref001"
+client_id: "reference-retail"
+build_id: "BLD-reference-retail-a-ref001"
+direction_id: "DIR-REFERENCE-RETAIL-A"
 artifacts:
-  - artifact_id: ART-0001
-    surface: customer-app
-    route_or_screen: default
-    environment: prototype
-    build_identity: BLD-reference-retail-a-ref001
-    journey: browse-to-buy
-    viewport: 390x844
+  - artifact_id: "ART-0001"
+    surface: "customer-app"
+    route_or_screen: "default"
+    environment: "prototype"
+    build_identity: "BLD-reference-retail-a-ref001"
+    journey: "browse-to-buy"
+    viewport: "390x844"
     preview_url: ""
-    screenshot_ref: review/artifacts/BLD-reference-retail-a-ref001/customer-app/390x844/default.png
-    approval_status: pending
-status: draft
+    screenshot_ref: "review/artifacts/BLD-reference-retail-a-ref001/customer-app/390x844/default.png"
+    approval_status: "pending"
+status: "draft"
+coverage_ref: "experience/prototypes/a-coverage.yaml"
+implementation_ref: null
+core_runtime_ref: "experience/prototype-core-runtime.yaml"
+demo_dataset_ref: "experience/fixtures/reference-retail-demo-dataset.yaml"
+surface_approvals:
+  - surface: "customer-app"
+    status: "pending"
+  - surface: "web-store"
+    status: "pending"
+  - surface: "commerce-admin"
+    status: "pending"
+  - surface: "analytics"
+    status: "pending"
+  - surface: "erp"
+    status: "pending"
+journey_approvals:
+  - journey: "browse-to-buy"
+    status: "pending"
+  - journey: "search-to-buy"
+    status: "pending"
+  - journey: "order-tracking"
+    status: "pending"
+  - journey: "return-refund"
+    status: "pending"
+  - journey: "quote-to-order"
+    status: "pending"
+  - journey: "repeat-order"
+    status: "pending"
+  - journey: "credit-order"
+    status: "pending"
+fixture_only: true
