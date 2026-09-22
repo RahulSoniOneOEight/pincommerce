@@ -17,6 +17,8 @@ def main() -> int:
         ("integration-map", "client-projects/reference-retail/derived/integration-map.yaml"),
         ("architecture-decision", "client-projects/reference-retail/solution/decisions/ADR-reference-retail-001.yaml"),
         ("scope-baseline", "client-projects/reference-retail/approved/scope-baseline.yaml"),
+        ("scope-baseline", "client-projects/reference-retail/approved/scope-baselines/BASE-reference-retail-v1.yaml"),
+        ("current-scope", "client-projects/reference-retail/approved/current-scope.yaml"),
         ("solution", "client-projects/reference-retail/solution/solution-contract.yaml"),
         ("data-contract", "client-projects/reference-retail/contracts/data-contract.yaml"),
         ("business-contract", "client-projects/reference-retail/contracts/business-contract.yaml"),
