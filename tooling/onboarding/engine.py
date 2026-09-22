@@ -8,6 +8,13 @@ from typing import Any
 import yaml
 
 from tooling.validation.identifiers import IdentifierError, validate_identifier
+from tooling.onboarding.abc_completion import (
+    architecture_decisions,
+    build_integration_map,
+    build_truth_register,
+    classification_evidence,
+    enrich_capability_gap,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -302,7 +309,7 @@ def build_blueprint(client_id: str, root: Path = ROOT) -> GeneratedBlueprint:
     industry_profile = load_industry_profile(root, industry)
     archetypes = [load_archetype(root, a) for a in archetype_ids]
     benchmark = resolve_benchmark(client_input, industry_profile, archetypes)
-    capability_gap = resolve_capability_gap(client_input, benchmark)
+    capability_gap = enrich_capability_gap(resolve_capability_gap(client_input, benchmark))
     capability_map = resolve_capability_map(client_input, benchmark)
     journey_map = resolve_journey_map(client_input, benchmark)
     surface_map = resolve_surface_map(client_input, benchmark)
@@ -315,9 +322,18 @@ def build_blueprint(client_id: str, root: Path = ROOT) -> GeneratedBlueprint:
     all_surfaces = unique(surface_map["required"] + surface_map["recommended"])
     entity_map = infer_entity_map(client_id, active_capabilities)
     dependency_map = infer_dependency_map(client_id, active_capabilities)
+    integration_map = build_integration_map(client_input)
     solution = resolve_solution_contract(
         client_id, active_capabilities, all_surfaces, root
     )
+    decisions = architecture_decisions(client_id, solution)
+    solution["capabilities"] = active_capabilities
+    solution["surfaces"] = all_surfaces
+    solution["entity_ref"] = "derived/entity-map.yaml"
+    solution["integration_ref"] = "derived/integration-map.yaml"
+    solution["dependency_ref"] = "derived/dependency-map.yaml"
+    solution["decision_refs"] = [f"{d['decision_id']}.yaml" for d in decisions]
+    solution["status"] = "draft"
     reuse = resolve_reuse_decisions(solution)
 
     client_profile = {
@@ -344,9 +360,13 @@ def build_blueprint(client_id: str, root: Path = ROOT) -> GeneratedBlueprint:
             f"intelligence/industries/{industry}/profile.yaml",
             *[f"intelligence/archetypes/{a}.yaml" for a in archetype_ids],
         ],
+        "classification": classification_evidence(business_models, archetype_ids),
     }
 
+    truth_register = build_truth_register(client_input)
+
     files = {
+        "derived/truth-register.yaml": truth_register,
         "derived/client-profile.yaml": client_profile,
         "derived/industry-profile.yaml": industry_profile_out,
         "derived/benchmark-report.yaml": benchmark,
@@ -357,7 +377,9 @@ def build_blueprint(client_id: str, root: Path = ROOT) -> GeneratedBlueprint:
         "derived/entity-map.yaml": entity_map,
         "derived/surface-map.yaml": surface_map,
         "derived/dependency-map.yaml": dependency_map,
+        "derived/integration-map.yaml": integration_map,
         "solution/solution-contract.yaml": solution,
+        **{f"solution/decisions/{d['decision_id']}.yaml": d for d in decisions},
     }
     return GeneratedBlueprint(files=files)
 
