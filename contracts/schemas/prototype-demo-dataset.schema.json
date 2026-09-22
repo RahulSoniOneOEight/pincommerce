@@ -1,0 +1,17 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Prototype Demo Dataset",
+  "type":"object",
+  "required":["dataset_id","client_id","profile","masters","transactions","finance","scenario_coverage","status"],
+  "properties":{
+    "dataset_id":{"type":"string","pattern":"^DEMO-[A-Za-z0-9._-]+$"},
+    "client_id":{"type":"string","minLength":1},
+    "profile":{"type":"string","minLength":1},
+    "masters":{"type":"object"},
+    "transactions":{"type":"object"},
+    "finance":{"type":"object"},
+    "scenario_coverage":{"type":"array","items":{"type":"string"},"minItems":1},
+    "status":{"enum":["draft","ready"]}
+  },
+  "additionalProperties":false
+}
