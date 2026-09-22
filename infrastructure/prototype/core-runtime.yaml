@@ -1,0 +1,37 @@
+version: 1
+purpose: functional-client-review-prototype
+principles:
+  core_modules: real
+  external_integrations: mock-or-sandbox
+  data: deterministic-demo
+services:
+  commerce:
+    provider: medusa
+    provisioning: official-project-runtime
+    baseline_ref: platform/prototype/baselines/medusa-standard-v1.yaml
+    default_port: 9000
+    healthcheck: /health
+  marketplace:
+    provider: mercur
+    provisioning: official-project-runtime
+    activation: client-marketplace-scope
+    baseline_ref: platform/prototype/baselines/mercur-standard-v1.yaml
+    notes:
+      - Mercur extends Medusa and should be used as the marketplace layer when multi-vendor scope is active.
+      - Standard Mercur seed data may be supplemented by the governed PinCommerce demo dataset.
+  erp:
+    provider: tryton
+    provisioning: official-container
+    image: tryton/tryton:8.0
+    baseline_ref: platform/prototype/baselines/tryton-standard-v1.yaml
+  postgres:
+    image: postgres:16
+  cache:
+    image: valkey/valkey:8
+  nats:
+    image: nats:2.10
+  search:
+    image: getmeili/meilisearch:v1.10
+external_providers:
+  mode: mock
+  catalog_ref: platform/prototype/mocks/provider-scenarios.yaml
