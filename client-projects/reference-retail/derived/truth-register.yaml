@@ -9,7 +9,7 @@
       "classification": "fact",
       "confidence": 1,
       "sources": [
-        "input/client-input.yaml"
+        "brief:reference-retail"
       ],
       "status": "confirmed",
       "notes": []
@@ -24,7 +24,7 @@
       "classification": "fact",
       "confidence": 1,
       "sources": [
-        "input/client-input.yaml"
+        "brief:reference-retail"
       ],
       "status": "confirmed",
       "notes": []
@@ -40,7 +40,7 @@
       "classification": "fact",
       "confidence": 1,
       "sources": [
-        "input/client-input.yaml"
+        "brief:reference-retail"
       ],
       "status": "confirmed",
       "notes": []
@@ -56,7 +56,7 @@
       "classification": "fact",
       "confidence": 1,
       "sources": [
-        "input/client-input.yaml"
+        "brief:reference-retail"
       ],
       "status": "confirmed",
       "notes": []
@@ -70,7 +70,101 @@
       "classification": "fact",
       "confidence": 1,
       "sources": [
-        "input/client-input.yaml"
+        "brief:reference-retail"
+      ],
+      "status": "confirmed",
+      "notes": []
+    },
+    {
+      "truth_id": "TRUTH-0006",
+      "path": "experience_requirements",
+      "value": [
+        {
+          "requirement_id": "REQ-REF-001",
+          "statement": "Customer should see available credit and approval status during checkout",
+          "ux_impact": true,
+          "source_refs": [
+            "brief:reference-retail"
+          ],
+          "requested_surfaces": [
+            "customer-app",
+            "web-store"
+          ],
+          "requested_screens": [
+            "checkout",
+            "approval-status"
+          ],
+          "requested_components": [
+            "credit-limit-card",
+            "approval-banner"
+          ],
+          "required_states": [
+            "available",
+            "limit-exceeded",
+            "approval-pending",
+            "approved"
+          ]
+        },
+        {
+          "requirement_id": "REQ-REF-002",
+          "statement": "Commerce admin should review orders, inventory, promotions and returns",
+          "ux_impact": true,
+          "source_refs": [
+            "brief:reference-retail"
+          ],
+          "requested_surfaces": [
+            "commerce-admin"
+          ],
+          "requested_screens": [
+            "orders",
+            "inventory",
+            "promotions",
+            "returns"
+          ],
+          "requested_components": [
+            "data-table",
+            "filter-bar",
+            "status-chip",
+            "bulk-actions"
+          ],
+          "required_states": [
+            "default",
+            "loading",
+            "empty",
+            "failure"
+          ]
+        },
+        {
+          "requirement_id": "REQ-REF-003",
+          "statement": "Operations team needs visibility into failed payment and shipment exceptions",
+          "ux_impact": true,
+          "source_refs": [
+            "brief:reference-retail"
+          ],
+          "requested_surfaces": [
+            "analytics"
+          ],
+          "requested_screens": [
+            "operations-overview",
+            "exceptions"
+          ],
+          "requested_components": [
+            "metric-card",
+            "exception-table",
+            "status-chip"
+          ],
+          "required_states": [
+            "default",
+            "open",
+            "resolved",
+            "failed"
+          ]
+        }
+      ],
+      "classification": "fact",
+      "confidence": 1,
+      "sources": [
+        "brief:reference-retail"
       ],
       "status": "confirmed",
       "notes": []
