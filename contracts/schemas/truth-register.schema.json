@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Client Truth Register",
+  "type": "object",
+  "required": ["client_id","version","records","open_questions","status"],
+  "properties": {
+    "client_id": {"type":"string","minLength":1},
+    "version": {"type":"integer","minimum":1},
+    "records": {
+      "type":"array",
+      "items":{
+        "type":"object",
+        "required":["truth_id","path","value","classification","confidence","sources","status"],
+        "properties":{
+          "truth_id":{"type":"string","pattern":"^TRUTH-[A-Za-z0-9._-]+$"},
+          "path":{"type":"string","minLength":1},
+          "value":{},
+          "classification":{"enum":["fact","assumption","unknown","conflict"]},
+          "confidence":{"type":"number","minimum":0,"maximum":1},
+          "sources":{"type":"array","items":{"type":"string"}},
+          "status":{"enum":["open","confirmed","rejected","resolved"]},
+          "notes":{"type":"array","items":{"type":"string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "open_questions":{"type":"array","items":{"type":"string"}},
+    "conflicts":{"type":"array","items":{"type":"string"}},
+    "status":{"enum":["draft","needs-input","review-ready","approved"]}
+  },
+  "additionalProperties": false
+}
