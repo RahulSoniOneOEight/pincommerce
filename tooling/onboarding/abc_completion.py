@@ -53,6 +53,7 @@ def build_truth_register(client_input: dict[str, Any]) -> dict[str, Any]:
         "industry", "business_models", "goals", "requested_capabilities",
         "required_integrations", "existing_systems", "channels", "volumes",
         "stakeholders", "compliance", "constraints", "geographies", "risk_profile",
+        "experience_requirements",
     )
     seq = 1
     for field in fact_fields:
