@@ -27,6 +27,7 @@ CONTRACTS = {
     "visual-qa": ROOT / "contracts" / "schemas" / "visual-qa.schema.json",
     "build-identity": ROOT / "contracts" / "schemas" / "build-identity.schema.json",
     "review-session": ROOT / "contracts" / "schemas" / "review-session.schema.json",
+    "live-review-session": ROOT / "contracts" / "schemas" / "live-review-session.schema.json",
     "bugdrop": ROOT / "contracts" / "schemas" / "bugdrop.schema.json",
     "capture-manifest": ROOT / "contracts" / "schemas" / "capture-manifest.schema.json",
     "domain-event": ROOT / "contracts" / "schemas" / "domain-event.schema.json",
