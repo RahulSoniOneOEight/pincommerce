@@ -13,6 +13,10 @@ def main() -> int:
     run(sys.executable, "tooling/validation/validate_repository.py")
     checks = [
         ("client-input", "client-projects/reference-retail/input/client-input.yaml"),
+        ("truth-register", "client-projects/reference-retail/derived/truth-register.yaml"),
+        ("integration-map", "client-projects/reference-retail/derived/integration-map.yaml"),
+        ("architecture-decision", "client-projects/reference-retail/solution/decisions/ADR-reference-retail-001.yaml"),
+        ("scope-baseline", "client-projects/reference-retail/approved/scope-baseline.yaml"),
         ("solution", "client-projects/reference-retail/solution/solution-contract.yaml"),
         ("data-contract", "client-projects/reference-retail/contracts/data-contract.yaml"),
         ("business-contract", "client-projects/reference-retail/contracts/business-contract.yaml"),
@@ -24,6 +28,7 @@ def main() -> int:
         ("fixture-set", "client-projects/reference-retail/experience/fixtures/commerce-baseline.yaml"),
         ("build-identity", "client-projects/reference-retail/experience/builds/BLD-reference-retail-a-ref001.yaml"),
         ("capture-manifest", "client-projects/reference-retail/experience/visual-qa/CAP-BLD-reference-retail-a-ref001.yaml"),
+        ("visual-qa", "client-projects/reference-retail/experience/visual-qa/VQA-BLD-reference-retail-a-ref001.yaml"),
         ("review-session", "client-projects/reference-retail/feedback/REV-BLD-reference-retail-a-ref001.yaml"),
         ("bugdrop", "client-projects/reference-retail/feedback/BUG-REF-001.yaml"),
         ("domain-event", "client-projects/reference-retail/production/integration/order-confirmed.event.yaml"),
