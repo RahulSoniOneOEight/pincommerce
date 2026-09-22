@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Architecture Decision",
+  "type": "object",
+  "required": ["decision_id","client_id","title","status","context","decision","consequences","affected_capabilities","affected_domains","approved_by"],
+  "properties": {
+    "decision_id":{"type":"string","pattern":"^ADR-[A-Za-z0-9._-]+$"},
+    "client_id":{"type":"string"},
+    "title":{"type":"string","minLength":1},
+    "status":{"enum":["proposed","accepted","superseded","rejected"]},
+    "context":{"type":"string"},
+    "decision":{"type":"string"},
+    "alternatives":{"type":"array","items":{"type":"string"}},
+    "consequences":{"type":"array","items":{"type":"string"}},
+    "affected_capabilities":{"type":"array","items":{"type":"string"}},
+    "affected_domains":{"type":"array","items":{"type":"string"}},
+    "evidence_refs":{"type":"array","items":{"type":"string"}},
+    "approved_by":{"type":["string","null"]},
+    "approved_at":{"type":["string","null"]}
+  },
+  "additionalProperties": false
+}
