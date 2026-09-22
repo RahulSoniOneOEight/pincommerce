@@ -79,7 +79,15 @@ Generate the functional core-runtime plan:
 
 `python -m tooling.prototype.core_runtime --client acme-retail`
 
-Provision the required real core services, apply the generated/client overlays, and record runtime health evidence in `experience/prototype-core-runtime.yaml`. Payments/logistics/messaging may use the governed mock scenario catalog during Phase C.
+Generate provider-specific seed bundles from the linked demo dataset:
+
+`python -m tooling.prototype.seed_bundle --client acme-retail`
+
+Provision the required real core services, apply the baseline plus client overlays, and import the applicable seed bundle. Then record health + seed evidence for each required module:
+
+`python -m tooling.prototype.runtime_evidence --client acme-retail --provider medusa --health-ref <health-evidence> --seed-ref <seed-evidence>`
+
+Repeat for Mercur and/or Tryton when required. Payments/logistics/messaging may use the governed mock scenario catalog during Phase C.
 
 Verify the core runtime:
 
