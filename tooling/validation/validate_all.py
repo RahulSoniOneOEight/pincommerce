@@ -26,6 +26,8 @@ def main() -> int:
         ("experience-direction", "client-projects/reference-retail/experience/directions/a.yaml"),
         ("prototype-manifest", "client-projects/reference-retail/experience/prototypes/a-manifest.yaml"),
         ("prototype-coverage", "client-projects/reference-retail/experience/prototypes/a-coverage.yaml"),
+        ("prototype-core-runtime", "client-projects/reference-retail/experience/prototype-core-runtime.yaml"),
+        ("prototype-demo-dataset", "client-projects/reference-retail/experience/fixtures/reference-retail-demo-dataset.yaml"),
         ("fixture-set", "client-projects/reference-retail/experience/fixtures/commerce-baseline.yaml"),
         ("build-identity", "client-projects/reference-retail/experience/builds/BLD-reference-retail-a-ref001.yaml"),
         ("capture-manifest", "client-projects/reference-retail/experience/visual-qa/CAP-BLD-reference-retail-a-ref001.yaml"),
