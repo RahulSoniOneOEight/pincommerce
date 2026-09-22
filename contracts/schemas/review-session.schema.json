@@ -2,32 +2,94 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Review Session",
   "type": "object",
-  "required": ["review_id","client_id","build_id","direction_id","artifacts","status"],
+  "required": [
+    "review_id",
+    "client_id",
+    "build_id",
+    "direction_id",
+    "artifacts",
+    "status"
+  ],
   "properties": {
-    "review_id": {"type":"string","pattern":"^REV-[A-Za-z0-9._-]+$"},
-    "client_id": {"type":"string"},
-    "build_id": {"type":"string"},
-    "direction_id": {"type":"string"},
+    "review_id": {
+      "type": "string",
+      "pattern": "^REV-[A-Za-z0-9._-]+$"
+    },
+    "client_id": {
+      "type": "string"
+    },
+    "build_id": {
+      "type": "string"
+    },
+    "direction_id": {
+      "type": "string"
+    },
     "artifacts": {
-      "type":"array",
-      "items":{
-        "type":"object",
-        "required":["artifact_id","surface","environment","build_identity","approval_status"],
-        "properties":{
-          "artifact_id":{"type":"string"},
-          "surface":{"type":"string"},
-          "route_or_screen":{"type":"string"},
-          "environment":{"type":"string"},
-          "build_identity":{"type":"string"},
-          "journey":{"type":"string"},
-          "viewport":{"type":"string"},
-          "preview_url":{"type":"string"},
-          "screenshot_ref":{"type":"string"},
-          "approval_status":{"enum":["pending","approved","changes-requested","rejected"]}
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "artifact_id",
+          "surface",
+          "environment",
+          "build_identity",
+          "approval_status"
+        ],
+        "properties": {
+          "artifact_id": {
+            "type": "string"
+          },
+          "surface": {
+            "type": "string"
+          },
+          "route_or_screen": {
+            "type": "string"
+          },
+          "environment": {
+            "type": "string"
+          },
+          "build_identity": {
+            "type": "string"
+          },
+          "journey": {
+            "type": "string"
+          },
+          "viewport": {
+            "type": "string"
+          },
+          "preview_url": {
+            "type": "string"
+          },
+          "screenshot_ref": {
+            "type": "string"
+          },
+          "approval_status": {
+            "enum": [
+              "pending",
+              "approved",
+              "changes-requested",
+              "rejected"
+            ]
+          }
         }
       }
     },
-    "status": {"enum":["draft","ready","in-review","changes-requested","approved","closed"]}
+    "status": {
+      "enum": [
+        "draft",
+        "ready",
+        "in-review",
+        "changes-requested",
+        "approved",
+        "closed"
+      ]
+    },
+    "live_review_sessions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
   },
   "additionalProperties": true
 }
