@@ -18,3 +18,5 @@ Rules:
 4. Use deterministic fixtures for happy, loading, empty, failure and business-critical edge states.
 5. Visual QA evidence is required before a direction becomes review-ready.
 6. Client feedback affecting business/data/integration scope becomes a Change Contract.
+7. During a Flutter client call, Nowa may be used only for recorded minor visual/UX edits. Persist changes to governed Flutter source and require post-change Visual QA.
+8. Never use Nowa to implement business rules, finance, permissions, data/integration behavior, workflow/state machines or architecture; route those requests to Change Contract.
