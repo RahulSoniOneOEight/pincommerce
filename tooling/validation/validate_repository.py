@@ -76,6 +76,7 @@ REQUIRED = [
     "templates/current-scope.yaml",
     "templates/production-plan.yaml","templates/production-readiness.yaml",
     "templates/production-migration-plan.yaml",
+    "templates/production-provider-selections.yaml",
     "templates/ai-proposal.yaml","templates/experience-direction.yaml",
     "templates/prototype-manifest.yaml","templates/prototype-coverage.yaml",
     "templates/prototype-implementation.yaml","templates/prototype-core-runtime.yaml",
