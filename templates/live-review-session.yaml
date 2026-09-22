@@ -1,0 +1,16 @@
+session_id: LIVE-EXAMPLE-001
+client_id: ""
+review_id: REV-EXAMPLE
+source_build_id: BLD-EXAMPLE
+tool: nowa
+started_by: ""
+started_at: null
+participants:
+  - agency-reviewer
+edits: []
+resulting_revision: null
+visual_qa_refs: []
+client_confirmed_by: null
+client_confirmed_at: null
+status: planned
+notes: []
