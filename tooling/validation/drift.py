@@ -15,6 +15,17 @@ def _load(path: Path) -> object:
     return yaml.safe_load(path.read_text(encoding="utf-8"))
 
 
+def _approval_normalized(relative: str, value: object) -> object:
+    """Ignore human approval metadata while still checking generated ADR substance."""
+    if relative.startswith("solution/decisions/ADR-") and isinstance(value, dict):
+        result = dict(value)
+        result["status"] = "proposed"
+        result["approved_by"] = None
+        result["approved_at"] = None
+        return result
+    return value
+
+
 def blueprint_drift(client_id: str, root: Path = ROOT) -> list[str]:
     """Return drift between the onboarding generator and committed derived artifacts."""
     blueprint = build_blueprint(client_id, root)
@@ -25,7 +36,9 @@ def blueprint_drift(client_id: str, root: Path = ROOT) -> list[str]:
         if not path.exists():
             errors.append(f"missing generated artifact: {relative}")
             continue
-        if _load(path) != generated:
+        committed = _approval_normalized(relative, _load(path))
+        expected = _approval_normalized(relative, generated)
+        if committed != expected:
             errors.append(f"drift: {relative}")
     return errors
 
