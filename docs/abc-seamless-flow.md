@@ -45,10 +45,19 @@ The functional prototype consists of:
 - capture manifest
 - Visual + Business QA
 - Review Session
+- immutable Prototype Revision
+- explicit Review Round
+- structured text Review Feedback
 - governed Nowa live-review sessions
 - Change Contracts for material changes
 
 Client review cannot begin until the UI and functional-core gates pass.
+
+The client-review loop is explicit:
+
+`Prototype Revision 001 → Review Round 001 → feedback/changes → Prototype Revision 002 → Review Round 002 → ... → final approved round`
+
+Review feedback may be entered as plain client text, but is stored with surface/journey/screen/component context and deterministic classification/routing.
 
 Scope freeze additionally requires:
 - A truth is resolved
@@ -82,6 +91,8 @@ A newly generated baseline records:
 - accepted Architecture Decisions
 - attached live-review sessions
 - included/excluded/deferred capabilities
+- final Prototype Revision reference
+- final Review Round reference
 - client approver and approval timestamp
 
 Supporting evidence remains in:
