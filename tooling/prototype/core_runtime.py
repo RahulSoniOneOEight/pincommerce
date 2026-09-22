@@ -153,6 +153,18 @@ def write_core_runtime(client_id: str, root: Path = ROOT, overwrite: bool = Fals
     return path
 
 
+def client_requires_core_runtime(client_id: str, root: Path = ROOT) -> bool:
+    solution_path = root / "client-projects" / client_id / "solution" / "solution-contract.yaml"
+    if not solution_path.exists():
+        return False
+    solution = load_yaml(solution_path)
+    core = {"medusa", "mercur", "tryton"}
+    return any(
+        isinstance(value, dict) and value.get("provider") in core
+        for value in solution.get("providers", {}).values()
+    )
+
+
 def assert_core_runtime_ready(client_id: str, root: Path = ROOT) -> dict[str, Any]:
     path = root / "client-projects" / client_id / "experience" / "prototype-core-runtime.yaml"
     value = load_yaml(path)
@@ -160,6 +172,27 @@ def assert_core_runtime_ready(client_id: str, root: Path = ROOT) -> dict[str, An
     if errors:
         raise CoreRuntimeError("Invalid core runtime: " + "; ".join(errors))
     evaluated = evaluate_core_runtime(value)
+    dataset_ref = evaluated.get("demo_dataset_ref")
+    if not dataset_ref:
+        raise CoreRuntimeError("Core prototype runtime has no demo dataset reference")
+    dataset_path = root / "client-projects" / client_id / dataset_ref
+    dataset = load_yaml(dataset_path)
+    dataset_errors = validate_document(dataset, "prototype-demo-dataset")
+    if dataset_errors:
+        raise CoreRuntimeError("Invalid prototype demo dataset: " + "; ".join(dataset_errors))
+    if dataset.get("status") != "ready":
+        raise CoreRuntimeError("Prototype demo dataset is not ready")
+
+    mock_pending = [
+        item.get("provider", "unknown")
+        for item in evaluated.get("external_integrations", [])
+        if item.get("status") != "ready"
+    ]
+    if mock_pending:
+        raise CoreRuntimeError(
+            "Prototype external integrations are not ready: " + ", ".join(mock_pending)
+        )
+
     if evaluated["status"] != "prototype-ready":
         pending = [
             module["provider"]
