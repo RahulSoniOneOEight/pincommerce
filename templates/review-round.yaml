@@ -1,0 +1,16 @@
+round_id: ROUND-example-a-001
+client_id: ""
+sequence: 1
+prototype_revision_ref: experience/revisions/PROTO-example-a-001.yaml
+review_session_ref: feedback/REV-example.yaml
+previous_round_ref: null
+next_revision_ref: null
+required_surfaces: []
+required_journeys: []
+feedback_refs: []
+live_review_refs: []
+change_refs: []
+qa_refs: []
+surface_decisions: []
+journey_decisions: []
+outcome: planned
