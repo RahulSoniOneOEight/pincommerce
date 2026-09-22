@@ -85,6 +85,7 @@ def build_truth_register(client_input: dict[str, Any]) -> dict[str, Any]:
         seq += 1
 
     questions = list(client_input.get("open_questions", []))
+    conflicts = list(client_input.get("conflicts", []))
     for question in questions:
         records.append({
             "truth_id": f"TRUTH-{seq:04d}",
@@ -98,13 +99,26 @@ def build_truth_register(client_input: dict[str, Any]) -> dict[str, Any]:
         })
         seq += 1
 
+    for conflict in conflicts:
+        records.append({
+            "truth_id": f"TRUTH-{seq:04d}",
+            "path": "conflicts",
+            "value": conflict,
+            "classification": "conflict",
+            "confidence": 0.0,
+            "sources": sources,
+            "status": "open",
+            "notes": ["Resolve contradiction before scope freeze."],
+        })
+        seq += 1
+
     return {
         "client_id": client_input["client_id"],
         "version": int(client_input.get("version", 1)),
         "records": records,
         "open_questions": questions,
-        "conflicts": [],
-        "status": "needs-input" if questions else "review-ready",
+        "conflicts": conflicts,
+        "status": "needs-input" if questions or conflicts else "review-ready",
     }
 
 
