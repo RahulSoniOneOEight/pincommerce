@@ -71,9 +71,15 @@ Scope freeze additionally requires:
 
 ## End of C: authoritative handoff
 
-The primary authority is:
+The primary authority is the mutable pointer:
 
-`approved/scope-baseline.yaml`
+`approved/current-scope.yaml`
+
+It points to one immutable versioned baseline:
+
+`approved/scope-baselines/BASE-<client>-vN.yaml`
+
+The historical `approved/scope-baseline.yaml` is retained only for backward compatibility on projects created before versioned baselines.
 
 A newly generated baseline records:
 - truth register reference
@@ -106,4 +112,4 @@ Supporting evidence remains in:
 - `feedback/`
 - `changes/`
 
-The Scope Baseline is the single production handoff authority into stage 20: Production Contracts.
+The baseline referenced by `approved/current-scope.yaml` is the single production handoff authority into stage 20: Production Contracts. Older versioned baselines remain immutable audit history.
