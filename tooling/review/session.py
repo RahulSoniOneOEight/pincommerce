@@ -71,7 +71,7 @@ def create_build_identity(
 
 def create_capture_manifest(
     build: dict[str, Any],
-    states: list[str],
+    surface_states: dict[str, list[str]],
 ) -> dict[str, Any]:
     targets: list[dict[str, Any]] = []
     for surface in build["surfaces"]:
@@ -83,6 +83,7 @@ def create_capture_manifest(
         viewports = ["390x844"] if runtime == "flutter" else ["1440x1024", "390x844"]
         if runtime == "external":
             viewports = ["external"]
+        states = surface_states.get(surface, ["default"])
         for viewport in viewports:
             for state in states:
                 targets.append({
@@ -106,6 +107,8 @@ def create_capture_manifest(
 def create_review_session(
     build: dict[str, Any],
     capture: dict[str, Any],
+    coverage: dict[str, Any],
+    core_runtime: dict[str, Any] | None,
 ) -> dict[str, Any]:
     artifacts = []
     for index, target in enumerate(capture["targets"], start=1):
@@ -121,11 +124,27 @@ def create_review_session(
             "screenshot_ref": target["output"],
             "approval_status": "pending",
         })
+    surfaces = [item["surface"] for item in coverage.get("surface_coverage", []) if item.get("required")]
+    journeys = list(dict.fromkeys(
+        journey
+        for item in coverage.get("surface_coverage", [])
+        for journey in item.get("journeys", [])
+    ))
     return {
         "review_id": f"REV-{build['build_id']}",
         "client_id": build["client_id"],
         "build_id": build["build_id"],
         "direction_id": build["direction_id"],
+        "coverage_ref": f"experience/prototypes/{build['direction_id'].split('-')[-1].lower()}-coverage.yaml",
+        "implementation_ref": coverage["implementation_ref"],
+        "core_runtime_ref": "experience/prototype-core-runtime.yaml" if core_runtime else None,
+        "demo_dataset_ref": core_runtime.get("demo_dataset_ref") if core_runtime else None,
+        "surface_approvals": [
+            {"surface": surface, "status": "pending"} for surface in surfaces
+        ],
+        "journey_approvals": [
+            {"journey": journey, "status": "pending"} for journey in journeys
+        ],
         "artifacts": artifacts,
         "status": "draft",
     }
@@ -139,25 +158,28 @@ def write_review_bundle(
     root: Path = ROOT,
 ) -> list[Path]:
     try:
-        assert_client_review_ready(client_id, direction_file, root)
+        coverage = assert_client_review_ready(client_id, direction_file, root)
     except CoverageError as exc:
         raise ReviewError(
             "Client review blocked by prototype completeness gate: " + str(exc)
         ) from exc
 
+    core_runtime = None
     if client_requires_core_runtime(client_id, root):
         try:
-            assert_core_runtime_ready(client_id, root)
+            core_runtime = assert_core_runtime_ready(client_id, root)
         except CoreRuntimeError as exc:
             raise ReviewError(
                 "Client review blocked by functional core-runtime gate: " + str(exc)
             ) from exc
 
     build = create_build_identity(client_id, direction_file, source_revision, created_by, root=root)
-    fixture = load_yaml(root / "client-projects" / client_id / "experience" / "fixtures" / "commerce-baseline.yaml")
-    states = [item["id"] for item in fixture["states"]]
-    capture = create_capture_manifest(build, states)
-    review = create_review_session(build, capture)
+    surface_states = {
+        item["surface"]: list(item.get("states", []))
+        for item in coverage.get("surface_coverage", [])
+    }
+    capture = create_capture_manifest(build, surface_states)
+    review = create_review_session(build, capture, coverage, core_runtime)
 
     project = root / "client-projects" / client_id
     paths = [
