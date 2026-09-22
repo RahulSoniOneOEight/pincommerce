@@ -8,7 +8,13 @@
     "build_id",
     "direction_id",
     "artifacts",
-    "status"
+    "status",
+    "coverage_ref",
+    "implementation_ref",
+    "core_runtime_ref",
+    "demo_dataset_ref",
+    "surface_approvals",
+    "journey_approvals"
   ],
   "properties": {
     "review_id": {
@@ -88,6 +94,78 @@
       "type": "array",
       "items": {
         "type": "string"
+      }
+    },
+    "coverage_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "implementation_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "core_runtime_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "demo_dataset_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "surface_approvals": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "surface",
+          "status"
+        ],
+        "properties": {
+          "surface": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "approved",
+              "changes-requested",
+              "rejected"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "journey_approvals": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "journey",
+          "status"
+        ],
+        "properties": {
+          "journey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "approved",
+              "changes-requested",
+              "rejected"
+            ]
+          }
+        },
+        "additionalProperties": false
       }
     }
   },
