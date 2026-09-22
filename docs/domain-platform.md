@@ -43,3 +43,18 @@ order.confirmed
 → reconciliation: commerce-order-to-erp
 
 Other supported adapter boundaries include product search indexing, support conversation creation, automation flow triggers and seller synchronization.
+
+
+## Functional prototype rule
+
+Phase C uses real core business runtimes, not mock commerce/ERP backends.
+
+- Medusa is the standard commerce core when commerce is in scope.
+- Mercur is the standard marketplace layer when marketplace/multi-vendor scope is active. Mercur extends Medusa.
+- Tryton is the standard ERP core when ERP, warehouse or accounting scope is active.
+- The client brief only overrides the affected baseline component; all unspecified behavior remains on the standard baseline.
+- External providers such as Razorpay, Shiprocket and WhatsApp may use deterministic mock/sandbox bindings during prototype review.
+
+The governed runtime record is `experience/prototype-core-runtime.yaml`. Client Review is blocked until every required core module is healthy with evidence and the linked demo dataset is ready.
+
+See `docs/functional-prototype-runtime.md`.
