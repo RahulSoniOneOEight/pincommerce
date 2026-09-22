@@ -25,7 +25,10 @@ Legend:
 
 | Contract | Location | Status | Enforcement |
 |---|---|---|---|
-| Review Session | `contracts/schemas/review-session.schema.json`, `client-projects/*/feedback/` | Enforced now | Reference instance schema-validated in CI |
+| Review Session | `contracts/schemas/review-session.schema.json`, `client-projects/*/feedback/` | Enforced now | Review build/surface/journey approval envelope |
+| Prototype Revision | `contracts/schemas/prototype-revision.schema.json`, `client-projects/*/experience/revisions/` | Enforced now | Immutable V1/V2/V3 prototype identity bound to exact build/source/coverage/runtime evidence |
+| Review Round | `contracts/schemas/review-round.schema.json`, `client-projects/*/feedback/rounds/` | Enforced now | Explicit client review iteration around one Prototype Revision |
+| Review Feedback | `contracts/schemas/review-feedback.schema.json`, `client-projects/*/feedback/items/` | Enforced now | Structured text feedback with surface/journey/screen/component context and governed routing |
 | Review Artifact | `contracts/schemas/review-artifact.schema.json`, `review/artifact-contract.md` | Legacy | Superseded by Review Session; no instance, not validated |
 | Visual QA | `contracts/schemas/visual-qa.schema.json`, `client-projects/*/experience/visual-qa/VQA-*.yaml` | Enforced now | Reference instance schema-validated in CI; scope freeze requires passed checks |
 | Live Client Review (Nowa) | `contracts/schemas/live-review-session.schema.json`, `client-projects/*/feedback/LIVE-*.yaml` | Enforced now | Minor edits require Git revision + post-change QA; material edits must route to Change Contract; unfinished sessions block scope freeze |
