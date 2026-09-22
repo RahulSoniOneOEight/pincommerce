@@ -25,6 +25,8 @@ CONTRACTS = {
     "prototype-manifest": ROOT / "contracts" / "schemas" / "prototype-manifest.schema.json",
     "prototype-coverage": ROOT / "contracts" / "schemas" / "prototype-coverage.schema.json",
     "prototype-implementation": ROOT / "contracts" / "schemas" / "prototype-implementation.schema.json",
+    "prototype-core-runtime": ROOT / "contracts" / "schemas" / "prototype-core-runtime.schema.json",
+    "prototype-demo-dataset": ROOT / "contracts" / "schemas" / "prototype-demo-dataset.schema.json",
     "fixture-set": ROOT / "contracts" / "schemas" / "fixture-set.schema.json",
     "visual-qa": ROOT / "contracts" / "schemas" / "visual-qa.schema.json",
     "build-identity": ROOT / "contracts" / "schemas" / "build-identity.schema.json",
