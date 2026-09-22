@@ -95,3 +95,36 @@ Review Session
 → client confirmation
 → scope freeze
 ```
+
+
+## Client brief → complete prototype rule
+
+Client-review prototypes are requirement-driven. The standard commerce component library is only a starting point.
+
+Every item in `input/client-input.yaml#experience_requirements` is traced into a `Prototype Coverage` artifact. If a requirement has UX impact, it must resolve to one or more:
+- surfaces
+- screens
+- components
+- states
+
+A UX-impacting requirement with no mapping is `unmapped` and blocks client review. A requirement may only bypass prototype implementation when it is explicitly recorded as `deferred` or `not-applicable` with rationale.
+
+The coverage engine also derives baseline screen/component/state requirements from the capability map and required journeys.
+
+Coverage alone is not sufficient. Before the Review Session can be created, the selected direction must also have `Prototype Implementation Evidence`. Every required screen, component and state must be marked `implemented` with a concrete evidence reference. Missing implementation evidence blocks review.
+
+The enforced chain is:
+
+```text
+Client Brief
+→ Client Truth
+→ capability / journey / surface maps
+→ experience requirements
+→ prototype coverage
+→ implementation evidence
+→ completeness gate
+→ client-review-ready
+→ Review Session
+```
+
+This allows dummy/fixture data while requiring the full UI/UX surface required by the client brief to be present for review.
