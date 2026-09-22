@@ -1,0 +1,6 @@
+readiness_id: PRODREADY-example-v1
+client_id: ""
+production_plan_ref: production/production-plan.yaml
+checks: []
+blocking_items: []
+status: blocked
