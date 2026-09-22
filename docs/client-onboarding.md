@@ -75,7 +75,33 @@ Plan governed Visual + Business QA from the generated capture manifest:
 
 `python -m tooling.review.visual_qa --client acme-retail --capture <CAP-...yaml>`
 
-Review/QA records remain unapproved until humans and/or reviewer tooling have supplied concrete evidence. Material findings become Change Contracts. After all review artifacts are approved and every Visual QA check is `pass`, freeze the immutable client scope:
+Review/QA records remain unapproved until humans and/or reviewer tooling have supplied concrete evidence.
+
+For a Flutter client call, create a governed Nowa live-review session:
+
+`python -m tooling.review.nowa_session create --client acme-retail --review-id <REV-...> --build-id <BLD-...> --started-by <actor> --participant <client> --output client-projects/acme-retail/feedback/LIVE-acme-retail-NOWA-001.yaml`
+
+Record requested edits during the call:
+
+`python -m tooling.review.nowa_session add-edit <LIVE-...yaml> --category spacing --summary "Reduce card spacing" --surface customer-app --target ProductCard.padding --before 24 --after 20 --git-path packages/agency_flutter_ui/lib/product_card.dart`
+
+Minor visual/UX edits may then be persisted from Nowa into Flutter source and bound to a Git diff/revision:
+
+`python -m tooling.review.nowa_session apply-minor <LIVE-...yaml> --edit-id EDIT-0001 --git-diff-ref <diff-or-pr-ref> --resulting-revision <git-sha>`
+
+Material requests must be routed instead:
+
+`python -m tooling.review.nowa_session route-material <LIVE-...yaml> --edit-id EDIT-0002 --change-contract-ref changes/CHG-002.yaml`
+
+After the changed revision passes Visual QA:
+
+`python -m tooling.review.nowa_session record-qa <LIVE-...yaml> --visual-qa-ref experience/visual-qa/<VQA-...yaml>`
+
+Then record client confirmation:
+
+`python -m tooling.review.nowa_session confirm <LIVE-...yaml> --confirmed-by <client-approver> --confirmed-at <ISO-8601>`
+
+Material findings become Change Contracts. Unfinished Nowa sessions block scope freeze. After all review artifacts are approved and every Visual QA check is `pass`, freeze the immutable client scope:
 
 `python -m tooling.review.freeze --client acme-retail --review <approved-review.yaml> --visual-qa <VQA-...yaml> --approved-by <client-approver> --approved-at <ISO-8601>`
 
