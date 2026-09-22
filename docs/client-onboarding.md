@@ -183,6 +183,6 @@ Then record client confirmation:
 
 Material findings become Change Contracts. Unfinished Nowa sessions block scope freeze. After all review artifacts are approved and every Visual QA check is `pass`, freeze the immutable client scope:
 
-`python -m tooling.review.freeze --client acme-retail --review <approved-review.yaml> --visual-qa <VQA-...yaml> --approved-by <client-approver> --approved-at <ISO-8601>`
+`python -m tooling.review.freeze --client acme-retail --review <approved-review.yaml> --visual-qa <VQA-...yaml> --approved-by <client-approver> --approved-at <ISO-8601> --version <next-version>`
 
-The resulting `approved/scope-baseline.yaml` is the production handoff authority for A/B/C. It references the approved solution, experience direction, Review Session, Visual QA and Architecture Decision records.
+The freeze writes an immutable versioned baseline under `approved/scope-baselines/BASE-<client>-vN.yaml` and updates `approved/current-scope.yaml` to point to it. Existing historical baselines are never overwritten. The current pointer is the production handoff authority for A/B/C and references the approved solution, experience direction, Prototype Revision, Review Round, Review Session, Visual QA and Architecture Decision records.
