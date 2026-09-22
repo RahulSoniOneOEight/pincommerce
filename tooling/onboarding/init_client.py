@@ -74,20 +74,33 @@ def initialize_client(
     write_yaml(project / "workflow" / "workflow-state.yaml", workflow_state)
 
     for folder in (
+        "input/documents",
         "intelligence/ai/decisions",
         "derived",
-        "solution",
+        "solution/decisions",
+        "solution/architecture",
         "experience/directions",
         "experience/prototypes",
+        "experience/builds",
+        "experience/fixtures",
+        "experience/captures",
         "experience/visual-qa",
-        "feedback",
+        "feedback/reviews",
+        "feedback/findings",
+        "feedback/annotations",
         "changes",
         "approved",
-        "contracts",
+        "contracts/contract-versions",
         "production",
         "qa",
         "uat",
-        "release",
+        "release/candidates",
+        "release/staging",
+        "release/hardening",
+        "release/observability",
+        "release/releases",
+        "release/recovery",
+        "workflow/evidence",
     ):
         directory = project / folder
         directory.mkdir(parents=True, exist_ok=True)
