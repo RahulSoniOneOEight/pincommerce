@@ -175,7 +175,12 @@ def _requirements(client_input: dict[str, Any]) -> list[dict[str, Any]]:
     return requirements
 
 
-def build_coverage(client_id: str, direction_file: str = "a.yaml", root: Path = ROOT) -> dict[str, Any]:
+def build_coverage(
+    client_id: str,
+    direction_file: str = "a.yaml",
+    root: Path = ROOT,
+    require_implementation: bool = True,
+) -> dict[str, Any]:
     project = root / "client-projects" / client_id
     client_input = load_yaml(project / "input" / "client-input.yaml")
     capability_map = load_yaml(project / "derived" / "capability-map.yaml")
@@ -184,6 +189,16 @@ def build_coverage(client_id: str, direction_file: str = "a.yaml", root: Path = 
     direction = load_yaml(project / "experience" / "directions" / direction_file)
     manifest_name = direction_file.replace(".yaml", "-manifest.yaml")
     manifest = load_yaml(project / "experience" / "prototypes" / manifest_name)
+    suffix = direction_file.replace(".yaml", "")
+    implementation_path = project / "experience" / "prototypes" / f"{suffix}-implementation.yaml"
+    implementation = None
+    implementation_ref = None
+    if implementation_path.exists():
+        implementation = load_yaml(implementation_path)
+        errors = validate_document(implementation, "prototype-implementation")
+        if errors:
+            raise CoverageError("Invalid prototype implementation evidence: " + "; ".join(errors))
+        implementation_ref = f"experience/prototypes/{implementation_path.name}"
 
     required_surfaces = list(surface_map.get("required", []))
     journeys = [
@@ -247,7 +262,17 @@ def build_coverage(client_id: str, direction_file: str = "a.yaml", root: Path = 
             "status": status,
         })
 
+    implementation_by_surface = {
+        item["surface"]: item
+        for item in (implementation or {}).get("surfaces", [])
+    }
+
     surface_records = []
+    if require_implementation and implementation is None:
+        blocking.append(
+            f"prototype implementation evidence missing: experience/prototypes/{suffix}-implementation.yaml"
+        )
+
     for surface in required_surfaces:
         defaults = SURFACE_DEFAULTS.get(surface, {"screens": [], "components": []})
         screens = list(defaults["screens"])
@@ -274,6 +299,47 @@ def build_coverage(client_id: str, direction_file: str = "a.yaml", root: Path = 
         complete = bool(screens and components and states and journeys)
         if not complete:
             blocking.append(f"surface:{surface}: missing screen/component/state/journey coverage")
+
+        if require_implementation and implementation is not None:
+            evidence = implementation_by_surface.get(surface)
+            if evidence is None:
+                complete = False
+                blocking.append(f"surface:{surface}: implementation evidence missing")
+            else:
+                implemented_screens = {
+                    item["id"] for item in evidence.get("screens", [])
+                    if item.get("status") == "implemented" and item.get("evidence_ref")
+                }
+                implemented_components = {
+                    item["id"] for item in evidence.get("components", [])
+                    if item.get("status") == "implemented" and item.get("evidence_ref")
+                }
+                implemented_states = {
+                    item["id"] for item in evidence.get("states", [])
+                    if item.get("status") == "implemented" and item.get("evidence_ref")
+                }
+                missing_screens = [item for item in screens if item not in implemented_screens]
+                missing_components = [item for item in components if item not in implemented_components]
+                missing_states = [item for item in states if item not in implemented_states]
+                if missing_screens:
+                    complete = False
+                    blocking.append(
+                        f"surface:{surface}: unimplemented screens: " + ", ".join(missing_screens)
+                    )
+                if missing_components:
+                    complete = False
+                    blocking.append(
+                        f"surface:{surface}: unimplemented components: " + ", ".join(missing_components)
+                    )
+                if missing_states:
+                    complete = False
+                    blocking.append(
+                        f"surface:{surface}: unimplemented states: " + ", ".join(missing_states)
+                    )
+                if evidence.get("status") != "complete":
+                    complete = False
+                    blocking.append(f"surface:{surface}: implementation status is not complete")
+
         surface_records.append({
             "surface": surface,
             "required": True,
@@ -290,6 +356,7 @@ def build_coverage(client_id: str, direction_file: str = "a.yaml", root: Path = 
         "client_id": client_id,
         "direction_id": direction["direction_id"],
         "prototype_manifest_ref": f"experience/prototypes/{manifest_name}",
+        "implementation_ref": implementation_ref,
         "requirements": req_records,
         "surface_coverage": surface_records,
         "blocking_items": blocking,
