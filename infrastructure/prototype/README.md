@@ -31,9 +31,13 @@ Generate the core runtime plan:
 
 `python -m tooling.prototype.core_runtime --client <client-id>`
 
-After the actual Medusa/Mercur/Tryton runtime is healthy, record the health evidence in:
+Generate provider-specific seed bundles:
 
-`client-projects/<client>/experience/prototype-core-runtime.yaml`
+`python -m tooling.prototype.seed_bundle --client <client-id>`
+
+After importing the applicable seed bundle into the actual Medusa/Mercur/Tryton runtime, record health and seed evidence:
+
+`python -m tooling.prototype.runtime_evidence --client <client-id> --provider <medusa|mercur|tryton> --health-ref <ref> --seed-ref <ref>`
 
 Then check readiness:
 
