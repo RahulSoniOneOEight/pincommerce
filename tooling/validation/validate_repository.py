@@ -112,6 +112,7 @@ REQUIRED = [
     "tooling/workflow/runtime.py","tooling/contracts/validator.py",
     "tooling/ai/router.py","tooling/ai/proposals.py","tooling/experience/generator.py",
     "tooling/review/session.py","tooling/review/bugdrop.py","tooling/review/freeze.py",
+    "tooling/review/visual_qa.py","tooling/review/impact.py",
     "tooling/integration/runtime.py","tooling/integration/reconciliation.py",
     "tooling/integration/adapters.py","tooling/integration/http_transport.py",
     "tooling/integration/durable.py","tooling/integration/dead_letter.py",
