@@ -94,6 +94,7 @@ def build_core_runtime(client_id: str, root: Path = ROOT) -> dict[str, Any]:
                 "required": required,
                 "evidence_ref": None,
             },
+            "seed_evidence_ref": None,
             "status": "planned" if required else "not-required",
         })
 
@@ -134,6 +135,8 @@ def evaluate_core_runtime(value: dict[str, Any]) -> dict[str, Any]:
         if module.get("status") != "healthy":
             ready = False
         if not module.get("health", {}).get("evidence_ref"):
+            ready = False
+        if not module.get("seed_evidence_ref"):
             ready = False
     if not value.get("demo_dataset_ref"):
         ready = False
@@ -200,6 +203,7 @@ def assert_core_runtime_ready(client_id: str, root: Path = ROOT) -> dict[str, An
             if module.get("required") and (
                 module.get("status") != "healthy"
                 or not module.get("health", {}).get("evidence_ref")
+                or not module.get("seed_evidence_ref")
             )
         ]
         raise CoreRuntimeError(
