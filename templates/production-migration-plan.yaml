@@ -1,0 +1,6 @@
+migration_plan_id: MIGPLAN-example-v1
+client_id: ""
+source_scope_ref: approved/current-scope.yaml
+steps: []
+blocking_items: []
+status: draft
