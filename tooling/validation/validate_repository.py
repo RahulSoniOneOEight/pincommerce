@@ -210,6 +210,8 @@ REQUIRED = [
     "client-projects/reference-retail/feedback/REV-BLD-reference-retail-a-ref001-approved.yaml",
     "client-projects/reference-retail/feedback/LIVE-reference-retail-NOWA-001.yaml",
     "client-projects/reference-retail/approved/scope-baseline.yaml",
+    "client-projects/reference-retail/approved/current-scope.yaml",
+    "client-projects/reference-retail/approved/scope-baselines/BASE-reference-retail-v1.yaml",
     "client-projects/reference-retail/feedback/BUG-REF-001.yaml",
     "client-projects/reference-retail/production/integration/order-confirmed.event.yaml",
     "client-projects/reference-retail/production/integration/create-sales-order.command.yaml",
