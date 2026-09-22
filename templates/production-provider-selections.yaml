@@ -1,0 +1,4 @@
+integrations:
+  payment: razorpay
+  logistics: shiprocket
+  whatsapp: meta-whatsapp-cloud
