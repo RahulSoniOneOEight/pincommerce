@@ -6,6 +6,7 @@ from typing import Any
 
 import yaml
 
+from tooling.contracts.validator import validate_document
 from tooling.validation.identifiers import IdentifierError, validate_identifier
 from tooling.experience.coverage import CoverageError, assert_client_review_ready
 from tooling.prototype.core_runtime import (
@@ -180,6 +181,17 @@ def write_review_bundle(
     }
     capture = create_capture_manifest(build, surface_states)
     review = create_review_session(build, capture, coverage, core_runtime)
+
+    for contract_type, value in (
+        ("build-identity", build),
+        ("capture-manifest", capture),
+        ("review-session", review),
+    ):
+        errors = validate_document(value, contract_type)
+        if errors:
+            raise ReviewError(
+                f"Generated {contract_type} invalid: " + "; ".join(errors)
+            )
 
     project = root / "client-projects" / client_id
     paths = [
