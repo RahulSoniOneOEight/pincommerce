@@ -1,0 +1,41 @@
+baseline_id: tryton-standard-v1
+provider: tryton
+role: erp-core
+mode: real-core
+capabilities:
+  party:
+    enabled: true
+    components: [customers, suppliers]
+  product:
+    enabled: true
+    components: [items, uom, taxes]
+  sales:
+    enabled: true
+    components: [quotation, sales-order, shipment, invoice]
+  purchase:
+    enabled: true
+    components: [purchase-order, receipt, supplier-invoice]
+  inventory:
+    enabled: true
+    components: [stock, reservation, adjustment, transfer]
+  warehouse:
+    enabled: true
+    components: [locations, receipts, picking, dispatch, transfer]
+  accounting:
+    enabled: true
+    components: [chart-of-accounts, journal, general-ledger]
+  receivables:
+    enabled: true
+    components: [customer-invoice, receipt, outstanding, ageing]
+  payables:
+    enabled: true
+    components: [supplier-invoice, payment, outstanding, ageing]
+  tax:
+    enabled: true
+    components: [gst-input, gst-output]
+prototype_defaults:
+  company: Demo Commerce India Pvt Ltd
+  currency: INR
+  fiscal_country: IN
+  warehouses: [BLR-01, BLR-02]
+override_policy: client-brief-over-standard
