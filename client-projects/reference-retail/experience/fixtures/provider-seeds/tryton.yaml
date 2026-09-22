@@ -1,0 +1,37 @@
+provider: tryton
+source_dataset: DEMO-reference-retail-v1
+parties:
+  - {id: CUST-B2C-001, name: Aarav Demo, type: customer}
+  - {id: CUST-B2B-014, name: Metro Hardware Demo, type: customer, credit_limit: 500000}
+  - {id: SUP-001, name: Demo Supplies Pvt Ltd, type: supplier}
+products:
+  - {id: SKU-1001, name: Reference Product A, gst_rate: 18, uom: each}
+  - {id: SKU-2001, name: Reference Product B, gst_rate: 18, uom: case}
+stock:
+  - {sku: SKU-1001, warehouse: BLR-01, on_hand: 42, reserved: 7, available: 35}
+  - {sku: SKU-2001, warehouse: BLR-01, on_hand: 8, reserved: 8, available: 0}
+sales_orders:
+  - {id: ORD-1001, customer_id: CUST-B2C-001, status: delivered, total: 11800}
+  - {id: ORD-1009, customer_id: CUST-B2B-014, status: delivered, total: 100000}
+purchase_orders:
+  - {id: PO-3001, supplier_id: SUP-001, status: partially_received, total: 250000}
+customer_invoices:
+  - {id: INV-1001, order_id: ORD-1001, taxable: 10000, gst: 1800, gross: 11800, status: paid}
+  - {id: INV-1009, order_id: ORD-1009, gross: 100000, status: partially_paid, outstanding: 50000}
+receivables:
+  - {customer_id: CUST-B2B-014, invoice_id: INV-1009, amount: 100000, collected: 50000, outstanding: 50000, age_days: 21}
+payables:
+  - {supplier_id: SUP-001, purchase_id: PO-3001, amount: 250000, paid: 100000, outstanding: 150000}
+journal_entries:
+  - id: JE-INV-1001
+    lines:
+      - {account: Accounts Receivable, debit: 11800, credit: 0}
+      - {account: Sales Revenue, debit: 0, credit: 10000}
+      - {account: Output GST, debit: 0, credit: 1800}
+  - id: JE-COGS-1001
+    lines:
+      - {account: COGS, debit: 6200, credit: 0}
+      - {account: Inventory, debit: 0, credit: 6200}
+reconciliations:
+  - {id: REC-1001, order_id: ORD-1001, status: matched}
+  - {id: REC-1008, order_id: ORD-1008, status: mismatch, difference: 180}
