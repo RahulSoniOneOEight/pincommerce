@@ -16,3 +16,21 @@ A review session identifies:
 - comments and approval state
 
 Material feedback must be converted into a Change Contract before production implementation.
+
+
+## Prototype Revision and Review Round
+
+A Review Session is the evidence/approval envelope for one immutable build. It now participates in a higher-level iteration model:
+
+`Prototype Revision → Review Round → Feedback → Changes → Next Prototype Revision`
+
+Prototype Revision records the exact build/source revision plus prototype coverage, implementation evidence and functional-core references.
+
+Review Round records one client review iteration against exactly one Prototype Revision. Text feedback is captured as Review Feedback with surface/journey/screen/component context. The feedback text remains human-readable, while classification and routing are structured:
+
+- visual/content request → minor change → Nowa
+- business rule/integration/data/finance/security/workflow request → material change → Change Contract
+- approve → approval/no routing
+- discuss → discussion
+
+The final Review Round must be approved, all feedback resolved, all required surfaces/journeys approved and QA evidence attached before scope freeze.
