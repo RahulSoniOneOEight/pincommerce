@@ -236,6 +236,88 @@ def _assert_visual_qa(
     return qa_refs
 
 
+
+def _assert_revision_round(
+    project: Path,
+    review: dict[str, Any],
+    *,
+    required_surfaces: list[str],
+    required_journeys: list[str],
+) -> tuple[str, str]:
+    revision_ref = review.get("prototype_revision_ref")
+    round_ref = review.get("review_round_ref")
+    if not revision_ref or not round_ref:
+        raise FreezeError(
+            "Review Session must be bound to a Prototype Revision and Review Round before scope freeze"
+        )
+
+    revision = load_yaml(project / revision_ref)
+    round_value = load_yaml(project / round_ref)
+
+    revision_errors = validate_document(revision, "prototype-revision")
+    if revision_errors:
+        raise FreezeError("Invalid Prototype Revision: " + "; ".join(revision_errors))
+    round_errors = validate_document(round_value, "review-round")
+    if round_errors:
+        raise FreezeError("Invalid Review Round: " + "; ".join(round_errors))
+
+    if revision.get("build_id") != review.get("build_id"):
+        raise FreezeError("Prototype Revision build does not match Review Session")
+    if round_value.get("prototype_revision_ref") != revision_ref:
+        raise FreezeError("Review Round does not reference the selected Prototype Revision")
+    if round_value.get("review_session_ref") != f"feedback/{review.get('review_id')}.yaml":
+        expected = f"feedback/{review.get('review_id')}.yaml"
+        actual = round_value.get("review_session_ref")
+        if actual != expected:
+            raise FreezeError("Review Round does not reference the selected Review Session")
+    if round_value.get("outcome") != "approved":
+        raise FreezeError("Final Review Round must be approved before scope freeze")
+
+    surface_status = {
+        item.get("surface"): item.get("status")
+        for item in round_value.get("surface_decisions", [])
+    }
+    missing_surfaces = [
+        surface for surface in required_surfaces
+        if surface_status.get(surface) != "approved"
+    ]
+    if missing_surfaces:
+        raise FreezeError(
+            "Final Review Round is missing approved surfaces: " + ", ".join(missing_surfaces)
+        )
+
+    journey_status = {
+        item.get("journey"): item.get("status")
+        for item in round_value.get("journey_decisions", [])
+    }
+    missing_journeys = [
+        journey for journey in required_journeys
+        if journey_status.get(journey) != "approved"
+    ]
+    if missing_journeys:
+        raise FreezeError(
+            "Final Review Round is missing approved journeys: " + ", ".join(missing_journeys)
+        )
+
+    unresolved_feedback = []
+    for feedback_ref in round_value.get("feedback_refs", []):
+        feedback = load_yaml(project / feedback_ref)
+        errors = validate_document(feedback, "review-feedback")
+        if errors:
+            raise FreezeError(
+                f"Invalid Review Feedback {feedback_ref}: " + "; ".join(errors)
+            )
+        if feedback.get("round_id") != round_value.get("round_id"):
+            raise FreezeError(f"Review Feedback {feedback_ref} belongs to another round")
+        if feedback.get("status") not in {"resolved", "accepted", "rejected"}:
+            unresolved_feedback.append(feedback.get("feedback_id", feedback_ref))
+    if unresolved_feedback:
+        raise FreezeError(
+            "Final Review Round has unresolved feedback: " + ", ".join(unresolved_feedback)
+        )
+
+    return revision_ref, round_ref
+
 def build_scope_baseline(
     client_id: str,
     *,
@@ -303,6 +385,12 @@ def build_scope_baseline(
         review=review,
         required_surfaces=required_surfaces,
     )
+    revision_ref, round_ref = _assert_revision_round(
+        project,
+        review,
+        required_surfaces=required_surfaces,
+        required_journeys=required_journeys,
+    )
     live_sessions = _validated_live_sessions(project, review)
     architecture_refs = _accepted_architecture_decisions(project)
 
@@ -320,6 +408,8 @@ def build_scope_baseline(
         "truth_ref": "derived/truth-register.yaml",
         "solution_ref": "solution/solution-contract.yaml",
         "experience_ref": f"experience/directions/{direction_file}",
+        "prototype_revision_ref": revision_ref,
+        "review_round_ref": round_ref,
         "prototype_coverage_ref": expected_coverage_ref,
         "prototype_implementation_ref": coverage.get("implementation_ref"),
         "core_runtime_ref": (
