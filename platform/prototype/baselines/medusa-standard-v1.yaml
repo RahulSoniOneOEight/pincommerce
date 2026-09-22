@@ -1,0 +1,38 @@
+baseline_id: medusa-standard-v1
+provider: medusa
+role: commerce-core
+mode: real-core
+capabilities:
+  catalogue:
+    enabled: true
+    components: [products, variants, categories, collections, brands]
+  pricing:
+    enabled: true
+    components: [price-lists, customer-groups, volume-pricing]
+  promotions:
+    enabled: true
+    components: [coupons, cart-discounts, campaign-rules]
+  cart:
+    enabled: true
+    components: [cart-lines, quantities, taxes, discounts]
+  checkout:
+    enabled: true
+    components: [addresses, delivery, payment-selection, order-confirmation]
+  orders:
+    enabled: true
+    components: [create, confirm, cancel, fulfill, complete]
+  returns:
+    enabled: true
+    components: [request, approve, receive, refund]
+  customers:
+    enabled: true
+    components: [b2c, b2b-account-context]
+  inventory:
+    enabled: true
+    components: [availability, reservation]
+prototype_defaults:
+  currency: INR
+  region: IN
+  tax_inclusive: true
+  seed_profile: realistic-retail
+override_policy: client-brief-over-standard
