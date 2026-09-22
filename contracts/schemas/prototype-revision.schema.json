@@ -1,0 +1,28 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Prototype Revision",
+  "type":"object",
+  "required":["revision_id","client_id","direction_id","sequence","parent_revision_ref","source_revision","build_id","coverage_ref","implementation_ref","core_runtime_ref","demo_dataset_ref","surfaces","journeys","feedback_refs","change_refs","created_by","status","immutable"],
+  "properties":{
+    "revision_id":{"type":"string","pattern":"^PROTO-[A-Za-z0-9._-]+$"},
+    "client_id":{"type":"string","minLength":1},
+    "direction_id":{"type":"string","minLength":1},
+    "sequence":{"type":"integer","minimum":1},
+    "parent_revision_ref":{"type":["string","null"]},
+    "source_revision":{"type":"string","minLength":1},
+    "build_id":{"type":"string","minLength":1},
+    "coverage_ref":{"type":"string","minLength":1},
+    "implementation_ref":{"type":["string","null"]},
+    "core_runtime_ref":{"type":["string","null"]},
+    "demo_dataset_ref":{"type":["string","null"]},
+    "surfaces":{"type":"array","items":{"type":"string"},"minItems":1},
+    "journeys":{"type":"array","items":{"type":"string"},"minItems":1},
+    "feedback_refs":{"type":"array","items":{"type":"string"}},
+    "change_refs":{"type":"array","items":{"type":"string"}},
+    "created_by":{"type":"string","minLength":1},
+    "created_at":{"type":["string","null"]},
+    "status":{"enum":["draft","qa-ready","review-ready","superseded","approved"]},
+    "immutable":{"const":true}
+  },
+  "additionalProperties":false
+}
