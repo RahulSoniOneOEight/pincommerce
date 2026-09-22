@@ -1,0 +1,8 @@
+coverage_id: COV-example-a
+client_id: ""
+direction_id: DIR-EXAMPLE-A
+prototype_manifest_ref: experience/prototypes/a-manifest.yaml
+requirements: []
+surface_coverage: []
+blocking_items: []
+status: draft
