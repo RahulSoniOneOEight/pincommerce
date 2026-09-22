@@ -1,0 +1,16 @@
+baseline_id: BASE-EXAMPLE-v1
+client_id: ""
+version: 1
+solution_ref: solution/solution-contract.yaml
+experience_ref: experience/directions/a.yaml
+review_ref: feedback/REV-EXAMPLE.yaml
+visual_qa_refs:
+  - experience/visual-qa/VQA-EXAMPLE.yaml
+included_capabilities: []
+excluded_capabilities: []
+deferred_capabilities: []
+architecture_decisions: []
+open_non_blocking_items: []
+approved_by: ""
+approved_at: ""
+immutable: true
