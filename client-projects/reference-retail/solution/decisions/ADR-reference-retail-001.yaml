@@ -2,7 +2,7 @@
   "decision_id": "ADR-reference-retail-001",
   "client_id": "reference-retail",
   "title": "Select activepieces for automation",
-  "status": "proposed",
+  "status": "accepted",
   "context": "Resolve provider for solution domain automation.",
   "decision": "Use provider activepieces behind the automation boundary.",
   "alternatives": [],
@@ -17,6 +17,6 @@
   "evidence_refs": [
     "solution/solution-contract.yaml"
   ],
-  "approved_by": null,
-  "approved_at": null
+  "approved_by": "reference-acceptance",
+  "approved_at": "2026-09-22T18:00:00Z"
 }
