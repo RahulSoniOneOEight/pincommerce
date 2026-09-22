@@ -79,7 +79,8 @@ class NowaLiveReviewTests(unittest.TestCase):
             project = root / "client-projects/demo"
             for folder in (
                 "input", "solution", "solution/decisions", "derived", "feedback",
-                "experience/directions", "experience/prototypes", "experience/visual-qa"
+                "experience/directions", "experience/prototypes", "experience/revisions",
+                "experience/visual-qa", "feedback/rounds", "feedback/items"
             ):
                 (project / folder).mkdir(parents=True, exist_ok=True)
 
@@ -195,6 +196,8 @@ class NowaLiveReviewTests(unittest.TestCase):
                 "implementation_ref": "experience/prototypes/a-implementation.yaml",
                 "core_runtime_ref": None,
                 "demo_dataset_ref": None,
+                "prototype_revision_ref": "experience/revisions/PROTO-demo-a-001.yaml",
+                "review_round_ref": "feedback/rounds/ROUND-demo-a-001.yaml",
                 "surface_approvals": [{"surface": "customer-app", "status": "approved"}],
                 "journey_approvals": [{"journey": "browse-to-buy", "status": "approved"}],
                 "live_review_sessions": ["feedback/LIVE-demo-NOWA-001.yaml"],
@@ -209,6 +212,51 @@ class NowaLiveReviewTests(unittest.TestCase):
             }
             (project / "feedback/review.yaml").write_text(
                 yaml.safe_dump(review), encoding="utf-8"
+            )
+            revision = {
+                "revision_id": "PROTO-demo-a-001",
+                "client_id": "demo",
+                "direction_id": "DIR-DEMO-A",
+                "sequence": 1,
+                "parent_revision_ref": None,
+                "source_revision": "abcdef123456",
+                "build_id": "BLD-DEMO",
+                "coverage_ref": "experience/prototypes/a-coverage.yaml",
+                "implementation_ref": "experience/prototypes/a-implementation.yaml",
+                "core_runtime_ref": None,
+                "demo_dataset_ref": None,
+                "surfaces": ["customer-app"],
+                "journeys": ["browse-to-buy"],
+                "feedback_refs": [],
+                "change_refs": [],
+                "created_by": "tester",
+                "created_at": "2026-09-22T00:00:00Z",
+                "status": "approved",
+                "immutable": True,
+            }
+            (project / "experience/revisions/PROTO-demo-a-001.yaml").write_text(
+                yaml.safe_dump(revision), encoding="utf-8"
+            )
+            round_value = {
+                "round_id": "ROUND-demo-a-001",
+                "client_id": "demo",
+                "sequence": 1,
+                "prototype_revision_ref": "experience/revisions/PROTO-demo-a-001.yaml",
+                "review_session_ref": "feedback/review.yaml",
+                "previous_round_ref": None,
+                "next_revision_ref": None,
+                "required_surfaces": ["customer-app"],
+                "required_journeys": ["browse-to-buy"],
+                "feedback_refs": [],
+                "live_review_refs": ["feedback/LIVE-demo-NOWA-001.yaml"],
+                "change_refs": [],
+                "qa_refs": ["experience/visual-qa/qa.yaml"],
+                "surface_decisions": [{"surface": "customer-app", "status": "approved"}],
+                "journey_decisions": [{"journey": "browse-to-buy", "status": "approved"}],
+                "outcome": "approved",
+            }
+            (project / "feedback/rounds/ROUND-demo-a-001.yaml").write_text(
+                yaml.safe_dump(round_value), encoding="utf-8"
             )
             qa = {
                 "qa_id": "VQA-DEMO",
