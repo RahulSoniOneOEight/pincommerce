@@ -95,3 +95,22 @@ client-input.yaml
 ```
 
 AI remains advisory throughout this chain. A generated classification or architecture decision does not become approved client scope without the applicable human review/freeze gate.
+
+
+## A/B/C seamless completion gate
+
+The final A/B/C scope freeze now re-validates the whole authority chain rather than trusting an approved Review Session in isolation.
+
+It blocks when:
+- Client Truth still contains unresolved assumptions, unknowns, questions or conflicts;
+- active Architecture Decisions remain proposed/rejected instead of accepted;
+- prototype coverage or implementation evidence has changed or become incomplete;
+- a required Medusa/Mercur/Tryton core runtime is not healthy/seeded;
+- required surfaces or journeys are not explicitly approved;
+- any required surface lacks passing Visual + Business QA;
+- any mandatory QA check is missing;
+- a live-review session attached to the selected Review Session is unfinished or contains unrouted material changes.
+
+Unrelated historical/live-review sessions no longer block a later review round merely because they exist in the feedback directory.
+
+Use `python -m tooling.validation.abc_seam --client <client> --direction a.yaml` to inspect A/B/C readiness before attempting client review/freeze.
