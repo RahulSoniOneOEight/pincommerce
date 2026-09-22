@@ -93,8 +93,8 @@ def build_scope_baseline(
         "excluded_capabilities": list(capability_map.get("not_applicable", [])),
         "deferred_capabilities": list(capability_map.get("later", [])),
         "architecture_decisions": [
-            f"solution/decisions/{name}"
-            for name in solution.get("decision_refs", [])
+            f"solution/decisions/{path.name}"
+            for path in sorted((project / "solution" / "decisions").glob("ADR-*.yaml"))
         ],
         "open_non_blocking_items": [],
         "approved_by": approved_by,
