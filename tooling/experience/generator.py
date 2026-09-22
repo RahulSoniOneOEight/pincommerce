@@ -149,10 +149,13 @@ def build_experience(client_id: str, root: Path = ROOT) -> dict[str, dict[str, A
             "fixture_set": fixture_set_id,
             "status": "draft",
         }
+        suffix = definition["suffix"].lower()
         manifest = {
             "client_id": client_id,
             "direction_id": direction_id,
             "build_identity": "unbuilt",
+            "requirements_source": "input/client-input.yaml#experience_requirements",
+            "coverage_ref": f"experience/prototypes/{suffix}-coverage.yaml",
             "surfaces": [
                 {
                     "id": surface,
@@ -164,8 +167,8 @@ def build_experience(client_id: str, root: Path = ROOT) -> dict[str, dict[str, A
             "fixtures": [fixture_set_id],
             "status": "draft",
         }
-        files[f"experience/directions/{definition['suffix'].lower()}.yaml"] = direction
-        files[f"experience/prototypes/{definition['suffix'].lower()}-manifest.yaml"] = manifest
+        files[f"experience/directions/{suffix}.yaml"] = direction
+        files[f"experience/prototypes/{suffix}-manifest.yaml"] = manifest
 
     return files
 
@@ -180,6 +183,11 @@ def write_experience(client_id: str, root: Path = ROOT, overwrite: bool = False)
             raise ExperienceError(f"Refusing to overwrite: {path}")
         dump_yaml(path, value)
         written.append(path)
+
+    from tooling.experience.coverage import write_coverage
+    for direction_file in ("a.yaml", "b.yaml", "c.yaml"):
+        coverage_path = write_coverage(client_id, direction_file, root)
+        written.append(coverage_path)
     return written
 
 
