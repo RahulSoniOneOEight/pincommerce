@@ -54,6 +54,7 @@
     "source_refs":{"type":"array","items":{"type":"string"},"uniqueItems":true},
     "assumptions":{"type":"array","items":{"type":"string"}},
     "open_questions":{"type":"array","items":{"type":"string"}},
+    "conflicts":{"type":"array","items":{"type":"string"}},
     "version":{"type":"integer","minimum":1},
     "submitted_by":{"type":"string"},
     "submitted_at":{"type":"string"}
