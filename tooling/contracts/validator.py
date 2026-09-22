@@ -12,6 +12,10 @@ ROOT = Path(__file__).resolve().parents[2]
 
 CONTRACTS = {
     "client-input": ROOT / "contracts" / "schemas" / "client-input.schema.json",
+    "truth-register": ROOT / "contracts" / "schemas" / "truth-register.schema.json",
+    "integration-map": ROOT / "contracts" / "schemas" / "integration-map.schema.json",
+    "architecture-decision": ROOT / "contracts" / "schemas" / "architecture-decision.schema.json",
+    "scope-baseline": ROOT / "contracts" / "schemas" / "scope-baseline.schema.json",
     "solution": ROOT / "contracts" / "schemas" / "solution-contract.schema.json",
     "workflow-state": ROOT / "contracts" / "schemas" / "workflow-state.schema.json",
     "change": ROOT / "contracts" / "schemas" / "change-contract.schema.json",
