@@ -85,6 +85,26 @@ CAPABILITY_UX = {
     },
 }
 
+CAPABILITY_SURFACES = {
+    "catalogue": {"customer-app", "web-store", "commerce-admin", "seller-portal"},
+    "search": {"customer-app", "web-store", "commerce-admin", "seller-portal"},
+    "promotions": {"customer-app", "web-store", "commerce-admin"},
+    "cart": {"customer-app", "web-store"},
+    "checkout": {"customer-app", "web-store"},
+    "orders": {"customer-app", "web-store"},
+    "return-refund": {"customer-app", "web-store", "commerce-admin", "seller-portal"},
+    "inventory-availability": {
+        "customer-app", "web-store", "commerce-admin", "seller-portal",
+        "warehouse", "erp",
+    },
+    "credit-management": {"customer-app", "web-store", "commerce-admin", "erp"},
+    "approval-workflow": {"customer-app", "web-store", "commerce-admin", "erp"},
+    "quote-rfq": {"customer-app", "web-store", "commerce-admin", "erp"},
+    "customer-support": {"customer-app", "web-store", "customer-support"},
+    "analytics": {"analytics", "commerce-admin"},
+    "ops-exceptions": {"ops-console", "analytics", "commerce-admin"},
+}
+
 SURFACE_DEFAULTS = {
     "customer-app": {
         "screens": ["home", "search", "product-list", "product-detail", "cart", "checkout", "orders", "profile"],
@@ -281,7 +301,8 @@ def build_coverage(
 
         for capability in capabilities:
             ux = CAPABILITY_UX.get(capability)
-            if ux:
+            applicable_surfaces = CAPABILITY_SURFACES.get(capability)
+            if ux and (applicable_surfaces is None or surface in applicable_surfaces):
                 screens.extend(ux["screens"])
                 components.extend(ux["components"])
                 states.extend(ux["states"])
