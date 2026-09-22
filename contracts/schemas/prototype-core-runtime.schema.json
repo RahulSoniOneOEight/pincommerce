@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Prototype Core Runtime",
+  "type": "object",
+  "required": ["runtime_id","client_id","modules","external_integrations","status"],
+  "properties": {
+    "runtime_id":{"type":"string","pattern":"^PCR-[A-Za-z0-9._-]+$"},
+    "client_id":{"type":"string","minLength":1},
+    "modules":{
+      "type":"array",
+      "items":{
+        "type":"object",
+        "required":["provider","baseline_ref","required","mode","overrides","health","status"],
+        "properties":{
+          "provider":{"enum":["medusa","mercur","tryton"]},
+          "baseline_ref":{"type":"string","minLength":1},
+          "required":{"type":"boolean"},
+          "mode":{"enum":["real-core","not-required"]},
+          "overrides":{"type":"array","items":{
+            "type":"object",
+            "required":["requirement_id","target","change"],
+            "properties":{
+              "requirement_id":{"type":"string"},
+              "target":{"type":"string"},
+              "change":{"type":"string"},
+              "source_refs":{"type":"array","items":{"type":"string"}}
+            },
+            "additionalProperties":false
+          }},
+          "health":{
+            "type":"object",
+            "required":["required","evidence_ref"],
+            "properties":{
+              "required":{"type":"boolean"},
+              "evidence_ref":{"type":["string","null"]}
+            },
+            "additionalProperties":false
+          },
+          "status":{"enum":["not-required","planned","configured","healthy"]}
+        },
+        "additionalProperties":false
+      }
+    },
+    "external_integrations":{
+      "type":"array",
+      "items":{
+        "type":"object",
+        "required":["provider","mode","scenario_catalog_ref","status"],
+        "properties":{
+          "provider":{"type":"string"},
+          "mode":{"enum":["mock","sandbox","live"]},
+          "scenario_catalog_ref":{"type":["string","null"]},
+          "status":{"enum":["planned","ready"]}
+        },
+        "additionalProperties":false
+      }
+    },
+    "demo_dataset_ref":{"type":["string","null"]},
+    "status":{"enum":["incomplete","prototype-ready"]}
+  },
+  "additionalProperties":false
+}
