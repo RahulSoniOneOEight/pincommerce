@@ -25,6 +25,7 @@ def main() -> int:
         ("ai-proposal", "client-projects/reference-retail/intelligence/ai/interpretation.yaml"),
         ("experience-direction", "client-projects/reference-retail/experience/directions/a.yaml"),
         ("prototype-manifest", "client-projects/reference-retail/experience/prototypes/a-manifest.yaml"),
+        ("prototype-coverage", "client-projects/reference-retail/experience/prototypes/a-coverage.yaml"),
         ("fixture-set", "client-projects/reference-retail/experience/fixtures/commerce-baseline.yaml"),
         ("build-identity", "client-projects/reference-retail/experience/builds/BLD-reference-retail-a-ref001.yaml"),
         ("capture-manifest", "client-projects/reference-retail/experience/visual-qa/CAP-BLD-reference-retail-a-ref001.yaml"),
