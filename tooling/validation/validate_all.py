@@ -30,6 +30,7 @@ def main() -> int:
         ("capture-manifest", "client-projects/reference-retail/experience/visual-qa/CAP-BLD-reference-retail-a-ref001.yaml"),
         ("visual-qa", "client-projects/reference-retail/experience/visual-qa/VQA-BLD-reference-retail-a-ref001.yaml"),
         ("review-session", "client-projects/reference-retail/feedback/REV-BLD-reference-retail-a-ref001.yaml"),
+        ("live-review-session", "client-projects/reference-retail/feedback/LIVE-reference-retail-NOWA-001.yaml"),
         ("bugdrop", "client-projects/reference-retail/feedback/BUG-REF-001.yaml"),
         ("domain-event", "client-projects/reference-retail/production/integration/order-confirmed.event.yaml"),
         ("domain-command", "client-projects/reference-retail/production/integration/create-sales-order.command.yaml"),
