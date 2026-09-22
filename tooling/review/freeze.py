@@ -443,13 +443,59 @@ def build_scope_baseline(
     return baseline
 
 
+def _current_approved_version(project: Path) -> int:
+    pointer = project / "approved" / "current-scope.yaml"
+    if pointer.exists():
+        value = load_yaml(pointer)
+        errors = validate_document(value, "current-scope")
+        if errors:
+            raise FreezeError("Invalid current scope pointer: " + "; ".join(errors))
+        return int(value["version"])
+
+    legacy = project / "approved" / "scope-baseline.yaml"
+    if legacy.exists():
+        value = load_yaml(legacy)
+        errors = validate_document(value, "scope-baseline")
+        if errors:
+            raise FreezeError("Invalid legacy scope baseline: " + "; ".join(errors))
+        return int(value.get("version", 1))
+    return 0
+
+
 def write_scope_baseline(client_id: str, baseline: dict[str, Any], root: Path = ROOT) -> Path:
-    path = root / "client-projects" / client_id / "approved" / "scope-baseline.yaml"
+    project = root / "client-projects" / client_id
+    approved = project / "approved"
+    version = int(baseline["version"])
+    current_version = _current_approved_version(project)
+    if version <= current_version:
+        raise FreezeError(
+            f"Scope baseline version must advance beyond current v{current_version}; got v{version}"
+        )
+
+    directory = approved / "scope-baselines"
+    path = directory / f"{baseline['baseline_id']}.yaml"
     if path.exists():
         raise FreezeError(f"Refusing to overwrite immutable baseline: {path}")
-    path.parent.mkdir(parents=True, exist_ok=True)
+    directory.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as fh:
         yaml.safe_dump(baseline, fh, sort_keys=False)
+
+    pointer = {
+        "client_id": client_id,
+        "baseline_id": baseline["baseline_id"],
+        "baseline_ref": f"approved/scope-baselines/{path.name}",
+        "version": version,
+        "updated_at": baseline["approved_at"],
+    }
+    errors = validate_document(pointer, "current-scope")
+    if errors:
+        path.unlink(missing_ok=True)
+        raise FreezeError("Generated current scope pointer invalid: " + "; ".join(errors))
+
+    pointer_path = approved / "current-scope.yaml"
+    approved.mkdir(parents=True, exist_ok=True)
+    with pointer_path.open("w", encoding="utf-8") as fh:
+        yaml.safe_dump(pointer, fh, sort_keys=False)
     return path
 
 
