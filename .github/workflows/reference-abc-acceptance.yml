@@ -1,0 +1,106 @@
+name: Reference Retail A-B-C Acceptance
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  reference-abc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: medusa_ref
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d medusa_ref"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install platform validation dependencies
+        run: pip install -r requirements-dev.txt
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Prove Medusa real-core runtime
+        id: medusa-runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone https://github.com/medusajs/dtc-starter.git --depth=1 /tmp/medusa-ref
+          cd /tmp/medusa-ref
+          corepack enable
+          pnpm install --frozen-lockfile
+          cp apps/backend/.env.template apps/backend/.env
+          {
+            echo "DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/medusa_ref"
+            echo "REDIS_URL="
+            echo "JWT_SECRET=reference-secret"
+            echo "COOKIE_SECRET=reference-secret"
+          } >> apps/backend/.env
+          cd apps/backend
+          pnpm medusa db:migrate
+          nohup pnpm dev >/tmp/medusa.log 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:9000/health >/tmp/medusa-health.json; then
+              cat /tmp/medusa-health.json
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/medusa.log
+          exit 1
+
+      - name: Prove Tryton real-core runtime
+        id: tryton-runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run -d --name tryton-reference -p 8000:8000 tryton/tryton:8.0
+          for i in $(seq 1 45); do
+            if curl -sS http://127.0.0.1:8000/ >/tmp/tryton-health.txt; then
+              docker ps --filter name=tryton-reference
+              cat /tmp/tryton-health.txt || true
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs tryton-reference
+          exit 1
+
+      - name: Verify governed provider seed bundles
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import yaml
+          root = Path("client-projects/reference-retail/experience/fixtures/provider-seeds")
+          for provider in ("medusa", "tryton"):
+              path = root / f"{provider}.yaml"
+              value = yaml.safe_load(path.read_text())
+              assert value["provider"] == provider
+              assert value["source_dataset"] == "DEMO-reference-retail-v1"
+              print(f"{provider}: seed bundle ready")
+          PY
+
+      - name: Run full A-B-C readiness audit
+        run: python -m tooling.validation.abc_seam --client reference-retail --direction a.yaml
