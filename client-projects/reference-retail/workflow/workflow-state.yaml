@@ -12,6 +12,7 @@ completed:
   - journey-map
   - entity-map
   - surface-map
+  - integration-map
   - dependency-map
 blocked: false
 human_approvals: []
