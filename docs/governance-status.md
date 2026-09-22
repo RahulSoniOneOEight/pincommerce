@@ -29,6 +29,8 @@ Legend:
 | Review Artifact | `contracts/schemas/review-artifact.schema.json`, `review/artifact-contract.md` | Legacy | Superseded by Review Session; no instance, not validated |
 | Visual QA | `contracts/schemas/visual-qa.schema.json`, `client-projects/*/experience/visual-qa/VQA-*.yaml` | Enforced now | Reference instance schema-validated in CI; scope freeze requires passed checks |
 | Live Client Review (Nowa) | `contracts/schemas/live-review-session.schema.json`, `client-projects/*/feedback/LIVE-*.yaml` | Enforced now | Minor edits require Git revision + post-change QA; material edits must route to Change Contract; unfinished sessions block scope freeze |
+| Prototype Coverage | `contracts/schemas/prototype-coverage.schema.json`, `client-projects/*/experience/prototypes/*-coverage.yaml` | Enforced now | Client UX requirements must map to surfaces/screens/components/states; unmapped requirements block Review Session creation |
+| Prototype Implementation Evidence | `contracts/schemas/prototype-implementation.schema.json`, `client-projects/*/experience/prototypes/*-implementation.yaml` | Enforced at review gate | Every required screen/component/state must have implemented evidence before client review |
 
 The canonical review model is **Review Session**. The review pipeline in
 `docs/review-visual-validation.md` (Build Identity → Capture Manifest → Review Session →
