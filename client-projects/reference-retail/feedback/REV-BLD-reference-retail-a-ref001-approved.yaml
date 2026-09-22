@@ -1,0 +1,21 @@
+{
+  "review_id": "REV-BLD-reference-retail-a-ref001-approved",
+  "client_id": "reference-retail",
+  "build_id": "BLD-reference-retail-a-ref001",
+  "direction_id": "DIR-REFERENCE-RETAIL-A",
+  "artifacts": [
+    {
+      "artifact_id": "ART-0001",
+      "surface": "customer-app",
+      "route_or_screen": "default",
+      "environment": "prototype",
+      "build_identity": "BLD-reference-retail-a-ref001",
+      "journey": "browse-to-buy",
+      "viewport": "390x844",
+      "preview_url": "",
+      "screenshot_ref": "review/artifacts/BLD-reference-retail-a-ref001/customer-app/390x844/default.png",
+      "approval_status": "approved"
+    }
+  ],
+  "status": "approved"
+}
