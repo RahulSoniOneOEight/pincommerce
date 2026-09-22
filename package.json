@@ -10,6 +10,8 @@
     "review:build": "npm --workspace apps/review_mode run build",
     "ops:build": "npm --workspace apps/ops_console run build",
     "control:build": "npm --workspace apps/control_plane run build",
-    "web:test": "npm --workspace packages/agency_web_ui run test"
+    "web:test": "npm --workspace packages/agency_web_ui run test",
+    "commerce-admin:build": "npm --workspace apps/commerce_admin run build",
+    "analytics:build": "npm --workspace apps/analytics run build"
   }
 }
