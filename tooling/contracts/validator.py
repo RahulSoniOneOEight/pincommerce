@@ -16,6 +16,7 @@ CONTRACTS = {
     "integration-map": ROOT / "contracts" / "schemas" / "integration-map.schema.json",
     "architecture-decision": ROOT / "contracts" / "schemas" / "architecture-decision.schema.json",
     "scope-baseline": ROOT / "contracts" / "schemas" / "scope-baseline.schema.json",
+    "current-scope": ROOT / "contracts" / "schemas" / "current-scope.schema.json",
     "solution": ROOT / "contracts" / "schemas" / "solution-contract.schema.json",
     "workflow-state": ROOT / "contracts" / "schemas" / "workflow-state.schema.json",
     "change": ROOT / "contracts" / "schemas" / "change-contract.schema.json",
