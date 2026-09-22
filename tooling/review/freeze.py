@@ -61,6 +61,29 @@ def build_scope_baseline(
     if blocking:
         raise FreezeError("All review artifacts must be approved: " + ", ".join(blocking))
 
+    live_sessions = []
+    for path in sorted((project / "feedback").glob("LIVE-*.yaml")):
+        live = load_yaml(path)
+        errors = validate_document(live, "live-review-session")
+        if errors:
+            raise FreezeError(f"Invalid live review session {path.name}: " + "; ".join(errors))
+        if live.get("status") not in {"client-confirmed", "closed"}:
+            raise FreezeError(
+                f"Live review session {path.name} must be client-confirmed/closed before scope freeze"
+            )
+        unrouted_material = [
+            edit.get("edit_id", "unknown")
+            for edit in live.get("edits", [])
+            if edit.get("classification") == "material-change"
+            and edit.get("status") != "change-contract-created"
+        ]
+        if unrouted_material:
+            raise FreezeError(
+                f"Live review session {path.name} has material edits without Change Contract: "
+                + ", ".join(unrouted_material)
+            )
+        live_sessions.append(f"feedback/{path.name}")
+
     qa_refs: list[str] = []
     for name in visual_qa_files:
         qa = load_yaml(project / "experience" / "visual-qa" / name)
@@ -97,6 +120,7 @@ def build_scope_baseline(
             for path in sorted((project / "solution" / "decisions").glob("ADR-*.yaml"))
         ],
         "open_non_blocking_items": [],
+        "live_review_sessions": live_sessions,
         "approved_by": approved_by,
         "approved_at": approved_at,
         "immutable": True,
