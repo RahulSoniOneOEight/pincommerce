@@ -1,0 +1,57 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: pincommerce_prototype
+      POSTGRES_USER: pincommerce
+      POSTGRES_PASSWORD: pincommerce
+    ports:
+      - "5432:5432"
+    volumes:
+      - prototype-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pincommerce -d pincommerce_prototype"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  valkey:
+    image: valkey/valkey:8
+    ports:
+      - "6379:6379"
+
+  nats:
+    image: nats:2.10
+    command: ["-js"]
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.10
+    environment:
+      MEILI_ENV: development
+      MEILI_NO_ANALYTICS: "true"
+      MEILI_MASTER_KEY: prototype-master-key
+    ports:
+      - "7700:7700"
+    volumes:
+      - prototype-meili:/meili_data
+
+  tryton:
+    image: tryton/tryton:8.0
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOSTNAME: postgres
+      DB_PORT: 5432
+      DB_NAME: pincommerce_prototype
+      DB_USER: pincommerce
+      DB_PASSWORD: pincommerce
+    ports:
+      - "8000:8000"
+
+volumes:
+  prototype-postgres:
+  prototype-meili:
