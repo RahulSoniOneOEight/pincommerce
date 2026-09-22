@@ -43,7 +43,10 @@ class ReviewToolingTests(unittest.TestCase):
         build = create_build_identity(
             "demo", "a.yaml", "abcdef1234567890", "tester", root=self.root
         )
-        capture = create_capture_manifest(build, ["default", "failure"])
+        capture = create_capture_manifest(
+            build,
+            {"customer-app": ["default", "failure"], "web-store": ["default", "failure"]},
+        )
         runtimes = {item["runtime"] for item in capture["targets"]}
         self.assertIn("flutter", runtimes)
         self.assertIn("web", runtimes)
@@ -53,10 +56,25 @@ class ReviewToolingTests(unittest.TestCase):
         build = create_build_identity(
             "demo", "a.yaml", "abcdef1234567890", "tester", root=self.root
         )
-        capture = create_capture_manifest(build, ["default"])
-        review = create_review_session(build, capture)
+        capture = create_capture_manifest(
+            build,
+            {"customer-app": ["default"], "web-store": ["default"]},
+        )
+        coverage = {
+            "implementation_ref": "experience/prototypes/a-implementation.yaml",
+            "surface_coverage": [
+                {"surface": "customer-app", "required": True, "journeys": ["browse-to-buy"]},
+                {"surface": "web-store", "required": True, "journeys": ["browse-to-buy"]},
+            ],
+        }
+        review = create_review_session(build, capture, coverage, None)
         self.assertEqual(review["build_id"], build["build_id"])
         self.assertTrue(review["artifacts"])
+        self.assertEqual(
+            {item["surface"] for item in review["surface_approvals"]},
+            {"customer-app", "web-store"},
+        )
+        self.assertEqual(review["journey_approvals"][0]["journey"], "browse-to-buy")
 
     def test_material_bugdrop_becomes_change_contract(self):
         bug = {
