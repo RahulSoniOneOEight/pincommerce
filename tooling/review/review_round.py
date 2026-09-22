@@ -436,6 +436,13 @@ def main() -> int:
             if path.exists():
                 raise ReviewRoundError(f"Refusing to overwrite immutable revision: {path}")
             save_yaml(path, value)
+            review_path = ROOT / "client-projects" / args.client / "feedback" / args.review
+            review_value = load_yaml(review_path)
+            review_value["prototype_revision_ref"] = f"experience/revisions/{path.name}"
+            errors = validate_document(review_value, "review-session")
+            if errors:
+                raise ReviewRoundError("Review Session invalid after revision bind: " + "; ".join(errors))
+            save_yaml(review_path, review_value)
             print(path.relative_to(ROOT))
             return 0
         if args.command == "create-round":
@@ -450,6 +457,13 @@ def main() -> int:
             if path.exists():
                 raise ReviewRoundError(f"Refusing to overwrite Review Round: {path}")
             save_yaml(path, value)
+            review_path = ROOT / "client-projects" / args.client / "feedback" / args.review
+            review_value = load_yaml(review_path)
+            review_value["review_round_ref"] = f"feedback/rounds/{path.name}"
+            errors = validate_document(review_value, "review-session")
+            if errors:
+                raise ReviewRoundError("Review Session invalid after round bind: " + "; ".join(errors))
+            save_yaml(review_path, review_value)
             print(path.relative_to(ROOT))
             return 0
         if args.command == "add-feedback":
@@ -502,7 +516,7 @@ def main() -> int:
             round_value = load_yaml(args.round_path)
             feedback_values = []
             for ref in round_value.get("feedback_refs", []):
-                relative = ref[len("feedback/"):] if ref.startswith("feedback/") else ref
+                relative = ref if ref.startswith("feedback/") else f"feedback/{ref}"
                 feedback_values.append(
                     load_yaml(ROOT / "client-projects" / round_value["client_id"] / relative)
                 )
