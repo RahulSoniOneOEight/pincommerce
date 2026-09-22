@@ -111,6 +111,16 @@
           "id": "support",
           "status": "implemented",
           "evidence_ref": "apps/prototype_app/lib/main.dart#screen:support"
+        },
+        {
+          "id": "profile",
+          "status": "implemented",
+          "evidence_ref": "apps/prototype_app/lib/main.dart#screen:profile"
+        },
+        {
+          "id": "inventory",
+          "status": "implemented",
+          "evidence_ref": "apps/prototype_app/lib/main.dart#screen:inventory"
         }
       ],
       "components": [
@@ -298,6 +308,16 @@
           "id": "ticket-status",
           "status": "implemented",
           "evidence_ref": "apps/prototype_app/lib/main.dart#component:ticket-status"
+        },
+        {
+          "id": "availability-indicator",
+          "status": "implemented",
+          "evidence_ref": "apps/prototype_app/lib/main.dart#component:availability-indicator"
+        },
+        {
+          "id": "warehouse-availability",
+          "status": "implemented",
+          "evidence_ref": "apps/prototype_app/lib/main.dart#component:warehouse-availability"
         }
       ],
       "states": [
@@ -395,6 +415,16 @@
           "id": "submitted",
           "status": "implemented",
           "evidence_ref": "apps/prototype_app/lib/main.dart#state:submitted"
+        },
+        {
+          "id": "in-stock",
+          "status": "implemented",
+          "evidence_ref": "apps/prototype_app/lib/main.dart#state:in-stock"
+        },
+        {
+          "id": "low-stock",
+          "status": "implemented",
+          "evidence_ref": "apps/prototype_app/lib/main.dart#state:low-stock"
         }
       ],
       "status": "complete"
@@ -507,6 +537,11 @@
           "id": "support",
           "status": "implemented",
           "evidence_ref": "apps/storefront/app/page.tsx#screen:support"
+        },
+        {
+          "id": "inventory",
+          "status": "implemented",
+          "evidence_ref": "apps/storefront/app/page.tsx#screen:inventory"
         }
       ],
       "components": [
@@ -699,6 +734,16 @@
           "id": "ticket-status",
           "status": "implemented",
           "evidence_ref": "apps/storefront/app/page.tsx#component:ticket-status"
+        },
+        {
+          "id": "availability-indicator",
+          "status": "implemented",
+          "evidence_ref": "apps/storefront/app/page.tsx#component:availability-indicator"
+        },
+        {
+          "id": "warehouse-availability",
+          "status": "implemented",
+          "evidence_ref": "apps/storefront/app/page.tsx#component:warehouse-availability"
         }
       ],
       "states": [
@@ -796,6 +841,16 @@
           "id": "submitted",
           "status": "implemented",
           "evidence_ref": "apps/storefront/app/page.tsx#state:submitted"
+        },
+        {
+          "id": "in-stock",
+          "status": "implemented",
+          "evidence_ref": "apps/storefront/app/page.tsx#state:in-stock"
+        },
+        {
+          "id": "low-stock",
+          "status": "implemented",
+          "evidence_ref": "apps/storefront/app/page.tsx#state:low-stock"
         }
       ],
       "status": "complete"
@@ -888,6 +943,46 @@
           "id": "support",
           "status": "implemented",
           "evidence_ref": "apps/commerce_admin/app/page.tsx#screen:support"
+        },
+        {
+          "id": "home",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#screen:home"
+        },
+        {
+          "id": "category",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#screen:category"
+        },
+        {
+          "id": "product-list",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#screen:product-list"
+        },
+        {
+          "id": "cart",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#screen:cart"
+        },
+        {
+          "id": "exceptions",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#screen:exceptions"
+        },
+        {
+          "id": "exception-detail",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#screen:exception-detail"
+        },
+        {
+          "id": "account",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#screen:account"
+        },
+        {
+          "id": "approval-status",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#screen:approval-status"
         }
       ],
       "components": [
@@ -1015,6 +1110,76 @@
           "id": "support-entry",
           "status": "implemented",
           "evidence_ref": "apps/commerce_admin/app/page.tsx#component:support-entry"
+        },
+        {
+          "id": "category-navigation",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#component:category-navigation"
+        },
+        {
+          "id": "product-card",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#component:product-card"
+        },
+        {
+          "id": "product-gallery",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#component:product-gallery"
+        },
+        {
+          "id": "variant-selector",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#component:variant-selector"
+        },
+        {
+          "id": "search-suggestions",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#component:search-suggestions"
+        },
+        {
+          "id": "pickup-option",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#component:pickup-option"
+        },
+        {
+          "id": "metric-card",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#component:metric-card"
+        },
+        {
+          "id": "trend-chart",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#component:trend-chart"
+        },
+        {
+          "id": "quote-line",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#component:quote-line"
+        },
+        {
+          "id": "exception-card",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#component:exception-card"
+        },
+        {
+          "id": "retry-action",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#component:retry-action"
+        },
+        {
+          "id": "replay-action",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#component:replay-action"
+        },
+        {
+          "id": "credit-balance",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#component:credit-balance"
+        },
+        {
+          "id": "approver-status",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#component:approver-status"
         }
       ],
       "states": [
@@ -1112,6 +1277,26 @@
           "id": "submitted",
           "status": "implemented",
           "evidence_ref": "apps/commerce_admin/app/page.tsx#state:submitted"
+        },
+        {
+          "id": "open",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#state:open"
+        },
+        {
+          "id": "retrying",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#state:retrying"
+        },
+        {
+          "id": "resolved",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#state:resolved"
+        },
+        {
+          "id": "failed",
+          "status": "implemented",
+          "evidence_ref": "apps/commerce_admin/app/page.tsx#state:failed"
         }
       ],
       "status": "complete"
@@ -1179,6 +1364,11 @@
           "id": "approval-status",
           "status": "implemented",
           "evidence_ref": "apps/analytics/app/page.tsx#screen:approval-status"
+        },
+        {
+          "id": "exception-detail",
+          "status": "implemented",
+          "evidence_ref": "apps/analytics/app/page.tsx#screen:exception-detail"
         }
       ],
       "components": [
@@ -1246,6 +1436,21 @@
           "id": "approval-banner",
           "status": "implemented",
           "evidence_ref": "apps/analytics/app/page.tsx#component:approval-banner"
+        },
+        {
+          "id": "exception-card",
+          "status": "implemented",
+          "evidence_ref": "apps/analytics/app/page.tsx#component:exception-card"
+        },
+        {
+          "id": "retry-action",
+          "status": "implemented",
+          "evidence_ref": "apps/analytics/app/page.tsx#component:retry-action"
+        },
+        {
+          "id": "replay-action",
+          "status": "implemented",
+          "evidence_ref": "apps/analytics/app/page.tsx#component:replay-action"
         }
       ],
       "states": [
@@ -1308,6 +1513,11 @@
           "id": "refunded",
           "status": "implemented",
           "evidence_ref": "apps/analytics/app/page.tsx#state:refunded"
+        },
+        {
+          "id": "retrying",
+          "status": "implemented",
+          "evidence_ref": "apps/analytics/app/page.tsx#state:retrying"
         }
       ],
       "status": "complete"
@@ -1370,6 +1580,21 @@
           "id": "approval-status",
           "status": "implemented",
           "evidence_ref": "platform/erp/tryton/adapter.yaml#screen:approval-status"
+        },
+        {
+          "id": "product-detail",
+          "status": "implemented",
+          "evidence_ref": "platform/erp/tryton/adapter.yaml#screen:product-detail"
+        },
+        {
+          "id": "account",
+          "status": "implemented",
+          "evidence_ref": "platform/erp/tryton/adapter.yaml#screen:account"
+        },
+        {
+          "id": "checkout",
+          "status": "implemented",
+          "evidence_ref": "platform/erp/tryton/adapter.yaml#screen:checkout"
         }
       ],
       "components": [
@@ -1432,6 +1657,36 @@
           "id": "quote-status",
           "status": "implemented",
           "evidence_ref": "platform/erp/tryton/adapter.yaml#component:quote-status"
+        },
+        {
+          "id": "availability-indicator",
+          "status": "implemented",
+          "evidence_ref": "platform/erp/tryton/adapter.yaml#component:availability-indicator"
+        },
+        {
+          "id": "quote-line",
+          "status": "implemented",
+          "evidence_ref": "platform/erp/tryton/adapter.yaml#component:quote-line"
+        },
+        {
+          "id": "credit-limit-card",
+          "status": "implemented",
+          "evidence_ref": "platform/erp/tryton/adapter.yaml#component:credit-limit-card"
+        },
+        {
+          "id": "credit-balance",
+          "status": "implemented",
+          "evidence_ref": "platform/erp/tryton/adapter.yaml#component:credit-balance"
+        },
+        {
+          "id": "approval-banner",
+          "status": "implemented",
+          "evidence_ref": "platform/erp/tryton/adapter.yaml#component:approval-banner"
+        },
+        {
+          "id": "approver-status",
+          "status": "implemented",
+          "evidence_ref": "platform/erp/tryton/adapter.yaml#component:approver-status"
         }
       ],
       "states": [
@@ -1499,6 +1754,21 @@
           "id": "submitted",
           "status": "implemented",
           "evidence_ref": "platform/erp/tryton/adapter.yaml#state:submitted"
+        },
+        {
+          "id": "available",
+          "status": "implemented",
+          "evidence_ref": "platform/erp/tryton/adapter.yaml#state:available"
+        },
+        {
+          "id": "partially-used",
+          "status": "implemented",
+          "evidence_ref": "platform/erp/tryton/adapter.yaml#state:partially-used"
+        },
+        {
+          "id": "limit-exceeded",
+          "status": "implemented",
+          "evidence_ref": "platform/erp/tryton/adapter.yaml#state:limit-exceeded"
         }
       ],
       "status": "complete"
