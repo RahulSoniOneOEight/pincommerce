@@ -17,6 +17,7 @@ risk_profile: standard
 source_refs: []
 assumptions: []
 open_questions: []
+conflicts: []
 version: 1
 submitted_by: ""
 submitted_at: ""
