@@ -1,5 +1,5 @@
-const screens = ["home","category","search","search-results","product-list","product-detail","cart","checkout","address","delivery","payment","order-confirmation","account","orders","order-detail","return-request","return-status","rfq","quote-detail","approval-status","support"];
-const states = ["default","loading","empty","failure","out-of-stock","no-results","coupon-valid","coupon-invalid","payment-failed","order-success","approval-pending","approved","rejected","refunded","available","partially-used","limit-exceeded","draft","submitted"];
+const screens = ["home","category","search","search-results","product-list","product-detail","cart","checkout","address","delivery","payment","order-confirmation","account","orders","order-detail","return-request","return-status","rfq","quote-detail","approval-status","support","inventory"];
+const states = ["default","loading","empty","failure","out-of-stock","no-results","coupon-valid","coupon-invalid","payment-failed","order-success","approval-pending","approved","rejected","refunded","available","partially-used","limit-exceeded","draft","submitted","in-stock","low-stock"];
 
 export default function HomePage() {
   return (
