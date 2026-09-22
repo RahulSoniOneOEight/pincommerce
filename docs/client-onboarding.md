@@ -109,6 +109,48 @@ Create an immutable build/capture/review bundle:
 
 The Review Session command independently re-runs both gates. It refuses client review if UI coverage/implementation evidence is incomplete or if a required Medusa/Mercur/Tryton runtime lacks healthy evidence, linked demo data, or ready prototype provider bindings.
 
+Create the immutable Prototype Revision for that exact build:
+
+`python -m tooling.review.review_round create-revision --client acme-retail --review <REV-...yaml> --sequence 1 --created-by <actor>`
+
+Create Review Round 001 around that revision:
+
+`python -m tooling.review.review_round create-round --client acme-retail --revision <PROTO-...yaml> --review <REV-...yaml> --sequence 1`
+
+During the client call, review feedback is captured as structured text with context. Example:
+
+`python -m tooling.review.review_round add-feedback client-projects/acme-retail/feedback/rounds/<ROUND-...yaml> --surface customer-app --journey credit-order --screen checkout --component credit-limit-card --type visual --comment "Move available credit above payment options" --action request-change --created-by <client>`
+
+The platform classifies visual/content feedback as a minor change routed to Nowa. Business-rule, integration, data, finance, security and workflow feedback is material and routes to a Change Contract. Approvals and discussion notes use the same Review Feedback contract.
+
+After a minor change has a governed Nowa session, bind the feedback item to it:
+
+`python -m tooling.review.review_round route-feedback <ROUND-...yaml> <FB-...yaml> --live-review-ref feedback/<LIVE-...yaml>`
+
+For material feedback:
+
+`python -m tooling.review.review_round route-feedback <ROUND-...yaml> <FB-...yaml> --change-contract-ref changes/<CHG-...yaml>`
+
+Once the requested change is complete, resolve the feedback item:
+
+`python -m tooling.review.review_round resolve-feedback <FB-...yaml>`
+
+Record the QA evidence for the reviewed revision:
+
+`python -m tooling.review.review_round record-qa <ROUND-...yaml> --qa-ref experience/visual-qa/<VQA-...yaml>`
+
+Approve reviewed surfaces and journeys as the client confirms them:
+
+`python -m tooling.review.review_round approve <ROUND-...yaml> --surface customer-app`
+
+`python -m tooling.review.review_round approve <ROUND-...yaml> --journey credit-order`
+
+Finalize the round:
+
+`python -m tooling.review.review_round finalize <ROUND-...yaml>`
+
+If changes are required, create Prototype Revision 002 with `--parent-revision-ref experience/revisions/<PROTO-001.yaml>`, create Review Round 002 with `--previous-round-ref feedback/rounds/<ROUND-001.yaml>`, and link the earlier round to the new revision with `link-next`. The loop can repeat for as many review rounds as needed.
+
 Plan governed Visual + Business QA from the generated capture manifest:
 
 `python -m tooling.review.visual_qa --client acme-retail --capture <CAP-...yaml>`
