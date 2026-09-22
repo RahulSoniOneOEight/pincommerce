@@ -23,6 +23,8 @@ BUSINESS_MODEL_TO_ARCHETYPE = {
     "b2c": "d2c-commerce",
     "b2b": "b2b-commerce",
     "marketplace": "marketplace",
+    "b2b-marketplace": "marketplace",
+    "multi-vendor": "marketplace",
 }
 
 
