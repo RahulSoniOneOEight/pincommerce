@@ -286,6 +286,26 @@ def main() -> int:
     add.add_argument("--after")
     add.add_argument("--git-path", action="append", default=[])
 
+    apply_cmd = sub.add_parser("apply-minor")
+    apply_cmd.add_argument("path", type=Path)
+    apply_cmd.add_argument("--edit-id", required=True)
+    apply_cmd.add_argument("--git-diff-ref", required=True)
+    apply_cmd.add_argument("--resulting-revision", required=True)
+
+    route_cmd = sub.add_parser("route-material")
+    route_cmd.add_argument("path", type=Path)
+    route_cmd.add_argument("--edit-id", required=True)
+    route_cmd.add_argument("--change-contract-ref", required=True)
+
+    qa_cmd = sub.add_parser("record-qa")
+    qa_cmd.add_argument("path", type=Path)
+    qa_cmd.add_argument("--visual-qa-ref", action="append", required=True)
+
+    confirm_cmd = sub.add_parser("confirm")
+    confirm_cmd.add_argument("path", type=Path)
+    confirm_cmd.add_argument("--confirmed-by", required=True)
+    confirm_cmd.add_argument("--confirmed-at", required=True)
+
     args = parser.parse_args()
     try:
         if args.command == "create":
@@ -310,6 +330,35 @@ def main() -> int:
             )
             save_yaml(args.path, value)
             print(yaml.safe_dump(value["edits"][-1], sort_keys=False))
+            return 0
+        if args.command == "apply-minor":
+            value = apply_minor_edit(
+                load_yaml(args.path),
+                args.edit_id,
+                git_diff_ref=args.git_diff_ref,
+                resulting_revision=args.resulting_revision,
+            )
+            save_yaml(args.path, value)
+            print(args.path)
+            return 0
+        if args.command == "route-material":
+            value = route_material_edit(
+                load_yaml(args.path), args.edit_id, args.change_contract_ref
+            )
+            save_yaml(args.path, value)
+            print(args.path)
+            return 0
+        if args.command == "record-qa":
+            value = record_qa(load_yaml(args.path), args.visual_qa_ref)
+            save_yaml(args.path, value)
+            print(args.path)
+            return 0
+        if args.command == "confirm":
+            value = client_confirm(
+                load_yaml(args.path), args.confirmed_by, args.confirmed_at
+            )
+            save_yaml(args.path, value)
+            print(args.path)
             return 0
         return 2
     except NowaReviewError as exc:
