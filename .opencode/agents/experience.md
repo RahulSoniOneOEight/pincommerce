@@ -20,3 +20,6 @@ Rules:
 6. Client feedback affecting business/data/integration scope becomes a Change Contract.
 7. During a Flutter client call, Nowa may be used only for recorded minor visual/UX edits. Persist changes to governed Flutter source and require post-change Visual QA.
 8. Never use Nowa to implement business rules, finance, permissions, data/integration behavior, workflow/state machines or architecture; route those requests to Change Contract.
+9. Every UX-impacting client brief requirement must map to prototype surfaces/screens/components/states or be explicitly deferred/not-applicable with rationale.
+10. Do not mark a prototype client-review-ready from coverage declarations alone. Require implementation evidence for every required screen, component and state.
+11. Dummy/fixture data is acceptable for client review; missing UI/UX coverage is not.
