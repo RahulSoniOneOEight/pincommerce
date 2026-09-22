@@ -241,8 +241,10 @@ def _assert_revision_round(
     project: Path,
     review: dict[str, Any],
     *,
+    expected_review_ref: str,
     required_surfaces: list[str],
     required_journeys: list[str],
+    qa_refs: list[str],
 ) -> tuple[str, str]:
     revision_ref = review.get("prototype_revision_ref")
     round_ref = review.get("review_round_ref")
@@ -265,13 +267,15 @@ def _assert_revision_round(
         raise FreezeError("Prototype Revision build does not match Review Session")
     if round_value.get("prototype_revision_ref") != revision_ref:
         raise FreezeError("Review Round does not reference the selected Prototype Revision")
-    if round_value.get("review_session_ref") != f"feedback/{review.get('review_id')}.yaml":
-        expected = f"feedback/{review.get('review_id')}.yaml"
-        actual = round_value.get("review_session_ref")
-        if actual != expected:
-            raise FreezeError("Review Round does not reference the selected Review Session")
+    if round_value.get("review_session_ref") != expected_review_ref:
+        raise FreezeError("Review Round does not reference the selected Review Session")
     if round_value.get("outcome") != "approved":
         raise FreezeError("Final Review Round must be approved before scope freeze")
+    round_qa = set(round_value.get("qa_refs", []))
+    if not round_qa:
+        raise FreezeError("Final Review Round has no QA evidence")
+    if not round_qa.issubset(set(qa_refs)):
+        raise FreezeError("Final Review Round QA references do not match selected passing QA")
 
     surface_status = {
         item.get("surface"): item.get("status")
@@ -388,8 +392,10 @@ def build_scope_baseline(
     revision_ref, round_ref = _assert_revision_round(
         project,
         review,
+        expected_review_ref=f"feedback/{review_file}",
         required_surfaces=required_surfaces,
         required_journeys=required_journeys,
+        qa_refs=qa_refs,
     )
     live_sessions = _validated_live_sessions(project, review)
     architecture_refs = _accepted_architecture_decisions(project)
