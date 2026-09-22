@@ -1,0 +1,8 @@
+dataset_id: DEMO-example-v1
+client_id: ""
+profile: realistic-retail
+masters: {}
+transactions: {}
+finance: {}
+scenario_coverage: []
+status: draft
