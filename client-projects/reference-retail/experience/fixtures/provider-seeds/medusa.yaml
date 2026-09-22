@@ -1,0 +1,23 @@
+provider: medusa
+source_dataset: DEMO-reference-retail-v1
+customers:
+  - {id: CUST-B2C-001, name: Aarav Demo, type: b2c}
+  - {id: CUST-B2B-014, name: Metro Hardware Demo, type: b2b, credit_limit: 500000, credit_available: 185000}
+products:
+  - {id: SKU-1001, name: Reference Product A, mrp: 1999, gst_rate: 18, uom: each}
+  - {id: SKU-2001, name: Reference Product B, mrp: 4800, gst_rate: 18, uom: case}
+inventory:
+  - {sku: SKU-1001, warehouse: BLR-01, on_hand: 42, reserved: 7, available: 35}
+  - {sku: SKU-2001, warehouse: BLR-01, on_hand: 8, reserved: 8, available: 0}
+orders:
+  - {id: ORD-1001, customer_id: CUST-B2C-001, status: delivered, total: 11800}
+  - {id: ORD-1002, customer_id: CUST-B2C-001, status: payment_failed, total: 4720}
+  - {id: ORD-1003, customer_id: CUST-B2B-014, status: approval_pending, total: 124800}
+  - {id: ORD-1008, customer_id: CUST-B2C-001, status: reconciliation_mismatch, total: 12980}
+payments:
+  - {id: PAY-1001, order_id: ORD-1001, provider: razorpay-mock, status: captured, amount: 11800}
+  - {id: PAY-1002, order_id: ORD-1002, provider: razorpay-mock, status: failed, amount: 4720}
+shipments:
+  - {id: SHP-1001, order_id: ORD-1001, provider: shiprocket-mock, awb: SRDEMO982173, status: delivered}
+returns:
+  - {id: RET-1005, order_id: ORD-1005, status: qc_pending, refund_status: not_started}
