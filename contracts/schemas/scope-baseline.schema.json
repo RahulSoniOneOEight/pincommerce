@@ -2,23 +2,97 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Approved Scope Baseline",
   "type": "object",
-  "required": ["baseline_id","client_id","version","solution_ref","experience_ref","review_ref","visual_qa_refs","included_capabilities","excluded_capabilities","deferred_capabilities","architecture_decisions","approved_by","approved_at","immutable"],
+  "required": [
+    "baseline_id",
+    "client_id",
+    "version",
+    "solution_ref",
+    "experience_ref",
+    "review_ref",
+    "visual_qa_refs",
+    "included_capabilities",
+    "excluded_capabilities",
+    "deferred_capabilities",
+    "architecture_decisions",
+    "approved_by",
+    "approved_at",
+    "immutable"
+  ],
   "properties": {
-    "baseline_id":{"type":"string","pattern":"^BASE-[A-Za-z0-9._-]+$"},
-    "client_id":{"type":"string"},
-    "version":{"type":"integer","minimum":1},
-    "solution_ref":{"type":"string"},
-    "experience_ref":{"type":"string"},
-    "review_ref":{"type":"string"},
-    "visual_qa_refs":{"type":"array","items":{"type":"string"},"minItems":1},
-    "included_capabilities":{"type":"array","items":{"type":"string"}},
-    "excluded_capabilities":{"type":"array","items":{"type":"string"}},
-    "deferred_capabilities":{"type":"array","items":{"type":"string"}},
-    "architecture_decisions":{"type":"array","items":{"type":"string"}},
-    "open_non_blocking_items":{"type":"array","items":{"type":"string"}},
-    "approved_by":{"type":"string","minLength":1},
-    "approved_at":{"type":"string","minLength":1},
-    "immutable":{"const":true}
+    "baseline_id": {
+      "type": "string",
+      "pattern": "^BASE-[A-Za-z0-9._-]+$"
+    },
+    "client_id": {
+      "type": "string"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "solution_ref": {
+      "type": "string"
+    },
+    "experience_ref": {
+      "type": "string"
+    },
+    "review_ref": {
+      "type": "string"
+    },
+    "visual_qa_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "included_capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "excluded_capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "deferred_capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "architecture_decisions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "open_non_blocking_items": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "approved_by": {
+      "type": "string",
+      "minLength": 1
+    },
+    "approved_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "immutable": {
+      "const": true
+    },
+    "live_review_sessions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
   },
   "additionalProperties": false
 }
