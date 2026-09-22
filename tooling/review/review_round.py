@@ -68,6 +68,14 @@ def create_prototype_revision(
 
     suffix = _direction_suffix(review["direction_id"])
     revision_id = f"PROTO-{client_id}-{suffix}-{sequence:03d}"
+    if parent_revision_ref:
+        parent = load_yaml(project / parent_revision_ref)
+        if parent.get("client_id") != client_id:
+            raise ReviewRoundError("Parent Prototype Revision belongs to another client")
+        if parent.get("direction_id") != review.get("direction_id"):
+            raise ReviewRoundError("Parent Prototype Revision uses another direction")
+        if int(parent.get("sequence", 0)) >= sequence:
+            raise ReviewRoundError("Prototype Revision sequence must advance beyond parent")
     coverage = load_yaml(project / "experience" / "prototypes" / f"{suffix}-coverage.yaml")
 
     surfaces = [
@@ -366,6 +374,21 @@ def finalize_round(
     return result
 
 
+
+def link_next_revision(
+    round_value: dict[str, Any],
+    next_revision_ref: str,
+) -> dict[str, Any]:
+    if round_value.get("outcome") not in {"changes-requested", "in-review"}:
+        raise ReviewRoundError(
+            "Next Prototype Revision can only be linked from an active/changes-requested round"
+        )
+    result = {**round_value, "next_revision_ref": next_revision_ref}
+    errors = validate_document(result, "review-round")
+    if errors:
+        raise ReviewRoundError("Review Round invalid after next-revision link: " + "; ".join(errors))
+    return result
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Govern Prototype Revisions and Review Rounds")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -420,6 +443,10 @@ def main() -> int:
 
     finalize = sub.add_parser("finalize")
     finalize.add_argument("round_path", type=Path)
+
+    link = sub.add_parser("link-next")
+    link.add_argument("round_path", type=Path)
+    link.add_argument("--next-revision-ref", required=True)
 
     args = parser.parse_args()
     try:
@@ -509,6 +536,13 @@ def main() -> int:
             save_yaml(
                 args.round_path,
                 approve_target(load_yaml(args.round_path), surface=args.surface, journey=args.journey),
+            )
+            print(args.round_path)
+            return 0
+        if args.command == "link-next":
+            save_yaml(
+                args.round_path,
+                link_next_revision(load_yaml(args.round_path), args.next_revision_ref),
             )
             print(args.round_path)
             return 0
