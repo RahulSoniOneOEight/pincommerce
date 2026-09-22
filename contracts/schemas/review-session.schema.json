@@ -169,6 +169,18 @@
         },
         "additionalProperties": false
       }
+    },
+    "prototype_revision_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "review_round_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
     }
   },
   "additionalProperties": true
