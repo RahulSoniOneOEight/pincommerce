@@ -20,6 +20,8 @@ stages:
     output: derived/entity-map.yaml
   - id: surface-map
     output: derived/surface-map.yaml
+  - id: integration-map
+    output: derived/integration-map.yaml
   - id: dependency-map
     output: derived/dependency-map.yaml
   - id: solution-architecture
@@ -35,7 +37,7 @@ stages:
   - id: change-control
     output: changes
   - id: approval-freeze
-    output: approved
+    output: approved/scope-baseline.yaml
     human_gate: true
   - id: production-contracts
     output: contracts
