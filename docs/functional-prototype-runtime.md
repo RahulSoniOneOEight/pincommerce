@@ -70,6 +70,22 @@ The same identifiers should be visible across UI, commerce, marketplace, ERP, op
 
 These mocks simulate the provider edge only. Internal order, inventory, ERP and finance consequences remain real core-system behavior.
 
+## Seed the core runtimes
+
+Generate provider-specific seed bundles from the governed demo dataset:
+
+`python -m tooling.prototype.seed_bundle --client <client-id>`
+
+This produces Medusa, Mercur and Tryton seed payloads under:
+
+`experience/fixtures/provider-seeds/`
+
+After importing the applicable seed into the actual core runtime, record both health and seed evidence:
+
+`python -m tooling.prototype.runtime_evidence --client <client-id> --provider medusa --health-ref <ref> --seed-ref <ref>`
+
+Repeat for every required core module. A runtime is not considered client-review ready merely because the service process is up; it must also be seeded with the governed prototype data.
+
 ## Client-review gate
 
 A Review Session may open only when:
