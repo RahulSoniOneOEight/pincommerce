@@ -14,6 +14,8 @@ from tooling.review.nowa_session import (
     route_material_edit,
 )
 from tooling.review.freeze import FreezeError, build_scope_baseline
+from tooling.review.visual_qa import REQUIRED_CHECKS
+from tooling.experience.coverage import build_coverage
 
 
 class NowaLiveReviewTests(unittest.TestCase):
@@ -76,17 +78,54 @@ class NowaLiveReviewTests(unittest.TestCase):
             root = Path(tmp)
             project = root / "client-projects/demo"
             for folder in (
-                "solution", "solution/decisions", "derived", "feedback",
-                "experience/directions", "experience/visual-qa"
+                "input", "solution", "solution/decisions", "derived", "feedback",
+                "experience/directions", "experience/prototypes", "experience/visual-qa"
             ):
                 (project / folder).mkdir(parents=True, exist_ok=True)
 
+            (project / "input/client-input.yaml").write_text(
+                yaml.safe_dump({
+                    "client_id": "demo",
+                    "industry": "retail",
+                    "business_models": ["d2c"],
+                    "experience_requirements": [],
+                }),
+                encoding="utf-8",
+            )
+            (project / "derived/truth-register.yaml").write_text(
+                yaml.safe_dump({
+                    "client_id": "demo",
+                    "version": 1,
+                    "records": [{
+                        "truth_id": "TRUTH-0001",
+                        "path": "industry",
+                        "value": "retail",
+                        "classification": "fact",
+                        "confidence": 1.0,
+                        "sources": ["input/client-input.yaml"],
+                        "status": "confirmed",
+                        "notes": [],
+                    }],
+                    "open_questions": [],
+                    "conflicts": [],
+                    "status": "review-ready",
+                }),
+                encoding="utf-8",
+            )
             (project / "solution/solution-contract.yaml").write_text(
                 "version: 1\nclient: demo\nproviders: {}\n", encoding="utf-8"
             )
             (project / "derived/capability-map.yaml").write_text(
-                "client_id: demo\nmandatory: [audit]\ncore: [checkout]\nrecommended: []\n"
+                "client_id: demo\nmandatory: []\ncore: []\nrecommended: []\n"
                 "requested_additional: []\nlater: []\nnot_applicable: []\n",
+                encoding="utf-8",
+            )
+            (project / "derived/surface-map.yaml").write_text(
+                "client_id: demo\nrequired: [customer-app]\nrecommended: []\n",
+                encoding="utf-8",
+            )
+            (project / "derived/journey-map.yaml").write_text(
+                "client_id: demo\njourneys:\n  - {id: browse-to-buy, status: required}\n",
                 encoding="utf-8",
             )
             (project / "experience/directions/a.yaml").write_text(
@@ -95,15 +134,76 @@ class NowaLiveReviewTests(unittest.TestCase):
                 "design_intent: {}\nstatus: draft\n",
                 encoding="utf-8",
             )
+            (project / "experience/prototypes/a-manifest.yaml").write_text(
+                yaml.safe_dump({
+                    "client_id": "demo",
+                    "direction_id": "DIR-DEMO-A",
+                    "build_identity": "unbuilt",
+                    "requirements_source": "input/client-input.yaml#experience_requirements",
+                    "coverage_ref": "experience/prototypes/a-coverage.yaml",
+                    "surfaces": [{
+                        "id": "customer-app",
+                        "runtime": "flutter",
+                        "entry": "apps/prototype_app",
+                    }],
+                    "fixtures": ["commerce-baseline"],
+                    "status": "draft",
+                }),
+                encoding="utf-8",
+            )
+            planned = build_coverage("demo", "a.yaml", root, require_implementation=False)
+            surface = planned["surface_coverage"][0]
+            (project / "experience/prototypes/a-implementation.yaml").write_text(
+                yaml.safe_dump({
+                    "implementation_id": "IMP-demo-a",
+                    "client_id": "demo",
+                    "direction_id": "DIR-DEMO-A",
+                    "surfaces": [{
+                        "surface": "customer-app",
+                        "runtime_ref": "apps/prototype_app",
+                        "screens": [
+                            {"id": x, "status": "implemented", "evidence_ref": f"app#{x}"}
+                            for x in surface["screens"]
+                        ],
+                        "components": [
+                            {"id": x, "status": "implemented", "evidence_ref": f"ui#{x}"}
+                            for x in surface["components"]
+                        ],
+                        "states": [
+                            {"id": x, "status": "implemented", "evidence_ref": f"fixture#{x}"}
+                            for x in surface["states"]
+                        ],
+                        "status": "complete",
+                    }],
+                    "status": "complete",
+                }),
+                encoding="utf-8",
+            )
+
+            live = create_live_session(
+                "demo", "REV-DEMO", "BLD-DEMO", "agency-reviewer", ["agency-reviewer"]
+            )
+            live_path = project / "feedback/LIVE-demo-NOWA-001.yaml"
+            live_path.write_text(yaml.safe_dump(live), encoding="utf-8")
+
             review = {
                 "review_id": "REV-DEMO",
                 "client_id": "demo",
                 "build_id": "BLD-DEMO",
                 "direction_id": "DIR-DEMO-A",
+                "coverage_ref": "experience/prototypes/a-coverage.yaml",
+                "implementation_ref": "experience/prototypes/a-implementation.yaml",
+                "core_runtime_ref": None,
+                "demo_dataset_ref": None,
+                "surface_approvals": [{"surface": "customer-app", "status": "approved"}],
+                "journey_approvals": [{"journey": "browse-to-buy", "status": "approved"}],
+                "live_review_sessions": ["feedback/LIVE-demo-NOWA-001.yaml"],
                 "artifacts": [{
-                    "artifact_id": "ART-1", "surface": "customer-app",
-                    "environment": "prototype", "build_identity": "BLD-DEMO",
-                    "approval_status": "approved"
+                    "artifact_id": "ART-1",
+                    "surface": "customer-app",
+                    "environment": "prototype",
+                    "build_identity": "BLD-DEMO",
+                    "approval_status": "approved",
                 }],
                 "status": "approved",
             }
@@ -111,22 +211,24 @@ class NowaLiveReviewTests(unittest.TestCase):
                 yaml.safe_dump(review), encoding="utf-8"
             )
             qa = {
-                "qa_id": "VQA-DEMO", "client_id": "demo", "direction_id": "DIR-DEMO-A",
-                "surface": "customer-app", "build_identity": "BLD-DEMO",
-                "checks": [{"id": "visual", "status": "pass", "evidence": "capture", "notes": []}],
+                "qa_id": "VQA-DEMO",
+                "client_id": "demo",
+                "direction_id": "DIR-DEMO-A",
+                "surface": "customer-app",
+                "build_identity": "BLD-DEMO",
+                "checks": [
+                    {"id": check, "status": "pass", "evidence": "capture", "notes": []}
+                    for check in REQUIRED_CHECKS
+                ],
                 "status": "passed",
             }
             (project / "experience/visual-qa/qa.yaml").write_text(
                 yaml.safe_dump(qa), encoding="utf-8"
             )
-            live = create_live_session(
-                "demo", "REV-DEMO", "BLD-DEMO", "agency-reviewer", ["agency-reviewer"]
-            )
-            (project / "feedback/LIVE-demo-NOWA-001.yaml").write_text(
-                yaml.safe_dump(live), encoding="utf-8"
-            )
 
-            with self.assertRaises(FreezeError):
+            with self.assertRaisesRegex(
+                FreezeError, "must be client-confirmed/closed"
+            ):
                 build_scope_baseline(
                     "demo",
                     review_file="review.yaml",
@@ -135,6 +237,7 @@ class NowaLiveReviewTests(unittest.TestCase):
                     approved_at="2026-09-22T11:00:00Z",
                     root=root,
                 )
+
 
 
 if __name__ == "__main__":
