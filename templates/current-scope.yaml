@@ -1,0 +1,5 @@
+client_id: ""
+baseline_id: BASE-example-v1
+baseline_ref: approved/scope-baselines/BASE-example-v1.yaml
+version: 1
+updated_at: ""
