@@ -32,6 +32,7 @@ experience_requirements:
     requested_screens: [operations-overview, exceptions]
     requested_components: [metric-card, exception-table, status-chip]
     required_states: [default, open, resolved, failed]
+core_module_requirements: []
 required_integrations: [payment, logistics, whatsapp]
 constraints:
   - provider-neutral-contracts
