@@ -28,6 +28,7 @@ Legend:
 | Review Session | `contracts/schemas/review-session.schema.json`, `client-projects/*/feedback/` | Enforced now | Reference instance schema-validated in CI |
 | Review Artifact | `contracts/schemas/review-artifact.schema.json`, `review/artifact-contract.md` | Legacy | Superseded by Review Session; no instance, not validated |
 | Visual QA | `contracts/schemas/visual-qa.schema.json`, `client-projects/*/experience/visual-qa/VQA-*.yaml` | Enforced now | Reference instance schema-validated in CI; scope freeze requires passed checks |
+| Live Client Review (Nowa) | `contracts/schemas/live-review-session.schema.json`, `client-projects/*/feedback/LIVE-*.yaml` | Enforced now | Minor edits require Git revision + post-change QA; material edits must route to Change Contract; unfinished sessions block scope freeze |
 
 The canonical review model is **Review Session**. The review pipeline in
 `docs/review-visual-validation.md` (Build Identity → Capture Manifest → Review Session →
