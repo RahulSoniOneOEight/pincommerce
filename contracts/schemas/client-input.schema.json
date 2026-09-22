@@ -2,62 +2,263 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Client Input",
   "type": "object",
-  "required": ["client_id", "industry", "business_models"],
+  "required": [
+    "client_id",
+    "industry",
+    "business_models"
+  ],
   "properties": {
-    "client_id": {"type": "string", "minLength": 1},
-    "client_name": {"type":"string"},
-    "industry": {"type": "string", "minLength": 1},
-    "business_models": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
-    "goals": {"type": "array", "items": {"type": "string"}},
-    "requested_capabilities": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
-    "required_integrations": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "client_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "client_name": {
+      "type": "string"
+    },
+    "industry": {
+      "type": "string",
+      "minLength": 1
+    },
+    "business_models": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "goals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "requested_capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "required_integrations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
     "existing_systems": {
-      "type":"array",
-      "items":{
-        "oneOf":[
-          {"type":"string"},
+      "type": "array",
+      "items": {
+        "oneOf": [
           {
-            "type":"object",
-            "required":["name","category"],
-            "properties":{
-              "name":{"type":"string"},
-              "category":{"type":"string"},
-              "owner":{"type":"string"},
-              "criticality":{"enum":["low","medium","high","critical"]},
-              "notes":{"type":"string"}
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "required": [
+              "name",
+              "category"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "owner": {
+                "type": "string"
+              },
+              "criticality": {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "critical"
+                ]
+              },
+              "notes": {
+                "type": "string"
+              }
             },
-            "additionalProperties":true
+            "additionalProperties": true
           }
         ]
       }
     },
-    "channels":{"type":"array","items":{"type":"string"},"uniqueItems":true},
-    "volumes":{"type":"object","additionalProperties":{"type":["number","integer","string"]}},
-    "stakeholders":{
-      "type":"array",
-      "items":{
-        "type":"object",
-        "required":["id","role"],
-        "properties":{
-          "id":{"type":"string"},
-          "name":{"type":"string"},
-          "role":{"type":"string"},
-          "approval_scope":{"type":"array","items":{"type":"string"}}
-        },
-        "additionalProperties":true
+    "channels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "volumes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": [
+          "number",
+          "integer",
+          "string"
+        ]
       }
     },
-    "compliance":{"type":"array","items":{"type":"string"},"uniqueItems":true},
-    "constraints": {"type": "array", "items": {"type": "string"}},
-    "geographies": {"type": "array", "items": {"type": "string"}},
-    "risk_profile": {"type": "string"},
-    "source_refs":{"type":"array","items":{"type":"string"},"uniqueItems":true},
-    "assumptions":{"type":"array","items":{"type":"string"}},
-    "open_questions":{"type":"array","items":{"type":"string"}},
-    "conflicts":{"type":"array","items":{"type":"string"}},
-    "version":{"type":"integer","minimum":1},
-    "submitted_by":{"type":"string"},
-    "submitted_at":{"type":"string"}
+    "stakeholders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "role"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "approval_scope": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "compliance": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "geographies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "risk_profile": {
+      "type": "string"
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "submitted_by": {
+      "type": "string"
+    },
+    "submitted_at": {
+      "type": "string"
+    },
+    "experience_requirements": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "object",
+            "required": [
+              "statement"
+            ],
+            "properties": {
+              "requirement_id": {
+                "type": "string",
+                "pattern": "^REQ-[A-Za-z0-9._-]+$"
+              },
+              "statement": {
+                "type": "string",
+                "minLength": 1
+              },
+              "ux_impact": {
+                "type": "boolean"
+              },
+              "source_refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "requested_surfaces": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "requested_screens": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "requested_components": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "required_states": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "decision": {
+                "enum": [
+                  "deferred",
+                  "not-applicable"
+                ]
+              },
+              "decision_reason": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          }
+        ]
+      }
+    }
   },
   "additionalProperties": true
 }
