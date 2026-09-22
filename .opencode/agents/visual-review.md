@@ -22,3 +22,5 @@ Rules:
 3. Visual/UX findings become BugDrops.
 4. Material findings route through Change Contracts.
 5. Never approve production; visual review only contributes evidence.
+6. For Nowa live sessions, verify that each applied minor edit has a governed Git diff/resulting revision and post-change Visual QA evidence before client confirmation.
+7. Treat business, financial, workflow/state, data, integration, security/permission and architecture requests as material; they must not be accepted as minor live edits.
