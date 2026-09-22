@@ -1,4 +1,4 @@
-const screens = ["dashboard","sales","orders","inventory","fulfilment","customers","operations-overview","exceptions","search","return-status","approval-status"];
+const screens = ["dashboard","sales","orders","inventory","fulfilment","customers","operations-overview","exceptions","search","return-status","approval-status","exception-detail"];
 const exceptions = [
   ["ORD-1002","Payment failed"],["ORD-1007","Inventory shortage"],["ORD-1008","Reconciliation mismatch"],["INV-1009","Overdue receivable"]
 ];
