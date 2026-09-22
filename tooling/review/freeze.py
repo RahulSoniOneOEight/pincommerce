@@ -7,6 +7,13 @@ from typing import Any
 import yaml
 
 from tooling.contracts.validator import validate_document
+from tooling.experience.coverage import CoverageError, assert_client_review_ready
+from tooling.prototype.core_runtime import (
+    CoreRuntimeError,
+    assert_core_runtime_ready,
+    client_requires_core_runtime,
+)
+from tooling.review.visual_qa import REQUIRED_CHECKS
 from tooling.validation.identifiers import IdentifierError, validate_identifier
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -24,6 +31,209 @@ def load_yaml(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise FreezeError(f"Expected mapping in {path}")
     return value
+
+
+def _assert_truth_ready(project: Path) -> None:
+    truth = load_yaml(project / "derived" / "truth-register.yaml")
+    errors = validate_document(truth, "truth-register")
+    if errors:
+        raise FreezeError("Invalid Client Truth Register: " + "; ".join(errors))
+    if truth.get("status") not in {"review-ready", "approved"}:
+        raise FreezeError("Client Truth Register must be review-ready/approved before scope freeze")
+    if truth.get("open_questions"):
+        raise FreezeError("Client Truth Register has unresolved open questions")
+    if truth.get("conflicts"):
+        raise FreezeError("Client Truth Register has unresolved conflicts")
+    unresolved = [
+        item.get("truth_id", "unknown")
+        for item in truth.get("records", [])
+        if item.get("classification") in {"assumption", "unknown", "conflict"}
+        and item.get("status") not in {"confirmed", "resolved", "rejected"}
+    ]
+    if unresolved:
+        raise FreezeError(
+            "Client Truth Register has unresolved records: " + ", ".join(unresolved)
+        )
+
+
+def _accepted_architecture_decisions(project: Path) -> list[str]:
+    refs: list[str] = []
+    blocking: list[str] = []
+    for path in sorted((project / "solution" / "decisions").glob("ADR-*.yaml")):
+        decision = load_yaml(path)
+        errors = validate_document(decision, "architecture-decision")
+        if errors:
+            raise FreezeError(f"Invalid architecture decision {path.name}: " + "; ".join(errors))
+        if decision.get("status") != "accepted":
+            blocking.append(path.name)
+        else:
+            refs.append(f"solution/decisions/{path.name}")
+    if blocking:
+        raise FreezeError(
+            "All active Architecture Decisions must be accepted before scope freeze: "
+            + ", ".join(blocking)
+        )
+    return refs
+
+
+def _required_surfaces_and_journeys(project: Path) -> tuple[list[str], list[str]]:
+    surface_map = load_yaml(project / "derived" / "surface-map.yaml")
+    journey_map = load_yaml(project / "derived" / "journey-map.yaml")
+    surfaces = list(dict.fromkeys(surface_map.get("required", [])))
+    journeys = list(dict.fromkeys(
+        item.get("id") if isinstance(item, dict) else item
+        for item in journey_map.get("journeys", [])
+        if not isinstance(item, dict) or item.get("status") == "required"
+    ))
+    return surfaces, [item for item in journeys if item]
+
+
+def _assert_review_coverage(
+    review: dict[str, Any],
+    *,
+    required_surfaces: list[str],
+    required_journeys: list[str],
+    direction_id: str,
+) -> None:
+    errors = validate_document(review, "review-session")
+    if errors:
+        raise FreezeError("Invalid Review Session: " + "; ".join(errors))
+    if review.get("status") != "approved":
+        raise FreezeError("Review Session must be approved before scope freeze")
+    if review.get("direction_id") != direction_id:
+        raise FreezeError("Review Session direction does not match selected direction")
+
+    blocking_artifacts = [
+        item.get("artifact_id", "unknown")
+        for item in review.get("artifacts", [])
+        if item.get("approval_status") != "approved"
+    ]
+    if blocking_artifacts:
+        raise FreezeError(
+            "All review artifacts must be approved: " + ", ".join(blocking_artifacts)
+        )
+
+    artifact_surfaces = {
+        item.get("surface")
+        for item in review.get("artifacts", [])
+        if item.get("approval_status") == "approved"
+    }
+    missing_artifact_surfaces = [
+        surface for surface in required_surfaces if surface not in artifact_surfaces
+    ]
+    if missing_artifact_surfaces:
+        raise FreezeError(
+            "Approved Review Session has no approved artifact for required surfaces: "
+            + ", ".join(missing_artifact_surfaces)
+        )
+
+    surface_status = {
+        item.get("surface"): item.get("status")
+        for item in review.get("surface_approvals", [])
+    }
+    missing_surfaces = [
+        surface for surface in required_surfaces
+        if surface_status.get(surface) != "approved"
+    ]
+    if missing_surfaces:
+        raise FreezeError(
+            "Required surfaces are not approved: " + ", ".join(missing_surfaces)
+        )
+
+    journey_status = {
+        item.get("journey"): item.get("status")
+        for item in review.get("journey_approvals", [])
+    }
+    missing_journeys = [
+        journey for journey in required_journeys
+        if journey_status.get(journey) != "approved"
+    ]
+    if missing_journeys:
+        raise FreezeError(
+            "Required journeys are not approved: " + ", ".join(missing_journeys)
+        )
+
+
+def _validated_live_sessions(project: Path, review: dict[str, Any]) -> list[str]:
+    refs: list[str] = []
+    for raw_ref in review.get("live_review_sessions", []):
+        relative = str(raw_ref)
+        if relative.startswith("feedback/"):
+            relative = relative[len("feedback/"):]
+        path = project / "feedback" / relative
+        live = load_yaml(path)
+        errors = validate_document(live, "live-review-session")
+        if errors:
+            raise FreezeError(f"Invalid live review session {path.name}: " + "; ".join(errors))
+        if live.get("review_id") != review.get("review_id"):
+            raise FreezeError(
+                f"Live review session {path.name} belongs to a different Review Session"
+            )
+        if live.get("status") not in {"client-confirmed", "closed"}:
+            raise FreezeError(
+                f"Live review session {path.name} must be client-confirmed/closed before scope freeze"
+            )
+        unrouted_material = [
+            edit.get("edit_id", "unknown")
+            for edit in live.get("edits", [])
+            if edit.get("classification") == "material-change"
+            and edit.get("status") != "change-contract-created"
+        ]
+        if unrouted_material:
+            raise FreezeError(
+                f"Live review session {path.name} has material edits without Change Contract: "
+                + ", ".join(unrouted_material)
+            )
+        refs.append(f"feedback/{path.name}")
+    return refs
+
+
+def _assert_visual_qa(
+    project: Path,
+    visual_qa_files: list[str],
+    *,
+    review: dict[str, Any],
+    required_surfaces: list[str],
+) -> list[str]:
+    qa_refs: list[str] = []
+    qa_surfaces: set[str] = set()
+    required_checks = set(REQUIRED_CHECKS)
+    for name in visual_qa_files:
+        qa = load_yaml(project / "experience" / "visual-qa" / name)
+        errors = validate_document(qa, "visual-qa")
+        if errors:
+            raise FreezeError("Invalid visual QA: " + "; ".join(errors))
+        if qa.get("build_identity") != review.get("build_id"):
+            raise FreezeError(f"Visual QA {name} does not match Review Session build")
+        if qa.get("direction_id") != review.get("direction_id"):
+            raise FreezeError(f"Visual QA {name} does not match Review Session direction")
+        if qa.get("status") != "passed":
+            raise FreezeError(f"Visual QA {name} must be passed")
+        checks = {item.get("id"): item.get("status") for item in qa.get("checks", [])}
+        missing_checks = sorted(required_checks - set(checks))
+        if missing_checks:
+            raise FreezeError(
+                f"Visual QA {name} is missing required checks: " + ", ".join(missing_checks)
+            )
+        failed = [check for check in REQUIRED_CHECKS if checks.get(check) != "pass"]
+        if failed:
+            raise FreezeError(
+                f"Visual QA {name} has blocking checks: " + ", ".join(failed)
+            )
+        surface = qa.get("surface")
+        if surface:
+            qa_surfaces.add(surface)
+        qa_refs.append(f"experience/visual-qa/{name}")
+
+    missing_surfaces = [
+        surface for surface in required_surfaces if surface not in qa_surfaces
+    ]
+    if missing_surfaces:
+        raise FreezeError(
+            "Passing Visual QA is missing for required surfaces: "
+            + ", ".join(missing_surfaces)
+        )
+    return qa_refs
 
 
 def build_scope_baseline(
@@ -47,55 +257,54 @@ def build_scope_baseline(
         raise FreezeError(str(exc)) from exc
 
     project = root / "client-projects" / client_id
+    _assert_truth_ready(project)
+
     solution = load_yaml(project / "solution" / "solution-contract.yaml")
     capability_map = load_yaml(project / "derived" / "capability-map.yaml")
     review = load_yaml(project / "feedback" / review_file)
     direction = load_yaml(project / "experience" / "directions" / direction_file)
+    required_surfaces, required_journeys = _required_surfaces_and_journeys(project)
 
-    if review.get("status") != "approved":
-        raise FreezeError("Review Session must be approved before scope freeze")
-    blocking = [
-        item["artifact_id"] for item in review.get("artifacts", [])
-        if item.get("approval_status") != "approved"
-    ]
-    if blocking:
-        raise FreezeError("All review artifacts must be approved: " + ", ".join(blocking))
+    try:
+        coverage = assert_client_review_ready(client_id, direction_file, root)
+    except CoverageError as exc:
+        raise FreezeError("Prototype completeness changed since review: " + str(exc)) from exc
 
-    live_sessions = []
-    for path in sorted((project / "feedback").glob("LIVE-*.yaml")):
-        live = load_yaml(path)
-        errors = validate_document(live, "live-review-session")
-        if errors:
-            raise FreezeError(f"Invalid live review session {path.name}: " + "; ".join(errors))
-        if live.get("status") not in {"client-confirmed", "closed"}:
-            raise FreezeError(
-                f"Live review session {path.name} must be client-confirmed/closed before scope freeze"
-            )
-        unrouted_material = [
-            edit.get("edit_id", "unknown")
-            for edit in live.get("edits", [])
-            if edit.get("classification") == "material-change"
-            and edit.get("status") != "change-contract-created"
-        ]
-        if unrouted_material:
-            raise FreezeError(
-                f"Live review session {path.name} has material edits without Change Contract: "
-                + ", ".join(unrouted_material)
-            )
-        live_sessions.append(f"feedback/{path.name}")
+    core_runtime = None
+    if client_requires_core_runtime(client_id, root):
+        try:
+            core_runtime = assert_core_runtime_ready(client_id, root)
+        except CoreRuntimeError as exc:
+            raise FreezeError("Functional core runtime is not ready: " + str(exc)) from exc
 
-    qa_refs: list[str] = []
-    for name in visual_qa_files:
-        qa = load_yaml(project / "experience" / "visual-qa" / name)
-        errors = validate_document(qa, "visual-qa")
-        if errors:
-            raise FreezeError("Invalid visual QA: " + "; ".join(errors))
-        if qa.get("status") not in {"passed", "review-ready"}:
-            raise FreezeError(f"Visual QA {name} is not passed/review-ready")
-        failed = [c.get("id", "unknown") for c in qa.get("checks", []) if c.get("status") != "pass"]
-        if failed:
-            raise FreezeError(f"Visual QA {name} has blocking checks: {', '.join(failed)}")
-        qa_refs.append(f"experience/visual-qa/{name}")
+    _assert_review_coverage(
+        review,
+        required_surfaces=required_surfaces,
+        required_journeys=required_journeys,
+        direction_id=direction["direction_id"],
+    )
+
+    expected_coverage_ref = f"experience/prototypes/{direction_file.replace('.yaml', '')}-coverage.yaml"
+    if review.get("coverage_ref") != expected_coverage_ref:
+        raise FreezeError("Review Session coverage_ref does not match selected prototype")
+    if review.get("implementation_ref") != coverage.get("implementation_ref"):
+        raise FreezeError("Review Session implementation_ref is stale")
+    if core_runtime is not None:
+        if review.get("core_runtime_ref") != "experience/prototype-core-runtime.yaml":
+            raise FreezeError("Review Session core_runtime_ref is missing/stale")
+        if review.get("demo_dataset_ref") != core_runtime.get("demo_dataset_ref"):
+            raise FreezeError("Review Session demo_dataset_ref is missing/stale")
+    elif review.get("core_runtime_ref") is not None:
+        raise FreezeError("Review Session references a core runtime that is not required")
+
+    qa_refs = _assert_visual_qa(
+        project,
+        visual_qa_files,
+        review=review,
+        required_surfaces=required_surfaces,
+    )
+    live_sessions = _validated_live_sessions(project, review)
+    architecture_refs = _accepted_architecture_decisions(project)
 
     included = list(dict.fromkeys(
         capability_map.get("mandatory", [])
@@ -108,17 +317,24 @@ def build_scope_baseline(
         "baseline_id": f"BASE-{client_id}-v{version}",
         "client_id": client_id,
         "version": version,
+        "truth_ref": "derived/truth-register.yaml",
         "solution_ref": "solution/solution-contract.yaml",
         "experience_ref": f"experience/directions/{direction_file}",
+        "prototype_coverage_ref": expected_coverage_ref,
+        "prototype_implementation_ref": coverage.get("implementation_ref"),
+        "core_runtime_ref": (
+            "experience/prototype-core-runtime.yaml" if core_runtime is not None else None
+        ),
+        "demo_dataset_ref": core_runtime.get("demo_dataset_ref") if core_runtime else None,
+        "build_id": review["build_id"],
         "review_ref": f"feedback/{review_file}",
         "visual_qa_refs": qa_refs,
+        "approved_surfaces": required_surfaces,
+        "approved_journeys": required_journeys,
         "included_capabilities": included,
         "excluded_capabilities": list(capability_map.get("not_applicable", [])),
         "deferred_capabilities": list(capability_map.get("later", [])),
-        "architecture_decisions": [
-            f"solution/decisions/{path.name}"
-            for path in sorted((project / "solution" / "decisions").glob("ADR-*.yaml"))
-        ],
+        "architecture_decisions": architecture_refs,
         "open_non_blocking_items": [],
         "live_review_sessions": live_sessions,
         "approved_by": approved_by,
