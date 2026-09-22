@@ -1,5 +1,5 @@
-const screens = ["dashboard","products","orders","inventory","promotions","returns","customers","settings","search","product-detail","checkout","rfq","quote-detail","support"];
-const states = ["default","loading","empty","failure","no-results","coupon-valid","coupon-invalid","approval-pending","approved","rejected","refunded","in-stock","low-stock","out-of-stock","available","limit-exceeded","draft","submitted"];
+const screens = ["dashboard","products","orders","inventory","promotions","returns","customers","settings","search","product-detail","checkout","rfq","quote-detail","support","home","category","product-list","cart","exceptions","exception-detail","account","approval-status"];
+const states = ["default","loading","empty","failure","no-results","coupon-valid","coupon-invalid","approval-pending","approved","rejected","refunded","in-stock","low-stock","out-of-stock","available","limit-exceeded","draft","submitted","open","retrying","resolved","failed"];
 
 export default function CommerceAdminPage() {
   return <main className="agency-page">
