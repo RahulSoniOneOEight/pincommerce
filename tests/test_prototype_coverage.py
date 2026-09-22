@@ -148,6 +148,44 @@ class PrototypeCoverageTests(unittest.TestCase):
         with self.assertRaises(CoverageError):
             assert_client_review_ready("demo", "a.yaml", self.root)
 
+    def test_capability_ui_is_scoped_to_relevant_surfaces(self):
+        self._write_input([])
+        (self.project / "derived/surface-map.yaml").write_text(
+            yaml.safe_dump({
+                "client_id": "demo",
+                "required": ["customer-app", "erp"],
+                "recommended": [],
+            }),
+            encoding="utf-8",
+        )
+        direction = yaml.safe_load(
+            (self.project / "experience/directions/a.yaml").read_text(encoding="utf-8")
+        )
+        direction["surfaces"] = ["customer-app", "erp"]
+        (self.project / "experience/directions/a.yaml").write_text(
+            yaml.safe_dump(direction), encoding="utf-8"
+        )
+        manifest = yaml.safe_load(
+            (self.project / "experience/prototypes/a-manifest.yaml").read_text(encoding="utf-8")
+        )
+        manifest["surfaces"].append({
+            "id": "erp",
+            "runtime": "external",
+            "entry": "external/erp",
+        })
+        (self.project / "experience/prototypes/a-manifest.yaml").write_text(
+            yaml.safe_dump(manifest), encoding="utf-8"
+        )
+        coverage = build_coverage(
+            "demo", "a.yaml", self.root, require_implementation=False
+        )
+        by_surface = {
+            item["surface"]: item for item in coverage["surface_coverage"]
+        }
+        self.assertIn("checkout", by_surface["customer-app"]["screens"])
+        self.assertNotIn("checkout", by_surface["erp"]["screens"])
+        self.assertIn("sales-orders", by_surface["erp"]["screens"])
+
 
 if __name__ == "__main__":
     unittest.main()
