@@ -1,0 +1,26 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Production Migration Plan",
+  "type":"object",
+  "required":["migration_plan_id","client_id","source_scope_ref","steps","blocking_items","status"],
+  "properties":{
+    "migration_plan_id":{"type":"string","pattern":"^MIGPLAN-[A-Za-z0-9._-]+$"},
+    "client_id":{"type":"string","minLength":1},
+    "source_scope_ref":{"type":"string","minLength":1},
+    "steps":{"type":"array","minItems":1,"items":{
+      "type":"object",
+      "required":["id","dataset","action","target","verification"],
+      "properties":{
+        "id":{"type":"string","minLength":1},
+        "dataset":{"type":"string","minLength":1},
+        "action":{"enum":["replace-demo","migrate","load","verify"]},
+        "target":{"type":"string","minLength":1},
+        "verification":{"type":"string","minLength":1}
+      },
+      "additionalProperties":false
+    }},
+    "blocking_items":{"type":"array","items":{"type":"string"}},
+    "status":{"enum":["draft","blocked","ready"]}
+  },
+  "additionalProperties":false
+}
