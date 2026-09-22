@@ -1,0 +1,14 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Current Approved Scope Pointer",
+  "type":"object",
+  "required":["client_id","baseline_id","baseline_ref","version","updated_at"],
+  "properties":{
+    "client_id":{"type":"string","minLength":1},
+    "baseline_id":{"type":"string","pattern":"^BASE-[A-Za-z0-9._-]+$"},
+    "baseline_ref":{"type":"string","pattern":"^approved/scope-baselines/BASE-[A-Za-z0-9._-]+\\.yaml$"},
+    "version":{"type":"integer","minimum":1},
+    "updated_at":{"type":"string","minLength":1}
+  },
+  "additionalProperties":false
+}
