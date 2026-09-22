@@ -1,0 +1,82 @@
+{
+  "client_id": "reference-retail",
+  "version": 1,
+  "records": [
+    {
+      "truth_id": "TRUTH-0001",
+      "path": "industry",
+      "value": "retail",
+      "classification": "fact",
+      "confidence": 1,
+      "sources": [
+        "input/client-input.yaml"
+      ],
+      "status": "confirmed",
+      "notes": []
+    },
+    {
+      "truth_id": "TRUTH-0002",
+      "path": "business_models",
+      "value": [
+        "d2c",
+        "b2b"
+      ],
+      "classification": "fact",
+      "confidence": 1,
+      "sources": [
+        "input/client-input.yaml"
+      ],
+      "status": "confirmed",
+      "notes": []
+    },
+    {
+      "truth_id": "TRUTH-0003",
+      "path": "goals",
+      "value": [
+        "mobile-and-web-commerce",
+        "integrated-inventory",
+        "governed-returns"
+      ],
+      "classification": "fact",
+      "confidence": 1,
+      "sources": [
+        "input/client-input.yaml"
+      ],
+      "status": "confirmed",
+      "notes": []
+    },
+    {
+      "truth_id": "TRUTH-0004",
+      "path": "required_integrations",
+      "value": [
+        "payment",
+        "logistics",
+        "whatsapp"
+      ],
+      "classification": "fact",
+      "confidence": 1,
+      "sources": [
+        "input/client-input.yaml"
+      ],
+      "status": "confirmed",
+      "notes": []
+    },
+    {
+      "truth_id": "TRUTH-0005",
+      "path": "constraints",
+      "value": [
+        "provider-neutral-contracts"
+      ],
+      "classification": "fact",
+      "confidence": 1,
+      "sources": [
+        "input/client-input.yaml"
+      ],
+      "status": "confirmed",
+      "notes": []
+    }
+  ],
+  "open_questions": [],
+  "conflicts": [],
+  "status": "review-ready"
+}
