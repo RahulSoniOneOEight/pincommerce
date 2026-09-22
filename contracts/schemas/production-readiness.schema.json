@@ -1,0 +1,24 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Production Readiness",
+  "type":"object",
+  "required":["readiness_id","client_id","production_plan_ref","checks","blocking_items","status"],
+  "properties":{
+    "readiness_id":{"type":"string","pattern":"^PRODREADY-[A-Za-z0-9._-]+$"},
+    "client_id":{"type":"string","minLength":1},
+    "production_plan_ref":{"type":"string","minLength":1},
+    "checks":{"type":"array","minItems":1,"items":{
+      "type":"object",
+      "required":["id","status","details"],
+      "properties":{
+        "id":{"type":"string","minLength":1},
+        "status":{"enum":["pass","fail"]},
+        "details":{"type":"array","items":{"type":"string"}}
+      },
+      "additionalProperties":false
+    }},
+    "blocking_items":{"type":"array","items":{"type":"string"}},
+    "status":{"enum":["blocked","production-ready"]}
+  },
+  "additionalProperties":false
+}
