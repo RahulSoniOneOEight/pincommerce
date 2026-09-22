@@ -48,6 +48,10 @@ jobs:
         run: npm run web:build
       - name: Build Review Mode
         run: npm run review:build
+      - name: Build Commerce Admin
+        run: npm run commerce-admin:build
+      - name: Build Analytics
+        run: npm run analytics:build
       - name: Build Ops Console
         run: npm run ops:build
       - name: Build Agency Control Plane
