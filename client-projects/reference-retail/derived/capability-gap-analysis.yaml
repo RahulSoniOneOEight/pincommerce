@@ -1,0 +1,246 @@
+{
+  "client_id": "reference-retail",
+  "requested": [],
+  "core_missing": [
+    "catalogue",
+    "search",
+    "pricing",
+    "promotions",
+    "cart",
+    "checkout",
+    "orders",
+    "inventory-availability",
+    "fulfilment",
+    "return-refund",
+    "analytics",
+    "b2b-account",
+    "quote-rfq"
+  ],
+  "recommended_missing": [
+    "loyalty",
+    "customer-support",
+    "lifecycle-automation",
+    "ops-exceptions",
+    "credit-management",
+    "approval-workflow",
+    "reorder"
+  ],
+  "covered_by_request": [],
+  "not_in_reference_baseline": [],
+  "items": [
+    {
+      "capability": "catalogue",
+      "gap_type": "core-missing",
+      "severity": "high",
+      "priority": 1,
+      "impact": [
+        "critical-journey",
+        "scope"
+      ],
+      "recommendation": "include-or-explicitly-exclude"
+    },
+    {
+      "capability": "search",
+      "gap_type": "core-missing",
+      "severity": "high",
+      "priority": 1,
+      "impact": [
+        "critical-journey",
+        "scope"
+      ],
+      "recommendation": "include-or-explicitly-exclude"
+    },
+    {
+      "capability": "pricing",
+      "gap_type": "core-missing",
+      "severity": "high",
+      "priority": 1,
+      "impact": [
+        "critical-journey",
+        "scope"
+      ],
+      "recommendation": "include-or-explicitly-exclude"
+    },
+    {
+      "capability": "promotions",
+      "gap_type": "core-missing",
+      "severity": "high",
+      "priority": 1,
+      "impact": [
+        "critical-journey",
+        "scope"
+      ],
+      "recommendation": "include-or-explicitly-exclude"
+    },
+    {
+      "capability": "cart",
+      "gap_type": "core-missing",
+      "severity": "high",
+      "priority": 1,
+      "impact": [
+        "critical-journey",
+        "scope"
+      ],
+      "recommendation": "include-or-explicitly-exclude"
+    },
+    {
+      "capability": "checkout",
+      "gap_type": "core-missing",
+      "severity": "high",
+      "priority": 1,
+      "impact": [
+        "critical-journey",
+        "scope"
+      ],
+      "recommendation": "include-or-explicitly-exclude"
+    },
+    {
+      "capability": "orders",
+      "gap_type": "core-missing",
+      "severity": "high",
+      "priority": 1,
+      "impact": [
+        "critical-journey",
+        "scope"
+      ],
+      "recommendation": "include-or-explicitly-exclude"
+    },
+    {
+      "capability": "inventory-availability",
+      "gap_type": "core-missing",
+      "severity": "high",
+      "priority": 1,
+      "impact": [
+        "critical-journey",
+        "scope"
+      ],
+      "recommendation": "include-or-explicitly-exclude"
+    },
+    {
+      "capability": "fulfilment",
+      "gap_type": "core-missing",
+      "severity": "high",
+      "priority": 1,
+      "impact": [
+        "critical-journey",
+        "scope"
+      ],
+      "recommendation": "include-or-explicitly-exclude"
+    },
+    {
+      "capability": "return-refund",
+      "gap_type": "core-missing",
+      "severity": "high",
+      "priority": 1,
+      "impact": [
+        "critical-journey",
+        "scope"
+      ],
+      "recommendation": "include-or-explicitly-exclude"
+    },
+    {
+      "capability": "analytics",
+      "gap_type": "core-missing",
+      "severity": "high",
+      "priority": 1,
+      "impact": [
+        "critical-journey",
+        "scope"
+      ],
+      "recommendation": "include-or-explicitly-exclude"
+    },
+    {
+      "capability": "b2b-account",
+      "gap_type": "core-missing",
+      "severity": "high",
+      "priority": 1,
+      "impact": [
+        "critical-journey",
+        "scope"
+      ],
+      "recommendation": "include-or-explicitly-exclude"
+    },
+    {
+      "capability": "quote-rfq",
+      "gap_type": "core-missing",
+      "severity": "high",
+      "priority": 1,
+      "impact": [
+        "critical-journey",
+        "scope"
+      ],
+      "recommendation": "include-or-explicitly-exclude"
+    },
+    {
+      "capability": "loyalty",
+      "gap_type": "recommended-missing",
+      "severity": "medium",
+      "priority": 2,
+      "impact": [
+        "best-practice"
+      ],
+      "recommendation": "evaluate"
+    },
+    {
+      "capability": "customer-support",
+      "gap_type": "recommended-missing",
+      "severity": "medium",
+      "priority": 2,
+      "impact": [
+        "best-practice"
+      ],
+      "recommendation": "evaluate"
+    },
+    {
+      "capability": "lifecycle-automation",
+      "gap_type": "recommended-missing",
+      "severity": "medium",
+      "priority": 2,
+      "impact": [
+        "best-practice"
+      ],
+      "recommendation": "evaluate"
+    },
+    {
+      "capability": "ops-exceptions",
+      "gap_type": "recommended-missing",
+      "severity": "medium",
+      "priority": 2,
+      "impact": [
+        "best-practice"
+      ],
+      "recommendation": "evaluate"
+    },
+    {
+      "capability": "credit-management",
+      "gap_type": "recommended-missing",
+      "severity": "medium",
+      "priority": 2,
+      "impact": [
+        "best-practice"
+      ],
+      "recommendation": "evaluate"
+    },
+    {
+      "capability": "approval-workflow",
+      "gap_type": "recommended-missing",
+      "severity": "medium",
+      "priority": 2,
+      "impact": [
+        "best-practice"
+      ],
+      "recommendation": "evaluate"
+    },
+    {
+      "capability": "reorder",
+      "gap_type": "recommended-missing",
+      "severity": "medium",
+      "priority": 2,
+      "impact": [
+        "best-practice"
+      ],
+      "recommendation": "evaluate"
+    }
+  ],
+  "blocking_count": 13
+}
