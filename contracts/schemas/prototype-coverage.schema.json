@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Prototype Coverage",
+  "type": "object",
+  "required": ["coverage_id","client_id","direction_id","requirements","surface_coverage","status"],
+  "properties": {
+    "coverage_id": {"type":"string","pattern":"^COV-[A-Za-z0-9._-]+$"},
+    "client_id": {"type":"string","minLength":1},
+    "direction_id": {"type":"string","minLength":1},
+    "prototype_manifest_ref": {"type":"string"},
+    "requirements": {
+      "type":"array",
+      "items":{
+        "type":"object",
+        "required":["requirement_id","statement","ux_impact","source_refs","prototype_coverage","status"],
+        "properties":{
+          "requirement_id":{"type":"string","pattern":"^REQ-[A-Za-z0-9._-]+$"},
+          "statement":{"type":"string","minLength":1},
+          "ux_impact":{"type":"boolean"},
+          "source_refs":{"type":"array","items":{"type":"string"}},
+          "prototype_coverage":{
+            "type":"array",
+            "items":{
+              "type":"object",
+              "required":["surface","screens","components","states"],
+              "properties":{
+                "surface":{"type":"string","minLength":1},
+                "screens":{"type":"array","items":{"type":"string"}},
+                "components":{"type":"array","items":{"type":"string"}},
+                "states":{"type":"array","items":{"type":"string"}}
+              },
+              "additionalProperties":false
+            }
+          },
+          "decision_reason":{"type":["string","null"]},
+          "status":{"enum":["covered","unmapped","deferred","not-applicable"]}
+        },
+        "additionalProperties":false
+      }
+    },
+    "surface_coverage":{
+      "type":"array",
+      "items":{
+        "type":"object",
+        "required":["surface","required","screens","components","states","journeys","status"],
+        "properties":{
+          "surface":{"type":"string"},
+          "required":{"type":"boolean"},
+          "screens":{"type":"array","items":{"type":"string"}},
+          "components":{"type":"array","items":{"type":"string"}},
+          "states":{"type":"array","items":{"type":"string"}},
+          "journeys":{"type":"array","items":{"type":"string"}},
+          "status":{"enum":["complete","incomplete"]}
+        },
+        "additionalProperties":false
+      }
+    },
+    "blocking_items":{"type":"array","items":{"type":"string"}},
+    "status":{"enum":["draft","incomplete","client-review-ready"]}
+  },
+  "additionalProperties":false
+}
