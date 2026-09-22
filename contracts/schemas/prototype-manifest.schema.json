@@ -2,14 +2,70 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Prototype Manifest",
   "type": "object",
-  "required": ["client_id","direction_id","build_identity","surfaces","fixtures","status"],
+  "required": [
+    "client_id",
+    "direction_id",
+    "build_identity",
+    "surfaces",
+    "fixtures",
+    "status"
+  ],
   "properties": {
-    "client_id": {"type":"string"},
-    "direction_id": {"type":"string"},
-    "build_identity": {"type":"string"},
-    "surfaces": {"type":"array","items":{"type":"object","required":["id","runtime"],"properties":{"id":{"type":"string"},"runtime":{"enum":["flutter","web","admin","external"]},"entry":{"type":"string"}}}},
-    "fixtures": {"type":"array","items":{"type":"string"}},
-    "status": {"enum":["draft","built","qa-ready","review-ready"]}
+    "client_id": {
+      "type": "string"
+    },
+    "direction_id": {
+      "type": "string"
+    },
+    "build_identity": {
+      "type": "string"
+    },
+    "surfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "runtime"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "runtime": {
+            "enum": [
+              "flutter",
+              "web",
+              "admin",
+              "external"
+            ]
+          },
+          "entry": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "fixtures": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "built",
+        "qa-ready",
+        "review-ready"
+      ]
+    },
+    "coverage_ref": {
+      "type": "string"
+    },
+    "requirements_source": {
+      "type": "string"
+    }
   },
   "additionalProperties": true
 }
