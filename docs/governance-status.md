@@ -80,7 +80,8 @@ the onboarding engine). See `docs/ai-operating-model.md`.
 | Capability Gap Analysis | `client-projects/*/derived/capability-gap-analysis.yaml` | Enforced by drift | Prioritized impact/severity view generated alongside canonical gap artifact |
 | Integration Map | `contracts/schemas/integration-map.schema.json`, `client-projects/*/derived/integration-map.yaml` | Enforced now | Schema-validated; provider candidates, criticality, SLA/fallback and credential refs |
 | Architecture Decision | `contracts/schemas/architecture-decision.schema.json`, `client-projects/*/solution/decisions/` | Enforced now | Reference ADR schema-validated; generated provider choices remain proposed until human acceptance |
-| Scope Baseline | `contracts/schemas/scope-baseline.schema.json`, `client-projects/*/approved/scope-baseline.yaml` | Enforced now | Immutable client scope freeze; creation requires approved Review Session and passing Visual QA |
+| Scope Baseline | `contracts/schemas/scope-baseline.schema.json`, `client-projects/*/approved/scope-baselines/` | Enforced now | Immutable versioned client scope freeze; creation requires approved Review Session/Review Round and passing QA |
+| Current Scope Pointer | `contracts/schemas/current-scope.schema.json`, `client-projects/*/approved/current-scope.yaml` | Enforced now | Mutable pointer to the latest approved immutable baseline; historical baseline files are never overwritten |
 
 The A/B/C authority chain is:
 
