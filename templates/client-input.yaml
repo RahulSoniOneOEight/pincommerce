@@ -6,6 +6,14 @@ business_models:
 goals: []
 requested_capabilities: []
 experience_requirements: []
+design_sources: []
+brand:
+  tone: []
+  fonts: []
+  raw_colors: {}
+  semantic_overrides: {}
+  image_direction: []
+  motion_preference: balanced
 core_module_requirements: []
 required_integrations: []
 existing_systems: []
