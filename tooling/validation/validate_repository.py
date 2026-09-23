@@ -25,6 +25,7 @@ REQUIRED = [
     "docs/phase-d-productionization.md",
     "docs/marketplace-a-to-d.md",
     "docs/phase-e1-staging.md",
+    "docs/staging-execution.md",
     "requirements-production.txt",
     "workflows/lifecycle.yaml",
     "contracts/schemas/client-input.schema.json",
