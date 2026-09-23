@@ -1,0 +1,52 @@
+version: 1
+stage: design-sources-dependency-learning
+
+sources:
+  supported:
+    - figma
+    - penpot
+    - git
+    - reference-site
+    - brand-guide
+    - client-media
+  require_provenance:
+    - source_id
+    - source_type
+    - captured_at
+    - content_hash
+  normalization:
+    preserve_raw_reference: true
+    map_components: true
+    map_tokens: true
+    map_assets: true
+
+dependencies:
+  license:
+    allow: [MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC]
+    review: [MPL-2.0, LGPL-3.0]
+    block: [GPL-3.0, AGPL-3.0, unknown]
+  maintenance:
+    healthy_max_days: 180
+    watch_max_days: 365
+  security:
+    block_severity: critical
+    review_severities: [high]
+  compatibility:
+    required_fields: [runtime, version, framework_compatibility]
+  rule: visual preference can never override blocked dependency eligibility
+
+learning:
+  minimum_observations: 3
+  max_ranking_adjustment: 10
+  accepted_weight: 2
+  accepted_with_changes_weight: 1
+  rejected_weight: -2
+  telemetry:
+    passed_weight: 2
+    review_weight: 0
+    failed_weight: -2
+  guardrails:
+    advisory_only: true
+    requires_human_approval: true
+    auto_promote: false
+    mutate_approved_client_design: false
