@@ -25,7 +25,8 @@ const captures = [];
 
 for (const [pattern, storyId] of cases) {
   for (const [viewportId, viewport] of Object.entries(viewports)) {
-    const page = await browser.newPage({ viewport });
+    const context = await browser.newContext({ viewport });
+    const page = await context.newPage();
     const url = `${base}/iframe.html?id=${storyId}&viewMode=story`;
     const started = Date.now();
     await page.goto(url, { waitUntil: "networkidle" });
@@ -83,7 +84,7 @@ for (const [pattern, storyId] of cases) {
       performance: perf,
       elapsed_ms: Date.now() - started,
     });
-    await page.close();
+    await context.close();
   }
 }
 
