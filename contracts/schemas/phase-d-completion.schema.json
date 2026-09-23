@@ -1,0 +1,28 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Phase D Completion",
+  "type":"object",
+  "required":["completion_id","client_id","approved_scope_ref","production_plan_ref","production_readiness_ref","production_execution_ref","cross_domain_qa_ref","checks","blocking_items","status"],
+  "properties":{
+    "completion_id":{"type":"string","pattern":"^PHASED-[A-Za-z0-9._-]+$"},
+    "client_id":{"type":"string","minLength":1},
+    "approved_scope_ref":{"type":"string","const":"approved/current-scope.yaml"},
+    "production_plan_ref":{"type":"string","minLength":1},
+    "production_readiness_ref":{"type":"string","minLength":1},
+    "production_execution_ref":{"type":"string","minLength":1},
+    "cross_domain_qa_ref":{"type":"string","minLength":1},
+    "checks":{"type":"array","minItems":1,"items":{
+      "type":"object",
+      "required":["id","status","details"],
+      "properties":{
+        "id":{"type":"string","minLength":1},
+        "status":{"enum":["pass","fail"]},
+        "details":{"type":"array","items":{"type":"string"}}
+      },
+      "additionalProperties":false
+    }},
+    "blocking_items":{"type":"array","items":{"type":"string"}},
+    "status":{"enum":["blocked","complete"]}
+  },
+  "additionalProperties":false
+}
