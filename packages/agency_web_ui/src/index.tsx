@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 
 export type CommerceFixture =
-  | "default" | "loading" | "empty" | "failure" | "disabled"
+  | "default" | "loading" | "empty" | "failure" | "approval-pending" | "payment-failed"
+  | "disabled"
   | "validation-error" | "out-of-stock" | "discounted"
   | "editing" | "open" | "resolved";
 
