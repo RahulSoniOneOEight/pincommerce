@@ -12,6 +12,10 @@ const cases = [
   ["b2b-quick-order", "commerce-b2bquickorder--default"],
   ["dashboard-kpi", "commerce-dashboardkpi--default"],
   ["exception-table", "commerce-exceptiontable--default"],
+  ["filter-bar", "commerce-filterbar--default"],
+  ["checkout-summary", "commerce-checkoutsummary--default"],
+  ["navigation-menu", "commerce-navigationmenu--default"],
+  ["form-section", "commerce-formsection--default"],
 ];
 const viewports = {
   "mobile-390": { width: 390, height: 844 },
