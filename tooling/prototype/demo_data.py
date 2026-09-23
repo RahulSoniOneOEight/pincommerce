@@ -82,8 +82,21 @@ def build_demo_dataset(client_id: str) -> dict[str, Any]:
                 {"id": "PO-3001", "supplier_id": "SUP-001", "status": "partially_received", "total": 250000},
                 {"id": "PO-3002", "supplier_id": "SUP-001", "status": "approved", "total": 125000},
             ],
+            "seller_offers": [
+                {"id": "OFFER-001", "seller_id": "SELLER-001", "sku": "SKU-1001", "price": 17500, "status": "active"},
+                {"id": "OFFER-002", "seller_id": "SELLER-002", "sku": "SKU-2001", "price": 4800, "status": "pending-approval"},
+            ],
+            "marketplace_allocations": [
+                {"id": "ALLOC-1010-001", "order_id": "ORD-1010", "seller_id": "SELLER-001", "gross": 17500, "status": "fulfilled"}
+            ],
+            "commission_ledger": [
+                {"id": "COMM-1010-001", "allocation_id": "ALLOC-1010-001", "seller_id": "SELLER-001", "rate_percent": 10, "commission": 1750}
+            ],
             "seller_settlements": [
                 {"id": "SET-001", "seller_id": "SELLER-001", "gross": 17500, "commission": 1750, "payable": 15750, "status": "pending"}
+            ],
+            "seller_payout_reconciliations": [
+                {"id": "SPREC-001", "settlement_id": "SET-001", "seller_id": "SELLER-001", "erp_payable": 15750, "marketplace_payable": 15750, "status": "matched"}
             ],
         },
         "finance": {
@@ -95,7 +108,8 @@ def build_demo_dataset(client_id: str) -> dict[str, Any]:
                 {"customer_id": "CUST-B2B-014", "invoice_id": "INV-1009", "amount": 100000, "collected": 50000, "outstanding": 50000, "age_days": 21}
             ],
             "payables": [
-                {"supplier_id": "SUP-001", "purchase_id": "PO-3001", "amount": 250000, "paid": 100000, "outstanding": 150000}
+                {"supplier_id": "SUP-001", "purchase_id": "PO-3001", "amount": 250000, "paid": 100000, "outstanding": 150000},
+                {"supplier_id": "SELLER-001", "purchase_id": "SET-001", "amount": 15750, "paid": 0, "outstanding": 15750, "type": "seller-settlement"}
             ],
             "journal_entries": [
                 {
@@ -139,7 +153,10 @@ def build_demo_dataset(client_id: str) -> dict[str, Any]:
             "inventory-shortage",
             "reconciliation-mismatch",
             "overdue-receivable",
-            "seller-settlement-pending"
+            "seller-settlement-pending",
+            "marketplace-order-allocation",
+            "commission-calculation",
+            "seller-payout-reconciliation"
         ],
         "status": "ready",
     }
