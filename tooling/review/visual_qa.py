@@ -24,6 +24,10 @@ REQUIRED_CHECKS = (
     "motion-and-reduced-motion",
     "asset-quality-and-source",
     "component-quality-threshold",
+    "state-completeness",
+    "performance-budget",
+    "cross-platform-parity",
+    "design-debt",
 )
 
 
