@@ -1,0 +1,10 @@
+manifest_id: STGMAN-example-abcdef123456
+client_id: ""
+candidate_id: RC-example-abcdef123456
+candidate_digest: ""
+source_revision: abcdef123456
+runtimes: []
+data_imports: []
+e2e_flows: []
+provider_checks: []
+status: planned
