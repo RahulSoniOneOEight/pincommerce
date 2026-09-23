@@ -1,0 +1,21 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Staging Runtime Evidence",
+  "type":"object",
+  "required":["candidate_id","runtimes","status"],
+  "properties":{
+    "candidate_id":{"type":"string","minLength":1},
+    "runtimes":{"type":"array","items":{
+      "type":"object",
+      "required":["id","status","evidence"],
+      "properties":{
+        "id":{"type":"string","minLength":1},
+        "status":{"enum":["pass","fail","not-run"]},
+        "evidence":{"type":"string"}
+      },
+      "additionalProperties":false
+    }},
+    "status":{"enum":["passed","failed","blocked"]}
+  },
+  "additionalProperties":false
+}
