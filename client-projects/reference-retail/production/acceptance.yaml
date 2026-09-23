@@ -1,0 +1,14 @@
+client_id: reference-retail
+production_plan_ref: production/production-plan.yaml
+required_checks:
+  - approved-scope-resolved
+  - capability-ownership
+  - runtime-provider-mapping
+  - runtime-version-pinning
+  - surface-production-mapping
+  - integration-provider-selection
+  - credential-inventory
+  - data-ownership
+  - migration-strategy
+  - deferred-scope-exclusion
+  - production-test-plan
