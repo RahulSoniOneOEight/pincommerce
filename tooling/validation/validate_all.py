@@ -26,6 +26,7 @@ def main() -> int:
         ("production-execution", "client-projects/reference-retail/production/production-execution.yaml"),
         ("cross-domain-qa", "client-projects/reference-retail/qa/cross-domain.yaml"),
         ("phase-d-completion", "client-projects/reference-retail/production/phase-d-completion.yaml"),
+        ("production-qa", "client-projects/reference-retail/qa/production-qa.yaml"),
         ("solution", "client-projects/reference-retail/solution/solution-contract.yaml"),
         ("data-contract", "client-projects/reference-retail/contracts/data-contract.yaml"),
         ("business-contract", "client-projects/reference-retail/contracts/business-contract.yaml"),
