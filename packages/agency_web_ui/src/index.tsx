@@ -115,6 +115,53 @@ export function ExceptionTable({ items, state = "default", onOpen }: {
   </table></div>;
 }
 
+export function FilterBar({ filters, selected = [], onSelect, onClear, state = "default" }: {
+  filters: string[]; selected?: string[]; onSelect?: (filter: string) => void; onClear?: () => void; state?: CommerceFixture;
+}) {
+  const disabled = state === "disabled";
+  return <section className="agency-filter-bar" aria-label="Product filters">
+    {filters.map((filter) => <button key={filter} className="agency-chip" aria-pressed={selected.includes(filter)} disabled={disabled} onClick={() => onSelect?.(filter)}>{filter}</button>)}
+    <button disabled={disabled} onClick={onClear}>Clear</button>
+  </section>;
+}
+
+export function CheckoutSummary({ subtotal, shipping, total, onContinue, state = "default" }: {
+  subtotal: string; shipping: string; total: string; onContinue?: () => void; state?: CommerceFixture;
+}) {
+  if (state === "loading") return <div role="status">Loading checkout summary…</div>;
+  const disabled = state === "disabled";
+  return <article className="agency-card" aria-label="Checkout summary">
+    <dl className="agency-summary-list">
+      <div><dt>Subtotal</dt><dd>{subtotal}</dd></div>
+      <div><dt>Shipping</dt><dd>{shipping}</dd></div>
+      <div><dt>Total</dt><dd>{total}</dd></div>
+    </dl>
+    <button disabled={disabled} onClick={onContinue}>Continue checkout</button>
+  </article>;
+}
+
+export function NavigationMenu({ items, current, onNavigate, state = "default" }: {
+  items: string[]; current: string; onNavigate?: (item: string) => void; state?: CommerceFixture;
+}) {
+  const disabled = state === "disabled";
+  return <nav className="agency-nav" aria-label="Primary navigation">
+    {items.map((item) => <button key={item} aria-current={item === current ? "page" : undefined} disabled={disabled} onClick={() => onNavigate?.(item)}>{item}</button>)}
+  </nav>;
+}
+
+export function FormSection({ label, value, helper, error, onChange, state = "default" }: {
+  label: string; value: string; helper?: string; error?: string; onChange?: (value: string) => void; state?: CommerceFixture;
+}) {
+  const disabled = state === "disabled";
+  const effectiveError = state === "validation-error" ? (error || "Check this value") : error;
+  const id = "agency-field-" + label.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  return <div className="agency-form-section">
+    <label htmlFor={id}>{label}</label>
+    <input id={id} value={value} disabled={disabled} aria-invalid={Boolean(effectiveError)} aria-describedby={helper || effectiveError ? id + "-help" : undefined} onChange={(event) => onChange?.(event.target.value)} />
+    {(helper || effectiveError) ? <div id={id + "-help"} role={effectiveError ? "alert" : undefined}>{effectiveError || helper}</div> : null}
+  </div>;
+}
+
 export function Surface({ children }: { children: ReactNode }) {
   return <section className="agency-surface">{children}</section>;
 }
