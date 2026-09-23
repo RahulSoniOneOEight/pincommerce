@@ -1,0 +1,169 @@
+version: 1
+policy:
+  default_action: evaluate-not-preselect
+  dependency_rule: prefer-pincommerce-wrapper
+  production_rule: smallest-approved-stack
+  inspiration_rule: broad-pool-small-runtime-pool
+  reuse_order:
+    - existing-client-component
+    - existing-pincommerce-component
+    - approved-pincommerce-pattern
+    - approved-open-source-component
+    - configure-existing
+    - extend-existing
+    - custom-governed-component
+
+quality_weights:
+  functional_fit: 20
+  visual_quality: 15
+  information_hierarchy: 15
+  interaction_quality: 10
+  responsive_fit: 10
+  accessibility: 10
+  brand_alignment: 10
+  performance: 5
+  reusability: 5
+minimum_quality_score: 80
+
+platforms:
+  flutter:
+    core:
+      - id: shadcn_flutter
+        roles: [primitives, forms, cards, navigation, dialogs, inputs]
+        default: true
+      - id: material
+        roles: [platform-interop, accessibility, native-controls]
+      - id: cupertino
+        roles: [ios-interop, native-ios-controls]
+    specialists:
+      - id: data_table_2
+        roles: [dense-table, quick-order, settlement, reconciliation, admin-grid]
+      - id: flutter_form_builder
+        roles: [complex-form, onboarding, kyc, configuration]
+      - id: fl_chart
+        roles: [analytics, kpi, dashboard]
+      - id: cached_network_image
+        roles: [product-media, editorial-media, remote-image-cache]
+      - id: carousel_slider
+        roles: [category-rail, merchandising-rail, media-carousel]
+      - id: moon_design
+        roles: [reference-design-system, themable-components]
+      - id: base_ui_flutter
+        roles: [desktop-dense, erp, industrial, high-density]
+      - id: ripplearc_core_ui
+        roles: [reference-design-system, token-reference]
+      - id: geniuslink_design_system
+        roles: [desktop-table, tree, sidebar, editable-table]
+    icons:
+      - id: iconoir
+        default: true
+        roles: [primary-icon-system]
+      - id: phosphor
+        roles: [expressive-icon-system, variable-weight]
+      - id: lucide
+        roles: [secondary-icon-system]
+      - id: material_symbols
+        roles: [native-material-icon-system]
+    motion:
+      - id: flutter_animate
+        default: true
+        roles: [micro-interaction, entrance, state-transition, scroll-linked]
+      - id: flutter_native_animation
+        roles: [precision-animation, custom-transition]
+      - id: rive
+        roles: [interactive-vector-animation]
+      - id: lottie
+        roles: [illustrative-vector-animation]
+
+  web:
+    core:
+      - id: shadcn_ui
+        roles: [owned-component-source, primitives, forms, cards, navigation]
+        default: true
+      - id: base_ui
+        roles: [headless-accessible-primitives]
+        default: true
+      - id: radix_ui
+        roles: [existing-radix-compatibility, accessible-primitives]
+      - id: react_aria
+        roles: [accessible-interaction-primitives]
+      - id: ant_design
+        roles: [enterprise-admin, complex-workflows]
+      - id: mui
+        roles: [enterprise-ui, material-system]
+      - id: tailwind_css
+        roles: [utility-styling]
+      - id: web_awesome
+        roles: [web-components-reference]
+      - id: shoelace
+        roles: [framework-agnostic-web-components-reference]
+    specialists:
+      - id: tanstack_table
+        roles: [dense-table, quick-order, settlement, reconciliation, admin-grid]
+      - id: tanstack_query
+        roles: [server-state, async-data]
+      - id: react_hook_form
+        roles: [complex-form, checkout, onboarding, kyc]
+      - id: recharts
+        roles: [analytics, kpi, dashboard]
+      - id: embla
+        roles: [category-rail, merchandising-rail, media-carousel]
+    icons:
+      - id: iconoir
+        default: true
+        roles: [primary-icon-system]
+      - id: lucide
+        roles: [secondary-icon-system]
+      - id: phosphor
+        roles: [expressive-icon-system, variable-weight]
+      - id: material_symbols
+        roles: [material-icon-system]
+    motion:
+      - id: motion_react
+        default: true
+        roles: [micro-interaction, layout-animation, gesture, scroll]
+      - id: css_waapi
+        roles: [lightweight-native-motion]
+      - id: gsap
+        roles: [advanced-timeline, scrollytelling, campaign-page]
+      - id: rive
+        roles: [interactive-vector-animation]
+      - id: lottie
+        roles: [illustrative-vector-animation]
+
+patterns:
+  product-card:
+    role: visual-commerce-card
+    prefers:
+      flutter: [shadcn_flutter, cached_network_image, iconoir, flutter_animate]
+      web: [shadcn_ui, base_ui, iconoir, motion_react]
+  category-rail:
+    role: visual-merchandising
+    prefers:
+      flutter: [carousel_slider, cached_network_image, flutter_animate]
+      web: [embla, motion_react]
+  b2b-quick-order:
+    role: dense-transactional-table
+    prefers:
+      flutter: [data_table_2, flutter_form_builder]
+      web: [tanstack_table, react_hook_form]
+  seller-settlement:
+    role: finance-operations-table
+    prefers:
+      flutter: [data_table_2, fl_chart]
+      web: [tanstack_table, recharts]
+  dashboard-kpi:
+    role: analytical-tile
+    prefers:
+      flutter: [fl_chart, shadcn_flutter]
+      web: [recharts, shadcn_ui]
+  exception-table:
+    role: ops-dense-table
+    prefers:
+      flutter: [data_table_2]
+      web: [tanstack_table]
+  checkout-section:
+    role: structured-form
+    prefers:
+      flutter: [flutter_form_builder, shadcn_flutter]
+      web: [react_hook_form, shadcn_ui]
