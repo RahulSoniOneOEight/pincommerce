@@ -1,0 +1,28 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Design Selection",
+  "type":"object",
+  "required":["selection_id","client_id","experience_type","preset","platforms","patterns","quality_policy","status"],
+  "properties":{
+    "selection_id":{"type":"string"},
+    "client_id":{"type":"string"},
+    "experience_type":{"type":"array","items":{"type":"string"}},
+    "preset":{"type":"string"},
+    "platforms":{"type":"object"},
+    "patterns":{"type":"array","items":{
+      "type":"object",
+      "required":["pattern","surface_role","selected","reason"],
+      "properties":{
+        "pattern":{"type":"string"},
+        "surface_role":{"type":"string"},
+        "selected":{"type":"object"},
+        "candidates":{"type":"array","items":{"type":"string"}},
+        "reason":{"type":"array","items":{"type":"string"}}
+      },
+      "additionalProperties":true
+    }},
+    "quality_policy":{"type":"object"},
+    "status":{"enum":["draft","evaluated","approved"]}
+  },
+  "additionalProperties":true
+}
