@@ -44,6 +44,22 @@ class AgencyWidgetbook extends StatelessWidget {
           ]))),
           WidgetbookUseCase(name: 'Empty', builder: (_) => shell(const ExceptionTable(items: [], state: CommerceFixture.empty))),
         ]),
+        WidgetbookComponent(name: 'FilterBar', useCases: [
+          WidgetbookUseCase(name: 'Default', builder: (_) => shell(const FilterBar(filters: ['In stock', 'Fast delivery', 'Under ₹2,000'], selected: {'In stock'}))),
+          WidgetbookUseCase(name: 'Disabled', builder: (_) => shell(const FilterBar(filters: ['In stock', 'Fast delivery'], state: CommerceFixture.disabled))),
+        ]),
+        WidgetbookComponent(name: 'CheckoutSummary', useCases: [
+          WidgetbookUseCase(name: 'Default', builder: (_) => shell(const CheckoutSummary(subtotal: '₹2,499', shipping: '₹99', total: '₹2,598'))),
+          WidgetbookUseCase(name: 'Loading', builder: (_) => shell(const CheckoutSummary(subtotal: '₹2,499', shipping: '₹99', total: '₹2,598', state: CommerceFixture.loading))),
+        ]),
+        WidgetbookComponent(name: 'NavigationMenu', useCases: [
+          WidgetbookUseCase(name: 'Default', builder: (_) => shell(const NavigationMenu(items: ['Home', 'Catalog', 'Orders', 'Account'], current: 'Catalog'))),
+          WidgetbookUseCase(name: 'Disabled', builder: (_) => shell(const NavigationMenu(items: ['Home', 'Catalog'], current: 'Home', state: CommerceFixture.disabled))),
+        ]),
+        WidgetbookComponent(name: 'FormSection', useCases: [
+          WidgetbookUseCase(name: 'Default', builder: (_) => shell(const FormSection(label: 'Email', value: 'buyer@example.com', helper: 'Order updates are sent here'))),
+          WidgetbookUseCase(name: 'Validation error', builder: (_) => shell(const FormSection(label: 'Email', value: 'bad', error: 'Enter a valid email', state: CommerceFixture.validationError))),
+        ]),
       ],
     );
   }
