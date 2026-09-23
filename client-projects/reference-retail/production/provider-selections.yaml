@@ -1,0 +1,13 @@
+integrations:
+  payment: razorpay
+  logistics: shiprocket
+  whatsapp: meta-whatsapp-cloud
+runtime_versions:
+  experience_mobile: flutter-git-6a19cca56475dbfba1478ee68d7bd0c2ef891da1
+  experience_web: nextjs-16.3.5
+  commerce: medusa-2.21.1-dtc-e3a237c9b8773cf35c899dabfe73afaebacbc8d5
+  erp: tryton-8.0
+  search: meilisearch-1.10
+  support: chatwoot-4.18.0
+  automation: activepieces-0.91.1
+  database: postgresql-16
