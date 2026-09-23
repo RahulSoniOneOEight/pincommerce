@@ -1,0 +1,103 @@
+name: Execute Phase E1 Staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      client_id:
+        description: Client project ID
+        required: true
+        default: reference-retail
+      source_revision:
+        description: Exact git SHA to stage
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  execute-staging:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: staging
+    env:
+      STAGING_RUNTIME_ENDPOINTS_JSON: ${{ secrets.STAGING_RUNTIME_ENDPOINTS_JSON }}
+      STAGING_RUNTIME_ATTESTATIONS_JSON: ${{ secrets.STAGING_RUNTIME_ATTESTATIONS_JSON }}
+      STAGING_IMPORT_PROBES_JSON: ${{ secrets.STAGING_IMPORT_PROBES_JSON }}
+      STAGING_E2E_PROBES_JSON: ${{ secrets.STAGING_E2E_PROBES_JSON }}
+      STAGING_OBSERVABILITY_PROBES_JSON: ${{ secrets.STAGING_OBSERVABILITY_PROBES_JSON }}
+      RAZORPAY_STAGING_URL: ${{ secrets.RAZORPAY_STAGING_URL }}
+      RAZORPAY_STAGING_AUTH: ${{ secrets.RAZORPAY_STAGING_AUTH }}
+      SHIPROCKET_STAGING_URL: ${{ secrets.SHIPROCKET_STAGING_URL }}
+      SHIPROCKET_STAGING_AUTH: ${{ secrets.SHIPROCKET_STAGING_AUTH }}
+      WHATSAPP_STAGING_URL: ${{ secrets.WHATSAPP_STAGING_URL }}
+      WHATSAPP_STAGING_AUTH: ${{ secrets.WHATSAPP_STAGING_AUTH }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_revision }}
+          fetch-depth: 0
+
+      - name: Verify exact source revision
+        shell: bash
+        env:
+          SOURCE_REVISION: ${{ inputs.source_revision }}
+        run: |
+          set -euo pipefail
+          ACTUAL="$(git rev-parse HEAD)"
+          test "$ACTUAL" = "$SOURCE_REVISION"
+          echo "Exact source revision: $ACTUAL"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Validate platform before staging
+        run: python tooling/validation/validate_all.py
+
+      - name: Build exact candidate and staging manifest
+        env:
+          CLIENT_ID: ${{ inputs.client_id }}
+          SOURCE_REVISION: ${{ inputs.source_revision }}
+        run: |
+          rm -rf /tmp/staging-execution
+          mkdir -p /tmp/staging-execution
+          python -m tooling.staging.manifest             --client "$CLIENT_ID"             --source-revision "$SOURCE_REVISION"             --created-by github-actions-staging             --output-dir /tmp/staging-execution
+
+      - name: Execute live staging probes and strict E1 gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          CANDIDATE="$(find /tmp/staging-execution -maxdepth 1 -name 'RC-*.yaml' -print -quit)"
+          test -n "$CANDIDATE"
+          python -m tooling.staging.execution             --candidate "$CANDIDATE"             --manifest /tmp/staging-execution/staging-manifest.yaml             --output-dir /tmp/staging-execution/evidence
+
+      - name: Validate generated staging evidence
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import yaml
+          from tooling.contracts.validator import validate_document
+
+          root = Path("/tmp/staging-execution")
+          candidate = yaml.safe_load(next(root.glob("RC-*.yaml")).read_text())
+          manifest = yaml.safe_load((root / "staging-manifest.yaml").read_text())
+          staging = yaml.safe_load((root / "evidence/staging-validation.yaml").read_text())
+          assert staging["status"] == "passed"
+          assert staging["candidate_id"] == candidate["candidate_id"]
+          assert manifest["candidate_digest"] == candidate["artifact_digest"]
+          errors = validate_document(staging, "staging-validation")
+          assert not errors, errors
+          print("staging passed for", candidate["candidate_id"])
+          PY
+
+      - name: Upload immutable staging evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-evidence-${{ inputs.client_id }}-${{ inputs.source_revision }}
+          path: /tmp/staging-execution
+          if-no-files-found: error
+          retention-days: 30
