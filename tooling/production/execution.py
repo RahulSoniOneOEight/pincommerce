@@ -176,6 +176,7 @@ def evaluate_phase_d(client_id: str, root: Path = ROOT) -> dict[str, Any]:
         ("production-readiness", readiness),
         ("production-execution", execution),
         ("cross-domain-qa", cross_domain),
+        ("production-qa", production_qa),
         ("phase-d-completion", completion),
     ):
         errors = validate_document(document, contract)
