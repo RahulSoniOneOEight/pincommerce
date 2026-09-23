@@ -1,0 +1,25 @@
+qa_id: PRODQA-reference-retail-v1
+client_id: reference-retail
+scope_ref: approved/current-scope.yaml
+production_execution_ref: production/production-execution.yaml
+checks:
+  contract-validation: pass
+  unit-tests: pass
+  integration-tests: pass
+  cross-domain-qa: pass
+  runtime-health: pass
+  provider-adapter-contracts: pass
+  migration-safety: pass
+  reconciliation: pass
+  idempotency-retry-dead-letter: pass
+  secrets-not-committed: pass
+  web-builds: pass
+  flutter-tests: pass
+evidence_refs:
+  - .github/workflows/reference-d-acceptance.yml
+  - .github/workflows/validate.yml
+  - .github/workflows/security.yml
+  - qa/cross-domain.yaml
+  - qa/migration-validation.yaml
+blocking_items: []
+status: passed
