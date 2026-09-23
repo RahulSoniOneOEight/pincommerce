@@ -109,3 +109,67 @@ Client requirements + brand/assets + Git/Figma/Penpot/reference sites
 → client review
 → approved reusable component/theme
 ```
+
+## Advanced implementation and learning loop
+
+The governed selection layer is followed by an implementation compiler and evidence gates.
+
+```text
+selection.yaml
+→ Design Implementation Compiler
+→ dependency candidates + PinCommerce wrapper plan
+→ Widgetbook / Storybook catalog targets
+→ required component states
+→ semantic icon + motion token bindings
+→ accessibility + performance + state-completeness gates
+→ equal-fixture component benchmark
+→ screenshot / golden evidence
+→ Visual QA + quality tournament
+→ candidate / approved component lifecycle
+→ production UX outcomes
+→ future candidate-ranking input
+```
+
+### Implementation compiler
+
+`python -m tooling.experience.implementation_compiler --client <client-id>`
+
+The compiler converts the selected stack into a platform implementation plan. It identifies shared-package targets, dependency candidates, PinCommerce wrapper names, catalog targets, required states and blocking quality gates. It does not silently install a dependency before license/maintenance/security eligibility is proven.
+
+### Component metadata and dependency health
+
+`design-intelligence/component-metadata.yaml` records functional/design characteristics. Dependency eligibility is evaluated separately from visual preference. A stale, blocked-license or blocked-security component cannot be promoted merely because it looks better.
+
+### Equal-fixture benchmark
+
+`python -m tooling.experience.benchmark --client <client-id>`
+
+Candidate components are compared using the same fixture, semantic theme, content, viewport and state. Standard benchmark viewports are mobile 390, tablet 768 and desktop 1440. This is the basis for automated screenshot/golden tournaments.
+
+### Deterministic implementation gates
+
+Reusable components must prove:
+- required state completeness
+- semantic token usage
+- semantic icon usage
+- keyboard/focus/semantics/contrast/reduced-motion accessibility
+- performance budget
+- responsive behavior
+- cross-platform behavioral parity where both Flutter and web variants exist
+- visual QA and quality threshold
+
+### Source ingestion
+
+`tooling.experience.source_import` normalizes exported Figma, Penpot, Git component inventory, reference-site analysis and brand-guide metadata into the same design-intelligence shape. Network/provider-specific extraction remains outside the deterministic core; exported evidence is normalized before it can influence governed selection.
+
+### Theme compiler
+
+`tooling.experience.theme_compiler` creates light/dark semantic variants and contrast evidence. Client raw colors remain inputs, not direct component values.
+
+### Design debt and change impact
+
+`tooling.experience.design_debt` detects raw color usage and mixed icon families. `tooling.experience.impact` identifies all client selections affected by a shared pattern change before promotion.
+
+### Production feedback
+
+Design outcomes and production UX telemetry may influence future candidate ranking but cannot silently alter an approved client design. Accepted/rejected outcomes and metrics are advisory learning evidence subject to the next client's own requirements and human approval.
