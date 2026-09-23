@@ -179,13 +179,13 @@ class B2BQuickOrder extends StatelessWidget {
             DataCell(Text(line.name)),
             DataCell(Row(children: [
               IconButton(
-                tooltip: 'Decrease \${line.name}',
+                tooltip: 'Decrease ${line.name}',
                 onPressed: onQuantityChanged == null ? null : () => onQuantityChanged!(line.sku, (line.quantity - 1).clamp(0, 9999)),
                 icon: const Icon(Icons.remove),
               ),
-              Text('\${line.quantity}'),
+              Text('${line.quantity}'),
               IconButton(
-                tooltip: 'Increase \${line.name}',
+                tooltip: 'Increase ${line.name}',
                 onPressed: onQuantityChanged == null ? null : () => onQuantityChanged!(line.sku, line.quantity + 1),
                 icon: const Icon(Icons.add),
               ),
