@@ -66,6 +66,20 @@ for (const [pattern, storyId] of cases) {
       if (violation.impact && impact[violation.impact] !== undefined) impact[violation.impact] += 1;
     }
 
+    const interaction = await page.evaluate(() => {
+      const nodes = [...document.querySelectorAll("button,a[href],input,select,textarea,[role='button'],[tabindex]")];
+      const unlabeled = nodes.filter((el) => {
+        const label = el.getAttribute("aria-label") || el.getAttribute("title") || (el.textContent || "").trim();
+        const labelledBy = el.getAttribute("aria-labelledby");
+        const id = el.getAttribute("id");
+        const explicitLabel = id ? document.querySelector('label[for="' + CSS.escape(id) + '"]') : null;
+        const wrappingLabel = el.closest("label");
+        return !label && !labelledBy && !explicitLabel && !wrappingLabel;
+      }).length;
+      const focusable = nodes.filter((el) => !el.hasAttribute("disabled") && el.getAttribute("tabindex") !== "-1").length;
+      return { interactive_count: nodes.length, unlabeled_interactive: unlabeled, focusable_interactive: focusable };
+    });
+
     const perf = await page.evaluate(() => {
       const nav = performance.getEntriesByType("navigation")[0];
       const resources = performance.getEntriesByType("resource");
@@ -84,7 +98,7 @@ for (const [pattern, storyId] of cases) {
       file,
       screenshot_sha256: screenshotSha,
       dom_fingerprint: domFingerprint,
-      accessibility: impact,
+      accessibility: { ...impact, ...interaction },
       performance: perf,
       elapsed_ms: Date.now() - started,
     });
