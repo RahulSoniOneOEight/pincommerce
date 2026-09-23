@@ -19,6 +19,13 @@ def main() -> int:
         ("scope-baseline", "client-projects/reference-retail/approved/scope-baseline.yaml"),
         ("scope-baseline", "client-projects/reference-retail/approved/scope-baselines/BASE-reference-retail-v1.yaml"),
         ("current-scope", "client-projects/reference-retail/approved/current-scope.yaml"),
+        ("production-provider-selections", "client-projects/reference-retail/production/provider-selections.yaml"),
+        ("production-plan", "client-projects/reference-retail/production/production-plan.yaml"),
+        ("production-readiness", "client-projects/reference-retail/production/production-readiness.yaml"),
+        ("production-migration-plan", "client-projects/reference-retail/production/data-migration.yaml"),
+        ("production-execution", "client-projects/reference-retail/production/production-execution.yaml"),
+        ("cross-domain-qa", "client-projects/reference-retail/qa/cross-domain.yaml"),
+        ("phase-d-completion", "client-projects/reference-retail/production/phase-d-completion.yaml"),
         ("solution", "client-projects/reference-retail/solution/solution-contract.yaml"),
         ("data-contract", "client-projects/reference-retail/contracts/data-contract.yaml"),
         ("business-contract", "client-projects/reference-retail/contracts/business-contract.yaml"),
@@ -73,6 +80,8 @@ def main() -> int:
     run(sys.executable, "-m", "tooling.experience.generator", "--client",
         "reference-retail", "--print-only")
     run(sys.executable, "-m", "tooling.validation.drift", "--client",
+        "reference-retail")
+    run(sys.executable, "-m", "tooling.production.execution", "--client",
         "reference-retail")
     run(sys.executable, "-m", "tooling.validation.lifecycle", "--client",
         "reference-retail")
