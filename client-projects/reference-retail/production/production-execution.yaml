@@ -1,0 +1,105 @@
+execution_id: PRODEXEC-reference-retail-v1
+client_id: reference-retail
+production_plan_ref: production/production-plan.yaml
+production_readiness_ref: production/production-readiness.yaml
+runtimes:
+  - domain: experience_mobile
+    provider: flutter
+    version: flutter-git-6a19cca56475dbfba1478ee68d7bd0c2ef891da1
+    provisioning: application-build
+    healthcheck: build-and-widget-tests
+    evidence_ref: .github/workflows/validate.yml#flutter-runtime
+    status: validated
+  - domain: experience_web
+    provider: nextjs
+    version: nextjs-16.3.5
+    provisioning: application-build
+    healthcheck: build
+    evidence_ref: .github/workflows/validate.yml#web-runtime
+    status: validated
+  - domain: commerce
+    provider: medusa
+    version: medusa-2.21.1-dtc-e3a237c9b8773cf35c899dabfe73afaebacbc8d5
+    provisioning: project-runtime
+    healthcheck: /health
+    evidence_ref: .github/workflows/reference-d-acceptance.yml#medusa
+    status: validated
+  - domain: erp
+    provider: tryton
+    version: tryton-8.0
+    provisioning: container
+    healthcheck: /
+    evidence_ref: .github/workflows/reference-d-acceptance.yml#tryton
+    status: validated
+  - domain: search
+    provider: meilisearch
+    version: meilisearch-1.10
+    provisioning: container
+    healthcheck: /health
+    evidence_ref: .github/workflows/reference-d-acceptance.yml#meilisearch
+    status: validated
+  - domain: support
+    provider: chatwoot
+    version: chatwoot-4.18.0
+    provisioning: managed-or-container
+    healthcheck: adapter-contract
+    evidence_ref: tests/test_provider_adapters.py
+    status: validated
+  - domain: automation
+    provider: activepieces
+    version: activepieces-0.91.1
+    provisioning: managed-or-container
+    healthcheck: adapter-contract
+    evidence_ref: tests/test_provider_adapters.py
+    status: validated
+  - domain: database
+    provider: postgresql
+    version: postgresql-16
+    provisioning: container
+    healthcheck: pg_isready
+    evidence_ref: .github/workflows/reference-d-acceptance.yml#postgres
+    status: validated
+provider_bindings:
+  - integration_id: payment
+    provider: razorpay
+    adapter_ref: connectors/payments/razorpay/adapter.yaml
+    credential_refs: [env:PAYMENT_CREDENTIALS]
+    verification: contract-tested
+    staging_live_verification: true
+    status: configured
+  - integration_id: logistics
+    provider: shiprocket
+    adapter_ref: connectors/logistics/shiprocket/adapter.yaml
+    credential_refs: [env:LOGISTICS_CREDENTIALS]
+    verification: contract-tested
+    staging_live_verification: true
+    status: configured
+  - integration_id: whatsapp
+    provider: meta-whatsapp-cloud
+    adapter_ref: connectors/messaging/whatsapp/adapter.yaml
+    credential_refs: [env:WHATSAPP_CREDENTIALS]
+    verification: contract-tested
+    staging_live_verification: true
+    status: configured
+migration:
+  plan_ref: production/data-migration.yaml
+  demo_data_replaced: true
+  master_data_strategy_validated: true
+  opening_inventory_strategy_validated: true
+  opening_finance_strategy_validated: true
+  evidence_ref: qa/migration-validation.yaml
+  status: validated
+integration:
+  event_bus: nats-2.10-jetstream
+  durable_store: postgresql-16
+  idempotency: true
+  retry: true
+  dead_letter: true
+  reconciliation: true
+  evidence_refs:
+    - tests/test_integration_runtime.py
+    - tests/test_production_connectors.py
+    - client-projects/reference-retail/production/integration/order-to-erp.reconciliation.yaml
+  status: validated
+blocking_items: []
+status: productionized
