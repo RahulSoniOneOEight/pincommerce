@@ -331,6 +331,93 @@
         }
       },
       "additionalProperties": true
+    },
+    "design_sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "ref"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "existing-app",
+              "existing-web",
+              "git",
+              "figma",
+              "penpot",
+              "brand-guide",
+              "reference-site",
+              "client-media",
+              "other"
+            ]
+          },
+          "ref": {
+            "type": "string"
+          },
+          "authority": {
+            "enum": [
+              "client-authoritative",
+              "approved-reference",
+              "advisory"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "brand": {
+      "type": "object",
+      "properties": {
+        "tone": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fonts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "raw_colors": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "semantic_overrides": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "image_direction": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "motion_preference": {
+          "enum": [
+            "reduced",
+            "restrained",
+            "balanced",
+            "expressive"
+          ]
+        }
+      },
+      "additionalProperties": true
     }
   },
   "additionalProperties": true
