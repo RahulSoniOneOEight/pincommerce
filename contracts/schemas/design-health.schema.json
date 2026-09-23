@@ -1,0 +1,23 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Design Dependency Health",
+  "type":"object",
+  "required":["health_id","components","status"],
+  "properties":{
+    "health_id":{"type":"string"},
+    "components":{"type":"array","items":{
+      "type":"object",
+      "required":["id","license","maintenance","security","eligibility"],
+      "properties":{
+        "id":{"type":"string"},
+        "license":{"enum":["approved","review","blocked","unknown"]},
+        "maintenance":{"enum":["healthy","watch","stale","unknown"]},
+        "security":{"enum":["clear","review","blocked","unknown"]},
+        "eligibility":{"enum":["eligible","review","blocked"]}
+      },
+      "additionalProperties":true
+    }},
+    "status":{"enum":["passed","review","blocked"]}
+  },
+  "additionalProperties":true
+}
