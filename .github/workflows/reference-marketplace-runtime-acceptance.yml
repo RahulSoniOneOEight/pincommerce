@@ -1,0 +1,177 @@
+name: Reference Marketplace Runtime Acceptance
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  reference-marketplace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: mercur_ref
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d mercur_ref"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install platform validation dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Run governed reference-marketplace A-D acceptance
+        run: |
+          python -m unittest tests.test_reference_marketplace_acceptance tests.test_marketplace_a_to_d -v
+          python -m tooling.marketplace.reference_acceptance
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.11"
+
+      - name: Prepare pinned Mercur basic runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone https://github.com/mercurjs/mercur.git /tmp/mercur-source
+          cd /tmp/mercur-source
+          git checkout d73f28a85a22587778cf3e60db318b2628103a0d
+          test "$(git rev-parse HEAD)" = "d73f28a85a22587778cf3e60db318b2628103a0d"
+          cp -R templates/basic /tmp/reference-marketplace-mercur
+          cd /tmp/reference-marketplace-mercur
+          cat > packages/api/.env <<'ENV'
+          STORE_CORS=http://localhost:8000
+          ADMIN_CORS=http://localhost:7000,http://localhost:9000
+          VENDOR_CORS=http://localhost:7001
+          AUTH_CORS=http://localhost:7000,http://localhost:7001,http://localhost:9000
+          REDIS_URL=redis://127.0.0.1:6379
+          JWT_SECRET=reference-marketplace-secret
+          COOKIE_SECRET=reference-marketplace-secret
+          DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/mercur_ref
+          MERCUR_VENDOR_URL=http://localhost:7001
+          STOREFRONT_REVALIDATE_URL=http://localhost:3000
+          STOREFRONT_REVALIDATE_SECRET=reference-marketplace-secret
+          ENV
+          bun install
+
+      - name: Run Mercur migrations and real seed
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/reference-marketplace-mercur/packages/api
+          bunx medusa db:migrate
+          bun run seed
+
+      - name: Start and health-check real Mercur backend
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/reference-marketplace-mercur/packages/api
+          nohup bun run dev >/tmp/mercur-reference.log 2>&1 &
+          for i in $(seq 1 75); do
+            if curl -fsS http://127.0.0.1:9000/health >/tmp/mercur-health.json; then
+              cat /tmp/mercur-health.json
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/mercur-reference.log
+          exit 1
+
+      - name: Read back marketplace records from Mercur PostgreSQL
+        shell: bash
+        env:
+          PGPASSWORD: postgres
+        run: |
+          set -euo pipefail
+          SELLERS=$(psql -h 127.0.0.1 -U postgres -d mercur_ref -Atc "select count(*) from seller where deleted_at is null")
+          OFFERS=$(psql -h 127.0.0.1 -U postgres -d mercur_ref -Atc "select count(*) from offer where deleted_at is null")
+          SELLER_EMAIL=$(psql -h 127.0.0.1 -U postgres -d mercur_ref -Atc "select email from seller where email='seller@mercur.dev' and deleted_at is null limit 1")
+          echo "seller_count=$SELLERS"
+          echo "offer_count=$OFFERS"
+          echo "primary_seller=$SELLER_EMAIL"
+          test "$SELLERS" -ge 3
+          test "$OFFERS" -gt 0
+          test "$SELLER_EMAIL" = "seller@mercur.dev"
+
+      - name: Verify governed Mercur bundle maps to live marketplace schema
+        shell: bash
+        env:
+          PGPASSWORD: postgres
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from tooling.prototype.demo_data import build_demo_dataset
+          from tooling.prototype.seed_bundle import build_seed_bundle
+          bundle = build_seed_bundle(build_demo_dataset("reference-marketplace"))["mercur"]
+          required = {
+              "sellers", "seller_offers", "marketplace_allocations",
+              "commission_ledger", "seller_settlements",
+              "seller_payout_reconciliations",
+          }
+          missing = sorted(key for key in required if not bundle.get(key))
+          assert not missing, missing
+          print("governed Mercur bundle complete:", sorted(required))
+          PY
+          for table in seller offer commission_line; do
+            psql -h 127.0.0.1 -U postgres -d mercur_ref -Atc               "select to_regclass('public.$table') is not null" | grep -qx t
+          done
+
+      - name: Prove Tryton ERP runtime boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run -d --name tryton-marketplace -p 8000:8000 tryton/tryton:8.0
+          for i in $(seq 1 45); do
+            if curl -sS http://127.0.0.1:8000/ >/tmp/tryton-marketplace-health.txt; then
+              cat /tmp/tryton-marketplace-health.txt || true
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs tryton-marketplace
+          exit 1
+
+      - name: Verify seller settlement to ERP payable reconciliation contract
+        run: |
+          python - <<'PY'
+          from tooling.prototype.demo_data import build_demo_dataset
+          data = build_demo_dataset("reference-marketplace")
+          settlement = data["transactions"]["seller_settlements"][0]
+          rec = data["transactions"]["seller_payout_reconciliations"][0]
+          payable = next(
+              p for p in data["finance"]["payables"]
+              if p.get("type") == "seller-settlement"
+              and p["purchase_id"] == settlement["id"]
+          )
+          assert settlement["payable"] == payable["amount"]
+          assert rec["marketplace_payable"] == rec["erp_payable"] == payable["amount"]
+          assert rec["status"] == "matched"
+          print("seller settlement reconciles to ERP payable:", payable["amount"])
+          PY
