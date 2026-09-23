@@ -1,0 +1,20 @@
+version: 1
+packs:
+  d2c:
+    patterns: [product-card, category-rail, checkout-section]
+    emphasis: [discovery, imagery, conversion]
+  b2b:
+    patterns: [b2b-quick-order, checkout-section, dashboard-kpi]
+    emphasis: [speed, density, repeat-order, keyboard-efficiency]
+  marketplace:
+    patterns: [product-card, category-rail, seller-settlement, dashboard-kpi]
+    emphasis: [seller-comparison, offer-context, trust, settlement]
+  seller:
+    patterns: [seller-settlement, dashboard-kpi, exception-table]
+    emphasis: [operations, finance, fulfilment, exceptions]
+  finance-admin:
+    patterns: [seller-settlement, exception-table, dashboard-kpi]
+    emphasis: [reconciliation, auditability, exception-resolution]
+  warehouse:
+    patterns: [exception-table, b2b-quick-order]
+    emphasis: [scanner-efficiency, inventory, low-latency]
