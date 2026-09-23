@@ -1,0 +1,35 @@
+version: 1
+selection_order:
+  - client-supplied
+  - existing-project-assets
+  - pincommerce-approved-fixtures
+  - pexels
+  - generated-neutral-placeholder
+providers:
+  pexels:
+    type: external-media-api
+    enabled: true
+    api_key_ref: env:PEXELS_API_KEY
+    allowed_media: [photo, video]
+    use_cases: [hero, editorial, lifestyle, category, placeholder]
+    selection_rules:
+      candidate_count_min: 5
+      candidate_count_max: 10
+      evaluate:
+        - subject-relevance
+        - crop-compatibility
+        - visual-quality
+        - palette-compatibility
+        - overlay-text-contrast
+        - brand-tone
+        - representation-requirements
+    evidence_fields:
+      - provider_asset_id
+      - source_page_url
+      - photographer
+      - query
+      - orientation
+      - selected_for
+      - crop
+      - focal_point
+      - visual_qa_status
