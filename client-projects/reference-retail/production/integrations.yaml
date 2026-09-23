@@ -1,0 +1,6 @@
+client_id: reference-retail
+production_plan_ref: production/production-plan.yaml
+integrations:
+  - {integration_id: payment, domain: payments, provider_candidates: [razorpay, cashfree], selected_provider: razorpay, selection_status: resolved, production_mode: live, credential_refs: [env:PAYMENT_CREDENTIALS], adapter_ref: connectors/payments/razorpay/adapter.yaml, reconciliation_required: true, status: mapped}
+  - {integration_id: logistics, domain: logistics, provider_candidates: [shiprocket, delhivery], selected_provider: shiprocket, selection_status: resolved, production_mode: live, credential_refs: [env:LOGISTICS_CREDENTIALS], adapter_ref: connectors/logistics/shiprocket/adapter.yaml, reconciliation_required: false, status: mapped}
+  - {integration_id: whatsapp, domain: messaging, provider_candidates: [meta-whatsapp-cloud], selected_provider: meta-whatsapp-cloud, selection_status: resolved, production_mode: live, credential_refs: [env:WHATSAPP_CREDENTIALS], adapter_ref: connectors/messaging/whatsapp/adapter.yaml, reconciliation_required: false, status: mapped}
