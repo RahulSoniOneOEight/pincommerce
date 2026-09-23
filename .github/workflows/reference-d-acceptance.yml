@@ -1,0 +1,128 @@
+name: Reference Retail Phase D Acceptance
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  reference-d:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: medusa_d
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d medusa_d"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependencies
+        run: pip install -r requirements-dev.txt
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Prove pinned Medusa production runtime
+        id: medusa
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone https://github.com/medusajs/dtc-starter.git /tmp/medusa-d
+          cd /tmp/medusa-d
+          git checkout e3a237c9b8773cf35c899dabfe73afaebacbc8d5
+          test "$(git rev-parse HEAD)" = "e3a237c9b8773cf35c899dabfe73afaebacbc8d5"
+          grep -q '"@medusajs/medusa": "2.21.1"' apps/backend/package.json
+          corepack enable
+          pnpm install --frozen-lockfile
+          cp apps/backend/.env.template apps/backend/.env
+          {
+            echo "DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/medusa_d"
+            echo "REDIS_URL="
+            echo "JWT_SECRET=phase-d-reference-secret"
+            echo "COOKIE_SECRET=phase-d-reference-secret"
+          } >> apps/backend/.env
+          cd apps/backend
+          pnpm medusa db:migrate
+          nohup pnpm dev >/tmp/medusa-d.log 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:9000/health >/tmp/medusa-d-health.json; then
+              cat /tmp/medusa-d-health.json
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/medusa-d.log
+          exit 1
+
+      - name: Prove pinned Tryton production runtime
+        id: tryton
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run -d --name tryton-d -p 8000:8000 tryton/tryton:8.0
+          for i in $(seq 1 45); do
+            if curl -sS http://127.0.0.1:8000/ >/tmp/tryton-d-health.txt; then
+              cat /tmp/tryton-d-health.txt || true
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs tryton-d
+          exit 1
+
+      - name: Prove pinned Meilisearch runtime
+        id: meilisearch
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run -d --name meili-d -p 7700:7700             -e MEILI_ENV=development -e MEILI_MASTER_KEY=phase-d-reference-key             getmeili/meilisearch:v1.10
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:7700/health >/tmp/meili-health.json; then
+              cat /tmp/meili-health.json
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs meili-d
+          exit 1
+
+      - name: Prove NATS JetStream integration runtime
+        id: nats
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run -d --name nats-d -p 4222:4222 -p 8222:8222 nats:2.10 -js -m 8222
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8222/healthz; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs nats-d
+          exit 1
+
+      - name: Validate D1 through D6 contracts and regression tests
+        run: |
+          python -m unittest             tests.test_production_plan             tests.test_phase_d_completion             tests.test_integration_runtime             tests.test_production_connectors             tests.test_provider_adapters             tests.test_integration_infrastructure -v
+
+      - name: Verify complete Phase D gate
+        run: python -m tooling.production.execution --client reference-retail
