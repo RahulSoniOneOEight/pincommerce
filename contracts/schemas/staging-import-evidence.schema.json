@@ -1,0 +1,22 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Staging Import Evidence",
+  "type":"object",
+  "required":["candidate_id","imports","status"],
+  "properties":{
+    "candidate_id":{"type":"string","minLength":1},
+    "imports":{"type":"array","items":{
+      "type":"object",
+      "required":["id","status","readback_status","evidence"],
+      "properties":{
+        "id":{"type":"string","minLength":1},
+        "status":{"enum":["pass","fail","not-run"]},
+        "readback_status":{"enum":["pass","fail","not-run"]},
+        "evidence":{"type":"string"}
+      },
+      "additionalProperties":false
+    }},
+    "status":{"enum":["passed","failed","blocked"]}
+  },
+  "additionalProperties":false
+}
