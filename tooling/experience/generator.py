@@ -121,7 +121,10 @@ def build_experience(client_id: str, root: Path = ROOT) -> dict[str, dict[str, A
     if not required_surfaces:
         raise ExperienceError("At least one required surface is needed")
 
+    from tooling.experience.design_intelligence import build_design_intelligence
+
     files: dict[str, dict[str, Any]] = {}
+    files.update(build_design_intelligence(client_id, root))
     fixture_set_id = "commerce-baseline"
     files["experience/fixtures/commerce-baseline.yaml"] = {
         "fixture_set_id": fixture_set_id,
@@ -147,6 +150,10 @@ def build_experience(client_id: str, root: Path = ROOT) -> dict[str, dict[str, A
             "design_intent": definition["design_intent"],
             "differentiators": definition["differentiators"],
             "fixture_set": fixture_set_id,
+            "design_selection_ref": "experience/design/selection.yaml",
+            "theme_resolution_ref": "experience/design/theme-resolution.yaml",
+            "asset_plan_ref": "experience/design/asset-plan.yaml",
+            "motion_policy_ref": "design-intelligence/motion-policy.yaml",
             "status": "draft",
         }
         suffix = definition["suffix"].lower()
@@ -165,6 +172,9 @@ def build_experience(client_id: str, root: Path = ROOT) -> dict[str, dict[str, A
                 for surface in required_surfaces
             ],
             "fixtures": [fixture_set_id],
+            "design_selection_ref": "experience/design/selection.yaml",
+            "theme_resolution_ref": "experience/design/theme-resolution.yaml",
+            "asset_plan_ref": "experience/design/asset-plan.yaml",
             "status": "draft",
         }
         files[f"experience/directions/{suffix}.yaml"] = direction
