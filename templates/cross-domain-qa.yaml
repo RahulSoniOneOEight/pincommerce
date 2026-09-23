@@ -1,0 +1,6 @@
+qa_id: CDQA-example-v1
+client_id: ""
+production_execution_ref: production/production-execution.yaml
+cases: []
+blocking_items: []
+status: failed
