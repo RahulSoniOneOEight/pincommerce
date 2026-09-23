@@ -1,0 +1,13 @@
+name: Design Learning Loop Acceptance
+on: [pull_request, push]
+permissions: {contents: read}
+jobs:
+  learning:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: pip install -r requirements-dev.txt
+      - run: python -m unittest tests.test_closed_learning_loop -v
+      - run: python -m tooling.experience.learning_orchestrator --client reference-retail

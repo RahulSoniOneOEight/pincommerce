@@ -1,0 +1,17 @@
+version: 1
+client_id: reference-retail
+minimum_score: 80
+weights: {accessibility: 30, performance: 25, visual-regression: 25, completeness: 20}
+candidates:
+  - id: direction-a
+    dependency_eligibility: eligible
+    deterministic_evidence: true
+    dimensions: {accessibility: 95, performance: 90, visual-regression: 95, completeness: 100}
+  - id: direction-b
+    dependency_eligibility: eligible
+    deterministic_evidence: true
+    dimensions: {accessibility: 90, performance: 94, visual-regression: 90, completeness: 95}
+  - id: direction-c
+    dependency_eligibility: eligible
+    deterministic_evidence: true
+    dimensions: {accessibility: 96, performance: 88, visual-regression: 88, completeness: 92}

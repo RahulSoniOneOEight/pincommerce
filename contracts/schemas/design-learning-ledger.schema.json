@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "client_id",
+    "outcomes",
+    "telemetry"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "client_id": {
+      "type": "string"
+    },
+    "outcomes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "target",
+          "decision",
+          "reviewer"
+        ],
+        "properties": {
+          "target": {
+            "type": "string"
+          },
+          "decision": {
+            "enum": [
+              "accepted",
+              "accepted-with-changes",
+              "rejected"
+            ]
+          },
+          "reviewer": {
+            "type": "string"
+          },
+          "component_version": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "telemetry": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "target",
+          "status",
+          "samples"
+        ],
+        "properties": {
+          "target": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "passed",
+              "review",
+              "failed"
+            ]
+          },
+          "samples": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  }
+}

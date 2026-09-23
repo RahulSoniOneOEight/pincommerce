@@ -80,6 +80,8 @@ CONTRACTS = {
     "design-contract": ROOT / "contracts" / "schemas" / "design-contract.schema.json",
     "integration-contract": ROOT / "contracts" / "schemas" / "integration-contract.schema.json",
     "component-selection-ledger": ROOT / "contracts" / "schemas" / "component-selection-ledger.schema.json",
+    "design-connector-evidence": ROOT / "contracts" / "schemas" / "design-connector-evidence.schema.json",
+    "design-learning-ledger": ROOT / "contracts" / "schemas" / "design-learning-ledger.schema.json",
 }
 
 

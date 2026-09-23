@@ -1,0 +1,13 @@
+version: 1
+client_id: reference-retail
+outcomes:
+  - {target: direction-a, decision: accepted, reviewer: reference-reviewer, component_version: "1.0.0"}
+  - {target: direction-a, decision: accepted, reviewer: reference-reviewer-2, component_version: "1.0.0"}
+  - {target: direction-b, decision: accepted-with-changes, reviewer: reference-reviewer, component_version: "1.0.0"}
+  - {target: direction-b, decision: rejected, reviewer: reference-reviewer-2, component_version: "1.0.0"}
+  - {target: direction-c, decision: accepted, reviewer: reference-reviewer, component_version: "1.0.0"}
+  - {target: direction-c, decision: rejected, reviewer: reference-reviewer-2, component_version: "1.0.0"}
+telemetry:
+  - {target: direction-a, status: passed, samples: 30}
+  - {target: direction-b, status: review, samples: 30}
+  - {target: direction-c, status: failed, samples: 30}

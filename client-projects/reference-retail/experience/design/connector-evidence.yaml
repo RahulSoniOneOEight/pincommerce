@@ -1,0 +1,15 @@
+version: 1
+client_id: reference-retail
+sources:
+  - id: reference-brand
+    type: brand-guide
+    mode: fixture
+    status: ready
+    provenance_ref: experience/design/source-inventory.yaml
+    detail: governed reference fixture; live client credentials are not required for reference acceptance
+  - id: reference-site
+    type: reference-site
+    mode: fixture
+    status: ready
+    provenance_ref: experience/design/source-inventory.yaml
+    detail: deterministic reference-site evidence

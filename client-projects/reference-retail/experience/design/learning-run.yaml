@@ -1,0 +1,12 @@
+version: 1
+client_id: reference-retail
+tournament_winner: direction-a
+status: advisory-only
+requires_human_approval: true
+ranking:
+  - {id: direction-a, base_score: 94.75, learning_adjustment: 6, advisory_score: 100.75}
+  - {id: direction-b, base_score: 92.0, learning_adjustment: -1, advisory_score: 91.0}
+  - {id: direction-c, base_score: 91.2, learning_adjustment: -2, advisory_score: 89.2}
+guardrails:
+  auto_promote: false
+  mutate_approved_client_design: false
