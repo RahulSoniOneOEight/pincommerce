@@ -24,7 +24,7 @@ void main() {
   testWidgets('B2BQuickOrder renders semantic order table', (tester) async {
     await tester.pumpWidget(host(const B2BQuickOrder(lines: [QuickOrderLine(sku: 'SKU-1', name: 'Product', quantity: 2)])));
     expect(find.text('SKU-1'), findsOneWidget);
-    expect(find.text('Product'), findsOneWidget);
+    expect(find.text('Product'), findsNWidgets(2));
     expect(find.text('2'), findsOneWidget);
   });
 
