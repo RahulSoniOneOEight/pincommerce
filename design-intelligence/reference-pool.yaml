@@ -1,0 +1,44 @@
+version: 1
+purpose: inspiration-and-evaluation-not-direct-runtime-dependency
+categories:
+  flutter_design_systems:
+    - moon_design
+    - cupertino_ui
+    - ripplearc_core_ui
+    - base_ui_flutter
+    - geniuslink_design_system
+    - shadcn_flutter
+  web_design_systems:
+    - shadcn_ui
+    - base_ui
+    - radix_ui
+    - react_aria
+    - ant_design
+    - mui
+    - tailwind_css
+    - shoelace
+    - web_awesome
+  enterprise_erp_reference:
+    - hubleto_react_ui
+    - synap_ui
+    - quan_erp_shared_ui
+    - erpsquad_common
+    - erp_pro_ui
+    - erp_blocks
+  palette_tools:
+    - gpick
+    - hue
+    - color_pickup
+    - chroma_panel
+    - color_hunter
+    - kcolorchooser
+    - colorify
+  token_tools:
+    - kernic
+    - quieto_tokens
+    - thesage_tokens
+    - tangible
+rules:
+  - reference-sources-do-not-bypass-design-contract
+  - no-library-selected-by-preference-alone
+  - license-and-maintenance-review-required-before-production-adoption
