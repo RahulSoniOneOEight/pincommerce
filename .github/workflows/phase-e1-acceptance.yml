@@ -24,7 +24,7 @@ jobs:
 
       - name: Validate E1 contracts and strict gates
         run: |
-          python -m unittest tests.test_phase_e1_staging tests.test_staging_manifest -v
+          python -m unittest tests.test_phase_e1_staging tests.test_staging_manifest tests.test_staging_execution -v
           python tooling/validation/validate_repository.py
 
       - name: Build exact candidate and staging manifest from this revision
