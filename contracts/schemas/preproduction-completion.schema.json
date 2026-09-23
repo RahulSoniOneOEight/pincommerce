@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "client_id",
+    "status",
+    "scope",
+    "authorities",
+    "points",
+    "visual_evidence",
+    "immutable"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "client_id": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "complete",
+        "blocked"
+      ]
+    },
+    "scope": {
+      "type": "object",
+      "required": [
+        "current_scope_ref",
+        "baseline_ref",
+        "baseline_id"
+      ],
+      "properties": {
+        "current_scope_ref": {
+          "type": "string"
+        },
+        "baseline_ref": {
+          "type": "string"
+        },
+        "baseline_id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "authorities": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "points": {
+      "type": "array",
+      "minItems": 40,
+      "maxItems": 40,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "point",
+          "name",
+          "status",
+          "evidence"
+        ],
+        "properties": {
+          "point": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 40
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "const": "pass"
+          },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "visual_evidence": {
+      "type": "object",
+      "required": [
+        "baseline_ref",
+        "baseline_mode",
+        "review_binding_ref"
+      ],
+      "properties": {
+        "baseline_ref": {
+          "type": "string"
+        },
+        "baseline_mode": {
+          "type": "string"
+        },
+        "review_binding_ref": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "immutable": {
+      "const": true
+    }
+  }
+}

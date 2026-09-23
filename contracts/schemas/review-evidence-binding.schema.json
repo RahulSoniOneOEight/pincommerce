@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "client_id",
+    "build_id",
+    "direction_id",
+    "review_ref",
+    "visual_qa_refs",
+    "capture_manifest_ref",
+    "approved_visual_baseline_ref",
+    "baseline_mode",
+    "status"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "client_id": {
+      "type": "string"
+    },
+    "build_id": {
+      "type": "string"
+    },
+    "direction_id": {
+      "type": "string"
+    },
+    "review_ref": {
+      "type": "string"
+    },
+    "visual_qa_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "capture_manifest_ref": {
+      "type": "string"
+    },
+    "approved_visual_baseline_ref": {
+      "type": "string"
+    },
+    "baseline_mode": {
+      "enum": [
+        "exact-png-hash",
+        "pixel-diff"
+      ]
+    },
+    "baseline_patterns": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "baseline_viewports": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "status": {
+      "enum": [
+        "bound",
+        "blocked"
+      ]
+    }
+  }
+}

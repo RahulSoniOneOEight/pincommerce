@@ -25,3 +25,14 @@ PinCommerce is the reference implementation of the Agency Platform V2 operating 
 9. Cross-Domain QA, UAT, Release, and Operations
 
 See `docs/architecture.md` and `docs/client-delivery.md` for the operating model.
+
+## Pre-production completion
+
+The authoritative completion gate for the governed flow from client onboarding through immutable
+scope freeze (points 1–40) is:
+
+```bash
+python -m tooling.validation.preproduction --client <client> --check-drift
+```
+
+See `docs/preproduction-completion.md` for the evidence model and boundary.

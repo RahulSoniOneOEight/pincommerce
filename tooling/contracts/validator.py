@@ -82,6 +82,8 @@ CONTRACTS = {
     "component-selection-ledger": ROOT / "contracts" / "schemas" / "component-selection-ledger.schema.json",
     "design-connector-evidence": ROOT / "contracts" / "schemas" / "design-connector-evidence.schema.json",
     "design-learning-ledger": ROOT / "contracts" / "schemas" / "design-learning-ledger.schema.json",
+    "review-evidence-binding": ROOT / "contracts" / "schemas" / "review-evidence-binding.schema.json",
+    "preproduction-completion": ROOT / "contracts" / "schemas" / "preproduction-completion.schema.json",
 }
 
 

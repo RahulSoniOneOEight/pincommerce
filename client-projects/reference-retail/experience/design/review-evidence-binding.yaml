@@ -1,0 +1,13 @@
+version: 1
+client_id: reference-retail
+build_id: BLD-reference-retail-a-ref001
+direction_id: DIR-REFERENCE-RETAIL-A
+review_ref: feedback/REV-BLD-reference-retail-a-ref001-approved.yaml
+visual_qa_refs:
+  - experience/visual-qa/VQA-BLD-reference-retail-a-ref001.yaml
+capture_manifest_ref: experience/visual-qa/CAP-BLD-reference-retail-a-ref001.yaml
+approved_visual_baseline_ref: design-intelligence/approved-visual-baselines.yaml
+baseline_mode: exact-png-hash
+baseline_patterns: 9
+baseline_viewports: [mobile-390, tablet-768, desktop-1440]
+status: bound

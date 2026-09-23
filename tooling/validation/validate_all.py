@@ -30,6 +30,13 @@ def main() -> int:
         ("solution", "client-projects/reference-retail/solution/solution-contract.yaml"),
         ("data-contract", "client-projects/reference-retail/contracts/data-contract.yaml"),
         ("business-contract", "client-projects/reference-retail/contracts/business-contract.yaml"),
+        ("design-contract", "client-projects/reference-retail/contracts/design-contract.yaml"),
+        ("integration-contract", "client-projects/reference-retail/contracts/integration-contract.yaml"),
+        ("component-selection-ledger", "client-projects/reference-retail/experience/design/selection-ledger.yaml"),
+        ("design-connector-evidence", "client-projects/reference-retail/experience/design/connector-evidence.yaml"),
+        ("design-learning-ledger", "client-projects/reference-retail/experience/design/learning-ledger.yaml"),
+        ("review-evidence-binding", "client-projects/reference-retail/experience/design/review-evidence-binding.yaml"),
+        ("preproduction-completion", "client-projects/reference-retail/approved/preproduction-completion.yaml"),
         ("change", "client-projects/reference-retail/changes/CHG-001.yaml"),
         ("workflow-state", "client-projects/reference-retail/workflow/workflow-state.yaml"),
         ("ai-proposal", "client-projects/reference-retail/intelligence/ai/interpretation.yaml"),
@@ -96,6 +103,8 @@ def main() -> int:
         "reference-retail")
     run(sys.executable, "-m", "tooling.validation.lifecycle", "--client",
         "reference-retail")
+    run(sys.executable, "-m", "tooling.validation.preproduction", "--client",
+        "reference-retail", "--check-drift")
     run(sys.executable, "-m", "tooling.workflow.runtime", "status",
         "--client", "reference-retail")
     run(sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v")

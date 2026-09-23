@@ -1,0 +1,277 @@
+version: 1
+client_id: reference-retail
+status: complete
+scope:
+  current_scope_ref: approved/current-scope.yaml
+  baseline_ref: approved/scope-baselines/BASE-reference-retail-v1.yaml
+  baseline_id: BASE-reference-retail-v1
+authorities:
+  client_input: input/client-input.yaml
+  truth_register: derived/truth-register.yaml
+  classification: derived/classification-evidence.yaml
+  benchmark: derived/benchmark-report.yaml
+  capability_map: derived/capability-map.yaml
+  journey_map: derived/journey-map.yaml
+  entity_map: derived/entity-map.yaml
+  surface_map: derived/surface-map.yaml
+  integration_map: derived/integration-map.yaml
+  dependency_map: derived/dependency-map.yaml
+  solution_contract: solution/solution-contract.yaml
+  design_contract: contracts/design-contract.yaml
+  integration_contract: contracts/integration-contract.yaml
+  design_selection: experience/design/selection.yaml
+  selection_ledger: experience/design/selection-ledger.yaml
+  learning_run: experience/design/learning-run.yaml
+  direction: experience/directions/a.yaml
+  prototype_coverage: experience/prototypes/a-coverage.yaml
+  build_identity: experience/builds/BLD-reference-retail-a-ref001.yaml
+  review_binding: experience/design/review-evidence-binding.yaml
+  approved_review: feedback/REV-BLD-reference-retail-a-ref001-approved.yaml
+  scope_baseline: approved/scope-baselines/BASE-reference-retail-v1.yaml
+points:
+  - point: 1
+    name: Client onboarding and truth capture
+    status: pass
+    evidence:
+      - "input/client-input.yaml"
+      - "derived/truth-register.yaml"
+  - point: 2
+    name: Business-model and archetype intelligence
+    status: pass
+    evidence:
+      - "derived/classification-evidence.yaml"
+      - "derived/industry-profile.yaml"
+      - "derived/benchmark-report.yaml"
+  - point: 3
+    name: Capability intelligence
+    status: pass
+    evidence:
+      - "derived/capability-gap.yaml"
+      - "derived/capability-gap-analysis.yaml"
+      - "derived/capability-map.yaml"
+  - point: 4
+    name: Journey intelligence
+    status: pass
+    evidence:
+      - "derived/journey-map.yaml"
+  - point: 5
+    name: Entity and data intelligence
+    status: pass
+    evidence:
+      - "derived/entity-map.yaml"
+      - "contracts/data-contract.yaml"
+  - point: 6
+    name: Surface intelligence
+    status: pass
+    evidence:
+      - "derived/surface-map.yaml"
+  - point: 7
+    name: Integration intelligence
+    status: pass
+    evidence:
+      - "derived/integration-map.yaml"
+      - "contracts/integration-contract.yaml"
+  - point: 8
+    name: Architecture decisions
+    status: pass
+    evidence:
+      - "solution/solution-contract.yaml"
+      - "solution/decisions/ADR-reference-retail-001.yaml"
+  - point: 9
+    name: Commerce runtime
+    status: pass
+    evidence:
+      - "experience/prototype-core-runtime.yaml"
+      - "@root/platform/commerce/medusa/adapter.yaml"
+  - point: 10
+    name: Marketplace runtime
+    status: pass
+    evidence:
+      - "experience/prototype-core-runtime.yaml"
+      - "@root/platform/marketplace/mercur/adapter.yaml"
+  - point: 11
+    name: ERP runtime
+    status: pass
+    evidence:
+      - "experience/prototype-core-runtime.yaml"
+      - "@root/platform/erp/tryton/adapter.yaml"
+  - point: 12
+    name: Event and messaging layer
+    status: pass
+    evidence:
+      - "@root/platform/integration/event-catalog.yaml"
+      - "@root/tooling/integration/nats_transport.py"
+  - point: 13
+    name: Search runtime
+    status: pass
+    evidence:
+      - "@root/platform/search/meilisearch/adapter.yaml"
+  - point: 14
+    name: Integration runtime
+    status: pass
+    evidence:
+      - "contracts/integration-contract.yaml"
+      - "@root/tooling/integration/runtime.py"
+      - "@root/tooling/integration/reconciliation.py"
+  - point: 15
+    name: Design-source intelligence
+    status: pass
+    evidence:
+      - "experience/design/source-inventory.yaml"
+      - "experience/design/connector-evidence.yaml"
+  - point: 16
+    name: Component and library selection
+    status: pass
+    evidence:
+      - "experience/design/selection.yaml"
+      - "experience/design/selection-ledger.yaml"
+  - point: 17
+    name: Theme and token system
+    status: pass
+    evidence:
+      - "contracts/design-contract.yaml"
+      - "@root/design-contract/tokens/foundation.yaml"
+      - "@root/design-contract/tokens/semantic.yaml"
+  - point: 18
+    name: Semantic icons and motion
+    status: pass
+    evidence:
+      - "contracts/design-contract.yaml"
+      - "@root/design-intelligence/semantic-icons.yaml"
+      - "@root/design-intelligence/motion-tokens.yaml"
+  - point: 19
+    name: Shared Flutter UI runtime
+    status: pass
+    evidence:
+      - "@root/packages/agency_flutter_ui/lib/agency_flutter_ui.dart"
+  - point: 20
+    name: Shared web UI runtime
+    status: pass
+    evidence:
+      - "@root/packages/agency_web_ui/src/index.tsx"
+  - point: 21
+    name: Governed component patterns
+    status: pass
+    evidence:
+      - "@root/design-intelligence/pattern-expansion.yaml"
+      - "@root/design-intelligence/component-registry.yaml"
+  - point: 22
+    name: Widgetbook and Storybook catalogs
+    status: pass
+    evidence:
+      - "@root/apps/widgetbook/lib/main.dart"
+      - "@root/apps/storybook/stories/ProductCard.stories.tsx"
+  - point: 23
+    name: Screenshot rendering
+    status: pass
+    evidence:
+      - "@root/design-intelligence/approved-visual-baselines.yaml"
+      - "@root/tooling/experience/web_evidence.mjs"
+  - point: 24
+    name: Accessibility QA
+    status: pass
+    evidence:
+      - "@root/design-intelligence/accessibility-performance-policy.yaml"
+      - "@root/tooling/experience/visual_evidence.py"
+  - point: 25
+    name: Performance QA
+    status: pass
+    evidence:
+      - "@root/design-intelligence/accessibility-performance-policy.yaml"
+      - "@root/design-intelligence/visual-evidence.yaml"
+  - point: 26
+    name: Visual regression
+    status: pass
+    evidence:
+      - "@root/design-intelligence/approved-visual-baselines.yaml"
+      - "@root/tooling/experience/visual_baseline.py"
+  - point: 27
+    name: A/B/C design tournament
+    status: pass
+    evidence:
+      - "experience/design/tournament.yaml"
+      - "@root/tooling/experience/visual_tournament.py"
+  - point: 28
+    name: Visual AI QA
+    status: pass
+    evidence:
+      - "@root/tooling/experience/visual_ai_provider.py"
+      - "@root/tooling/experience/visual_ai_qa.py"
+  - point: 29
+    name: Dependency intelligence
+    status: pass
+    evidence:
+      - "@root/design-intelligence/dependency-sources.yaml"
+      - "@root/tooling/experience/dependency_intelligence.py"
+  - point: 30
+    name: Dependency refresh
+    status: pass
+    evidence:
+      - "@root/.github/workflows/design-connector-refresh.yml"
+  - point: 31
+    name: UX telemetry
+    status: pass
+    evidence:
+      - "experience/design/learning-ledger.yaml"
+      - "@root/design-intelligence/ux-telemetry-policy.yaml"
+  - point: 32
+    name: Human design feedback
+    status: pass
+    evidence:
+      - "experience/design/learning-ledger.yaml"
+      - "feedback/REV-BLD-reference-retail-a-ref001-approved.yaml"
+  - point: 33
+    name: Learning loop
+    status: pass
+    evidence:
+      - "experience/design/learning-run.yaml"
+      - "@root/tooling/experience/learning_orchestrator.py"
+  - point: 34
+    name: Component lifecycle
+    status: pass
+    evidence:
+      - "@root/design-intelligence/component-registry.yaml"
+      - "@root/tooling/experience/component_registry.py"
+  - point: 35
+    name: Promotion gate
+    status: pass
+    evidence:
+      - "@root/tooling/experience/promotion_gate.py"
+  - point: 36
+    name: Design debt
+    status: pass
+    evidence:
+      - "@root/design-intelligence/design-debt-baseline.yaml"
+      - "@root/tooling/experience/debt_gate.py"
+  - point: 37
+    name: Flutter and web behavioral parity
+    status: pass
+    evidence:
+      - "@root/design-intelligence/behavior-contracts.yaml"
+      - "@root/tooling/experience/web_behavior.mjs"
+      - "@root/packages/agency_flutter_ui/test/behavior_parity_test.dart"
+  - point: 38
+    name: Prototype creation and coverage
+    status: pass
+    evidence:
+      - "experience/prototypes/a-manifest.yaml"
+      - "experience/prototypes/a-coverage.yaml"
+      - "experience/prototypes/a-implementation.yaml"
+  - point: 39
+    name: Visual and business review
+    status: pass
+    evidence:
+      - "experience/design/review-evidence-binding.yaml"
+      - "experience/visual-qa/VQA-BLD-reference-retail-a-ref001.yaml"
+      - "feedback/REV-BLD-reference-retail-a-ref001-approved.yaml"
+  - point: 40
+    name: Immutable scope freeze
+    status: pass
+    evidence:
+      - "approved/current-scope.yaml"
+      - "approved/scope-baselines/BASE-reference-retail-v1.yaml"
+visual_evidence:
+  baseline_ref: design-intelligence/approved-visual-baselines.yaml
+  baseline_mode: exact-png-hash
+  review_binding_ref: experience/design/review-evidence-binding.yaml
+immutable: true

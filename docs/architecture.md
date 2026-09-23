@@ -20,9 +20,7 @@ The canonical machine-readable stage list, including each stage's output path an
 - Data Contract
 - Solution Contract
 
-Which of these are enforced today, partially enforced, or roadmap is tracked in
-`docs/governance-status.md`. Solution Contract is enforced now; Business and Data Contracts are
-roadmap.
+Enforcement status is authoritative in `docs/governance-status.md`. Design, Business, Integration, Data and Solution Contracts are schema-backed and enforced for the reference pre-production authority chain.
 
 ## Engineering domains
 - Experience

@@ -9,6 +9,10 @@ Stage 1 turns Design Intelligence selections into reusable Flutter and web runti
 - B2B Quick Order
 - Dashboard KPI
 - Exception Table
+- Filter Bar
+- Checkout Summary
+- Navigation Menu
+- Form Section
 
 Each pattern is exposed through the shared `agency_flutter_ui` and `agency_web_ui` packages and represented in Widgetbook/Storybook with deterministic states.
 
@@ -25,7 +29,7 @@ Each pattern is exposed through the shared `agency_flutter_ui` and `agency_web_u
 - Widgetbook analyze,
 - Storybook production build.
 
-The viewport contract defines 390px mobile, 768px tablet and 1440px desktop targets. The repository records these capture targets now; actual browser/device screenshot image capture can be attached by a dedicated renderer without changing the component contract.
+The viewport contract defines 390px mobile, 768px tablet and 1440px desktop targets. CI now renders web screenshots and Flutter golden artifacts at these targets, records accessibility/performance evidence, and checks the web captures against the approved visual baseline authority.
 
 ## Governance
 

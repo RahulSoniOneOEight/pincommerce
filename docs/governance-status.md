@@ -15,8 +15,8 @@ Legend:
 | Contract | Location | Status | Enforcement |
 |---|---|---|---|
 | Solution Contract | `contracts/schemas/solution-contract.schema.json`, `client-projects/*/solution/` | Enforced now | JSON Schema validation of the reference instance; generated deterministically by `tooling.onboarding.engine` (drift-checked) |
-| Design Contract | `design-contract/` | Partial | Required files present; no token/component JSON Schema yet |
-| Integration Contract | `platform/integration/*.yaml`, `contracts/schemas/provider-adapter.schema.json` | Partial | Catalogs present; provider adapters schema-validated; unified integration schema pending |
+| Design Contract | `contracts/schemas/design-contract.schema.json`, `client-projects/*/contracts/design-contract.yaml`, `design-contract/` | Enforced now | Schema-validates source provenance, tokens/theme, approved components, icons, motion and Flutter/web bindings; required by the pre-production completion gate |
+| Integration Contract | `contracts/schemas/integration-contract.schema.json`, `client-projects/*/contracts/integration-contract.yaml`, `platform/integration/*.yaml` | Enforced now | Unified schema binds provider adapters, commands/events, retry, reconciliation, credential references, SLA and fallback; required by the pre-production completion gate |
 | Data Contract | `contracts/schemas/data-contract.schema.json`, `client-projects/*/contracts/data-contract.yaml` | Enforced now | Schema-validated reference instance; defines canonical entity ownership |
 | Business Contract | `contracts/schemas/business-contract.schema.json`, `client-projects/*/contracts/business-contract.yaml` | Enforced now | Schema-validated reference instance |
 | Change Contract | `contracts/schemas/change-contract.schema.json`, `client-projects/*/changes/` | Enforced now | Schema-validated reference instance |
@@ -146,3 +146,23 @@ Phase D is complete only when all D1–D6 gates pass with zero blockers.
 | Phase D Completion | `production/phase-d-completion.yaml` | `python -m tooling.production.execution --client <client>` returns `status: complete` |
 
 Reference-retail is a governed reference acceptance. Contract-tested external provider bindings require real credential/live verification in Phase E staging. Phase D completion does not represent a real client production deployment and cannot bypass UAT or Production Authorization.
+
+
+## Pre-production points 1–40 completion
+
+The authoritative platform-completion gate before Phase D is:
+
+`python -m tooling.validation.preproduction --client <client> --check-drift`
+
+It reuses the A/B/C seam and prototype coverage gates, validates the Design and Integration
+Contracts, component-selection and design-learning evidence, approved visual baseline binding,
+design-debt policy, accepted architecture decisions, immutable scope pointer/baseline, and the
+client's persisted completion manifest.
+
+The reference-retail acceptance manifest is
+`client-projects/reference-retail/approved/preproduction-completion.yaml`. It contains exactly
+40 passing point records and is immutable. CI rejects drift between current governed inputs and
+that approved completion manifest.
+
+This gate establishes **platform completeness through scope freeze**. It does not fabricate
+client credentials or represent Phase D/E deployment, UAT or production authorization.
