@@ -1,0 +1,15 @@
+version: 1
+metrics:
+  task_completion_min: 0.85
+  checkout_completion_min: 0.70
+  interaction_error_rate_max: 0.03
+  p95_interaction_ms_max: 250
+  abandonment_rate_max: 0.30
+feedback:
+  allowed_use:
+    - candidate-ranking-input
+    - design-debt-signal
+    - pattern-improvement-proposal
+  prohibited_use:
+    - silent-client-design-change
+    - automatic-production-promotion
