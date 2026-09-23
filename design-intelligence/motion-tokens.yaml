@@ -1,0 +1,22 @@
+version: 1
+tokens:
+  motion.instant:
+    duration_ms: 80
+    curve: standard
+  motion.fast:
+    duration_ms: 140
+    curve: standard
+  motion.standard:
+    duration_ms: 220
+    curve: emphasized
+  motion.slow:
+    duration_ms: 320
+    curve: emphasized
+  motion.page:
+    duration_ms: 380
+    curve: emphasized
+reduced_motion:
+  duration_ms: 0
+  preserve:
+    - focus-visibility
+    - state-change-clarity
