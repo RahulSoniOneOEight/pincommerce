@@ -1,0 +1,26 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Asset Selection",
+  "type":"object",
+  "required":["asset_plan_id","client_id","source_order","requests","status"],
+  "properties":{
+    "asset_plan_id":{"type":"string"},
+    "client_id":{"type":"string"},
+    "source_order":{"type":"array","items":{"type":"string"}},
+    "requests":{"type":"array","items":{
+      "type":"object",
+      "required":["id","purpose","provider_policy","status"],
+      "properties":{
+        "id":{"type":"string"},
+        "purpose":{"type":"string"},
+        "provider_policy":{"type":"string"},
+        "query":{"type":"object"},
+        "selected_asset":{"type":["object","null"]},
+        "status":{"enum":["planned","selected","approved","blocked"]}
+      },
+      "additionalProperties":true
+    }},
+    "status":{"enum":["draft","ready","approved"]}
+  },
+  "additionalProperties":true
+}
