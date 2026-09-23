@@ -33,6 +33,10 @@ def main() -> int:
         ("change", "client-projects/reference-retail/changes/CHG-001.yaml"),
         ("workflow-state", "client-projects/reference-retail/workflow/workflow-state.yaml"),
         ("ai-proposal", "client-projects/reference-retail/intelligence/ai/interpretation.yaml"),
+        ("design-source-inventory", "client-projects/reference-retail/experience/design/source-inventory.yaml"),
+        ("design-selection", "client-projects/reference-retail/experience/design/selection.yaml"),
+        ("theme-resolution", "client-projects/reference-retail/experience/design/theme-resolution.yaml"),
+        ("asset-selection", "client-projects/reference-retail/experience/design/asset-plan.yaml"),
         ("experience-direction", "client-projects/reference-retail/experience/directions/a.yaml"),
         ("prototype-manifest", "client-projects/reference-retail/experience/prototypes/a-manifest.yaml"),
         ("prototype-coverage", "client-projects/reference-retail/experience/prototypes/a-coverage.yaml"),
@@ -77,6 +81,8 @@ def main() -> int:
     run(sys.executable, "-m", "tooling.ai.router", "--role", "strategy")
     run(sys.executable, "-m", "tooling.ai.router", "--role", "implementation")
     run(sys.executable, "-m", "tooling.onboarding.engine", "--client",
+        "reference-retail", "--print-only")
+    run(sys.executable, "-m", "tooling.experience.design_intelligence", "--client",
         "reference-retail", "--print-only")
     run(sys.executable, "-m", "tooling.experience.generator", "--client",
         "reference-retail", "--print-only")
