@@ -20,6 +20,7 @@ CONTRACTS = {
     "production-plan": ROOT / "contracts" / "schemas" / "production-plan.schema.json",
     "production-readiness": ROOT / "contracts" / "schemas" / "production-readiness.schema.json",
     "production-migration-plan": ROOT / "contracts" / "schemas" / "production-migration-plan.schema.json",
+    "production-provider-selections": ROOT / "contracts" / "schemas" / "production-provider-selections.schema.json",
     "solution": ROOT / "contracts" / "schemas" / "solution-contract.schema.json",
     "workflow-state": ROOT / "contracts" / "schemas" / "workflow-state.schema.json",
     "change": ROOT / "contracts" / "schemas" / "change-contract.schema.json",
