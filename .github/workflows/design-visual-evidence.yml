@@ -42,9 +42,30 @@ jobs:
           raise SystemExit(0 if result["status"]=="passed" else 2)
           PY
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: design-visual-evidence
           path: artifacts/design-evidence
+
+  flutter-render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Generate Flutter rendered goldens
+        working-directory: packages/agency_flutter_ui
+        env:
+          RUN_VISUAL_CAPTURE: "true"
+        run: |
+          flutter pub get
+          flutter test --update-goldens test/visual_capture_test.dart
+      - uses: actions/upload-artifact@v4
+        with:
+          name: flutter-design-visual-evidence
+          path: packages/agency_flutter_ui/test/goldens
 
   contracts:
     runs-on: ubuntu-latest
