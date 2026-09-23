@@ -1,0 +1,57 @@
+client_id: reference-marketplace
+client_name: Reference Multi-vendor Marketplace
+industry: retail
+business_models: [marketplace, multi-vendor]
+goals:
+  - multi-vendor-commerce
+  - governed-seller-onboarding
+  - seller-order-allocation
+  - commission-and-settlement-accounting
+source_refs:
+  - brief:reference-marketplace
+requested_capabilities:
+  - catalogue
+  - pricing
+  - orders
+  - seller-onboarding
+  - seller-catalogue
+  - seller-inventory
+  - marketplace-orders
+  - commissions
+  - settlements
+  - seller-analytics
+  - seller-approval
+  - payout-reconciliation
+required_integrations: [payment, logistics, whatsapp]
+experience_requirements:
+  - requirement_id: REQ-MKT-001
+    statement: Sellers can onboard, see approval status and maintain marketplace offers.
+    ux_impact: true
+    source_refs: [brief:reference-marketplace]
+    requested_surfaces: [seller-portal]
+    requested_screens: [seller-onboarding, seller-profile, offers]
+    requested_components: [approval-status, seller-form, offer-table]
+    required_states: [pending, approved, rejected, active]
+  - requirement_id: REQ-MKT-002
+    statement: Sellers can see allocated orders, fulfilment, commissions and settlements.
+    ux_impact: true
+    source_refs: [brief:reference-marketplace]
+    requested_surfaces: [seller-portal]
+    requested_screens: [orders, fulfilment, commissions, settlements]
+    requested_components: [order-table, commission-breakdown, settlement-card]
+    required_states: [allocated, fulfilled, return-requested, settlement-pending, settled]
+marketplace_requirements:
+  seller_onboarding: approval-required
+  seller_kyc: configurable-provider-boundary
+  catalogue_ownership: shared-master-catalogue-with-seller-offers
+  inventory_ownership: seller-owned-projected-to-commerce
+  fulfilment_ownership: seller
+  returns_ownership: seller-with-marketplace-governance
+  commission_model: percentage-rule
+  settlement_cycle: weekly
+  payout_model: settlement-after-commission
+  dispute_model: marketplace-admin-mediated
+core_module_requirements: []
+constraints:
+  - provider-neutral-contracts
+  - mercur-real-core-when-marketplace-active
