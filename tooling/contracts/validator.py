@@ -72,6 +72,7 @@ CONTRACTS = {
     "design-selection": ROOT / "contracts" / "schemas" / "design-selection.schema.json",
     "theme-resolution": ROOT / "contracts" / "schemas" / "theme-resolution.schema.json",
     "asset-selection": ROOT / "contracts" / "schemas" / "asset-selection.schema.json",
+    "design-quality-evaluation": ROOT / "contracts" / "schemas" / "design-quality-evaluation.schema.json",
 }
 
 
