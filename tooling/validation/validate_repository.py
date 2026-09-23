@@ -154,6 +154,7 @@ REQUIRED = [
     ".github/workflows/reference-marketplace-runtime-acceptance.yml",
     ".github/workflows/phase-e1-acceptance.yml",
     ".github/workflows/staging-execution.yml",
+    ".github/workflows/design-intelligence-acceptance.yml",
     ".github/workflows/staging-candidate.yml",
     ".github/workflows/production-promotion.yml",
     ".github/workflows/rollback.yml",
