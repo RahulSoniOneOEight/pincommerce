@@ -1,0 +1,24 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Design Source Inventory",
+  "type":"object",
+  "required":["inventory_id","client_id","sources","status"],
+  "properties":{
+    "inventory_id":{"type":"string"},
+    "client_id":{"type":"string"},
+    "sources":{"type":"array","items":{
+      "type":"object",
+      "required":["id","type","ref","authority"],
+      "properties":{
+        "id":{"type":"string"},
+        "type":{"enum":["existing-app","existing-web","git","figma","penpot","brand-guide","reference-site","client-media","other"]},
+        "ref":{"type":"string"},
+        "authority":{"enum":["client-authoritative","approved-reference","advisory"]},
+        "notes":{"type":"string"}
+      },
+      "additionalProperties":true
+    }},
+    "status":{"enum":["draft","evaluated","approved"]}
+  },
+  "additionalProperties":true
+}
