@@ -1,0 +1,15 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Theme Resolution",
+  "type":"object",
+  "required":["theme_id","client_id","preset","semantic_roles","overrides","status"],
+  "properties":{
+    "theme_id":{"type":"string"},
+    "client_id":{"type":"string"},
+    "preset":{"type":"string"},
+    "semantic_roles":{"type":"object"},
+    "overrides":{"type":"object"},
+    "status":{"enum":["draft","resolved","approved"]}
+  },
+  "additionalProperties":true
+}
