@@ -9,6 +9,7 @@ Part 3A converts governed solution artifacts into reviewable multi-surface exper
 - surface-map.yaml
 - Design Contract (partial: presence-checked, not yet schema-validated)
 - approved AI/strategy proposals where relevant (advisory; see `docs/governance-status.md`)
+- governed Design Intelligence outputs: source inventory, component selection, theme resolution and asset plan
 
 ## Generated outputs
 
@@ -112,6 +113,19 @@ A UX-impacting requirement with no mapping is `unmapped` and blocks client revie
 The coverage engine also derives baseline screen/component/state requirements from the capability map and required journeys.
 
 Coverage alone is not sufficient. Before the Review Session can be created, the selected direction must also have `Prototype Implementation Evidence`. Every required screen, component and state must be marked `implemented` with a concrete evidence reference. Missing implementation evidence blocks review.
+
+Design choice is also governed before prototype composition:
+
+```text
+Client/brand/Figma/Penpot/Git/reference sources
+→ Design Source Inventory
+→ component/icon/motion candidate evaluation
+→ visual preset + semantic theme resolution
+→ asset plan (client assets first, Pexels fallback)
+→ Direction A/B/C composition
+```
+
+See `docs/design-intelligence.md`.
 
 The enforced chain is:
 
