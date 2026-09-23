@@ -20,6 +20,7 @@ accessibility:
 performance:
   max_dom_content_loaded_ms: 2500
   max_transfer_bytes: 4000000
+  max_component_runtime_ms: 2000
 visual:
   require_screenshot_artifact: true
   deterministic_fingerprint_gate: true
