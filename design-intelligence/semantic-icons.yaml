@@ -1,0 +1,21 @@
+version: 1
+default_family: iconoir
+concepts:
+  cart: shopping-bag
+  orders: package
+  search: search
+  warning: warning-triangle
+  payment: credit-card
+  shipment: delivery-truck
+  seller: shop
+  inventory: boxes
+  returns: undo-action
+  analytics: graph-up
+  settings: settings
+  account: user
+  success: check-circle
+  error: cancel
+rules:
+  - components-request-semantic-concepts-not-library-glyphs
+  - one-icon-family-per-product-surface-by-default
+  - exceptions-require-design-selection-evidence
