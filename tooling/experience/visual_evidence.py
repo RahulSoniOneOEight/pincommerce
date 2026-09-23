@@ -63,6 +63,8 @@ def evaluate_evidence(payload: dict[str, Any], policy: dict[str, Any] | None = N
             blockers.append(f"accessibility-critical:{row.get('pattern')}:{row.get('viewport_id')}")
         if int(axe.get("serious", 0)) > int(policy["accessibility"]["max_serious"]):
             blockers.append(f"accessibility-serious:{row.get('pattern')}:{row.get('viewport_id')}")
+        if int(axe.get("unlabeled_interactive", 0)) > 0:
+            blockers.append(f"accessibility-unlabeled-interactive:{row.get('pattern')}:{row.get('viewport_id')}")
         perf = row.get("performance", {})
         dcl = float(perf.get("dom_content_loaded_ms", 0))
         transfer = int(perf.get("transfer_bytes", 0))
@@ -70,6 +72,9 @@ def evaluate_evidence(payload: dict[str, Any], policy: dict[str, Any] | None = N
             blockers.append(f"performance-dcl:{row.get('pattern')}:{row.get('viewport_id')}")
         if transfer > int(policy["performance"]["max_transfer_bytes"]):
             blockers.append(f"performance-transfer:{row.get('pattern')}:{row.get('viewport_id')}")
+        max_runtime = float(policy["performance"].get("max_component_runtime_ms", 2000))
+        if float(row.get("elapsed_ms", 0)) > max_runtime:
+            blockers.append(f"performance-component-runtime:{row.get('pattern')}:{row.get('viewport_id')}")
 
     return {
         "status": "passed" if not blockers else "blocked",
