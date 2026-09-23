@@ -29,7 +29,6 @@ abstract final class AgencyTheme {
     return ThemeData(
       colorScheme: scheme,
       scaffoldBackgroundColor: const Color(0xFFFFFFFF),
-      cardTheme: const CardThemeData(margin: EdgeInsets.zero),
       useMaterial3: true,
     );
   }
@@ -180,7 +179,7 @@ class B2BQuickOrder extends StatelessWidget {
             DataCell(Row(children: [
               IconButton(
                 tooltip: 'Decrease ${line.name}',
-                onPressed: onQuantityChanged == null ? null : () => onQuantityChanged!(line.sku, (line.quantity - 1).clamp(0, 9999)),
+                onPressed: onQuantityChanged == null ? null : () => onQuantityChanged!(line.sku, line.quantity > 0 ? line.quantity - 1 : 0),
                 icon: const Icon(Icons.remove),
               ),
               Text('${line.quantity}'),
