@@ -53,9 +53,20 @@ integrations:
   payment: razorpay
   logistics: shiprocket
   whatsapp: meta-whatsapp-cloud
+runtime_versions:
+  experience_mobile: "<exact Flutter pin>"
+  experience_web: "<exact Next.js pin>"
+  commerce: "<exact Medusa pin>"
+  erp: "<exact Tryton pin>"
+  search: "<exact Meilisearch pin>"
+  support: "<exact Chatwoot pin>"
+  automation: "<exact Activepieces pin>"
+  database: "<exact PostgreSQL pin>"
 ```
 
 A single approved candidate may resolve automatically.
+
+Production runtime versions are also D1 operational inputs in this file. This keeps version pinning out of the already-approved Phase-C Solution Contract.
 
 ## Production readiness
 
