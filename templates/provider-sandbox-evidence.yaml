@@ -1,0 +1,9 @@
+evidence_id: PROVSTG-RC-example-abcdef123456
+candidate_id: RC-example-abcdef123456
+providers:
+  - id: razorpay
+    mode: sandbox
+    credential_ref: env:RAZORPAY_STAGING_AUTH
+    status: not-run
+    evidence: credentials not supplied
+status: blocked
