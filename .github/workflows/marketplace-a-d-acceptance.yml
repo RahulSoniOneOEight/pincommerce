@@ -1,0 +1,39 @@
+name: Marketplace A-D Acceptance
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  marketplace-a-d:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Validate marketplace A-D governance
+        run: |
+          python -m unittest tests.test_marketplace_a_to_d -v
+          python tooling/validation/validate_repository.py
+
+      - name: Verify pinned Mercur upstream source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone https://github.com/mercurjs/mercur.git /tmp/mercur
+          cd /tmp/mercur
+          git checkout d73f28a85a22587778cf3e60db318b2628103a0d
+          test "$(git rev-parse HEAD)" = "d73f28a85a22587778cf3e60db318b2628103a0d"
+          grep -q '"@medusajs/medusa": "2.21.0"' package.json
+          grep -q '"packageManager": "bun@1.3.8"' package.json
