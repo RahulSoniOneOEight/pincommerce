@@ -1,0 +1,11 @@
+client_id: reference-retail
+production_plan_ref: production/production-plan.yaml
+runtimes:
+  - {domain: experience_mobile, provider: flutter, required: true, production_mode: real, adapter_ref: null, baseline_ref: null, version: flutter-git-6a19cca56475dbfba1478ee68d7bd0c2ef891da1, overlays: [], status: mapped}
+  - {domain: experience_web, provider: nextjs, required: true, production_mode: real, adapter_ref: null, baseline_ref: null, version: nextjs-16.3.5, overlays: [], status: mapped}
+  - {domain: commerce, provider: medusa, required: true, production_mode: real, adapter_ref: platform/commerce/medusa/adapter.yaml, baseline_ref: platform/prototype/baselines/medusa-standard-v1.yaml, version: medusa-2.21.1-dtc-e3a237c9b8773cf35c899dabfe73afaebacbc8d5, overlays: [], status: mapped}
+  - {domain: erp, provider: tryton, required: true, production_mode: real, adapter_ref: platform/erp/tryton/adapter.yaml, baseline_ref: platform/prototype/baselines/tryton-standard-v1.yaml, version: tryton-8.0, overlays: [], status: mapped}
+  - {domain: search, provider: meilisearch, required: true, production_mode: real, adapter_ref: platform/search/meilisearch/adapter.yaml, baseline_ref: null, version: meilisearch-1.10, overlays: [], status: mapped}
+  - {domain: support, provider: chatwoot, required: true, production_mode: real, adapter_ref: platform/customer/chatwoot/adapter.yaml, baseline_ref: null, version: chatwoot-4.18.0, overlays: [], status: mapped}
+  - {domain: automation, provider: activepieces, required: true, production_mode: real, adapter_ref: platform/automation/activepieces/adapter.yaml, baseline_ref: null, version: activepieces-0.91.1, overlays: [], status: mapped}
+  - {domain: database, provider: postgresql, required: true, production_mode: real, adapter_ref: null, baseline_ref: null, version: postgresql-16, overlays: [], status: mapped}
