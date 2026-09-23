@@ -12,6 +12,9 @@ roles:
     primary: action.primary
     secondary: action.secondary
     destructive: action.destructive
+  border:
+    default: border.default
+    strong: border.strong
   feedback:
     success: feedback.success
     warning: feedback.warning
