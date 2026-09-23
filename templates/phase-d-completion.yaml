@@ -1,0 +1,10 @@
+completion_id: PHASED-example-v1
+client_id: ""
+approved_scope_ref: approved/current-scope.yaml
+production_plan_ref: production/production-plan.yaml
+production_readiness_ref: production/production-readiness.yaml
+production_execution_ref: production/production-execution.yaml
+cross_domain_qa_ref: qa/cross-domain.yaml
+checks: []
+blocking_items: []
+status: blocked
