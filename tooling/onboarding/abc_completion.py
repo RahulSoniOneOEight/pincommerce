@@ -10,6 +10,7 @@ PROVIDER_CANDIDATES = {
     "whatsapp": ["meta-whatsapp-cloud"],
     "messaging": ["meta-whatsapp-cloud"],
     "commerce": ["medusa"],
+    "marketplace": ["mercur"],
     "erp": ["tryton"],
     "search": ["meilisearch"],
     "automation": ["activepieces", "n8n"],
@@ -24,6 +25,7 @@ DOMAIN_BY_INTEGRATION = {
     "whatsapp": "messaging",
     "messaging": "messaging",
     "commerce": "commerce",
+    "marketplace": "marketplace",
     "erp": "erp",
     "search": "search",
     "automation": "automation",
@@ -37,6 +39,7 @@ CRITICALITY = {
     "shipping": "high",
     "erp": "critical",
     "commerce": "critical",
+    "marketplace": "critical",
     "whatsapp": "medium",
     "messaging": "medium",
     "search": "medium",
@@ -53,7 +56,7 @@ def build_truth_register(client_input: dict[str, Any]) -> dict[str, Any]:
         "industry", "business_models", "goals", "requested_capabilities",
         "required_integrations", "existing_systems", "channels", "volumes",
         "stakeholders", "compliance", "constraints", "geographies", "risk_profile",
-        "experience_requirements", "core_module_requirements",
+        "experience_requirements", "core_module_requirements", "marketplace_requirements",
     )
     seq = 1
     for field in fact_fields:
