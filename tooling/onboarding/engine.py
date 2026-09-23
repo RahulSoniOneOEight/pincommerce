@@ -194,6 +194,18 @@ def infer_entity_map(client_id: str, capabilities: list[str]) -> dict[str, Any]:
         entities["shipment"] = {"owner_capability": "logistics-integration"}
     if any(c in capabilities for c in ("b2b-account", "credit-management")):
         entities["business-account"] = {"owner_capability": "commerce-account-management"}
+    if "seller-onboarding" in capabilities:
+        entities["seller"] = {"owner_capability": "marketplace-seller-management"}
+    if "seller-catalogue" in capabilities:
+        entities["seller-offer"] = {"owner_capability": "marketplace-offer-management"}
+    if "marketplace-orders" in capabilities:
+        entities["marketplace-order-allocation"] = {"owner_capability": "marketplace-order-management"}
+    if "commissions" in capabilities:
+        entities["commission"] = {"owner_capability": "marketplace-commission-management"}
+    if "settlements" in capabilities:
+        entities["seller-settlement"] = {"owner_capability": "marketplace-settlement-management"}
+    if "payout-reconciliation" in capabilities:
+        entities["seller-payout-reconciliation"] = {"owner_capability": "marketplace-settlement-management"}
     return {"client_id": client_id, "entities": entities}
 
 
@@ -228,6 +240,27 @@ def infer_dependency_map(
             {
                 "id": "quote-to-order",
                 "domains": ["experience", "commerce", "automation", "erp"],
+            }
+        )
+    if "seller-onboarding" in capabilities:
+        flows.append(
+            {
+                "id": "seller-onboarding-to-approval",
+                "domains": ["experience", "marketplace", "automation"],
+            }
+        )
+    if "marketplace-orders" in capabilities:
+        flows.append(
+            {
+                "id": "commerce-order-to-seller-allocation",
+                "domains": ["commerce", "marketplace", "integration", "erp"],
+            }
+        )
+    if "settlements" in capabilities:
+        flows.append(
+            {
+                "id": "seller-settlement-to-accounting",
+                "domains": ["marketplace", "integration", "erp", "finance"],
             }
         )
     return {"client_id": client_id, "critical_cross_domain_flows": flows}
