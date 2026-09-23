@@ -1,0 +1,42 @@
+version: 1
+purpose: curated-pattern-learning
+rules:
+  - store-why-a-reference-is-good-not-only-a-screenshot
+  - external-reference-is-inspiration-not-source-of-truth
+  - approved-components-must-pass-quality-threshold
+categories:
+  cards:
+    - product-card
+    - order-card
+    - marketplace-offer
+    - seller-settlement
+    - dashboard-kpi
+    - exception-card
+  navigation:
+    - bottom-nav
+    - sidebar
+    - mega-menu
+  tables:
+    - quick-order
+    - settlement
+    - reconciliation
+  motion:
+    - button
+    - card
+    - modal
+    - cart
+    - page
+  commerce:
+    - d2c
+    - b2b
+    - marketplace
+    - seller
+    - admin
+reference_record_fields:
+  - reference_id
+  - source
+  - good_for
+  - strengths
+  - weaknesses
+  - patterns
+  - license_review
