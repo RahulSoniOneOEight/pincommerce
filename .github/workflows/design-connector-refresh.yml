@@ -36,8 +36,18 @@ jobs:
           python - <<'PY'
           import json, yaml
           from tooling.experience.dependency_collectors import collect_sources
+          from tooling.experience.security_advisories import collect_osv
           rows=yaml.safe_load(open("design-intelligence/dependency-sources.yaml"))["packages"]
-          data={"dependencies": collect_sources(rows)}
+          deps=collect_sources(rows)
+          for dep in deps:
+              try:
+                  ecosystem="npm" if dep["ecosystem"]=="npm" else "Pub"
+                  dep["vulnerabilities"]=collect_osv(dep["id"], ecosystem, dep["version"]) if dep.get("version") else []
+                  dep["security_status"]="collected"
+              except Exception as exc:
+                  dep["security_status"]="unavailable"
+                  dep["security_collection_error"]=str(exc)
+          data={"dependencies": deps}
           open("artifacts/dependency-refresh/snapshot.json","w").write(json.dumps(data,indent=2))
           print(json.dumps(data,indent=2))
           PY
