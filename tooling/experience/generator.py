@@ -125,6 +125,7 @@ def build_experience(client_id: str, root: Path = ROOT) -> dict[str, dict[str, A
 
     files: dict[str, dict[str, Any]] = {}
     files.update(build_design_intelligence(client_id, root))
+    base_visual_preset = files["experience/design/selection.yaml"]["preset"]
     fixture_set_id = "commerce-baseline"
     files["experience/fixtures/commerce-baseline.yaml"] = {
         "fixture_set_id": fixture_set_id,
@@ -150,6 +151,13 @@ def build_experience(client_id: str, root: Path = ROOT) -> dict[str, dict[str, A
             "design_intent": definition["design_intent"],
             "differentiators": definition["differentiators"],
             "fixture_set": fixture_set_id,
+            "visual_preset": (
+                "premium-modern"
+                if definition["suffix"] == "A"
+                else "compact-commerce"
+                if definition["suffix"] == "B"
+                else base_visual_preset
+            ),
             "design_selection_ref": "experience/design/selection.yaml",
             "theme_resolution_ref": "experience/design/theme-resolution.yaml",
             "asset_plan_ref": "experience/design/asset-plan.yaml",
