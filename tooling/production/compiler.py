@@ -33,6 +33,15 @@ CAPABILITY_OWNERS = {
     "credit-management": "commerce",
     "approval-workflow": "commerce",
     "reorder": "commerce",
+    "seller-onboarding": "marketplace",
+    "seller-catalogue": "marketplace",
+    "seller-inventory": "marketplace",
+    "marketplace-orders": "marketplace",
+    "commissions": "marketplace",
+    "settlements": "marketplace",
+    "seller-analytics": "marketplace",
+    "seller-approval": "marketplace",
+    "payout-reconciliation": "marketplace",
 }
 
 PROVIDER_ADAPTERS = {
@@ -301,11 +310,11 @@ def build_production_plan(client_id: str, root: Path = ROOT) -> tuple[dict[str, 
         "status": "blocked" if blockers else "draft",
     }
 
-    migration = {
-        "migration_plan_id": f"MIGPLAN-{client_id}-v{version}",
-        "client_id": client_id,
-        "source_scope_ref": current["baseline_ref"],
-        "steps": [
+    marketplace_required = any(
+        item.get("provider") == "mercur" and item.get("required")
+        for item in runtime_rows
+    )
+    migration_steps = [
             {
                 "id": "replace-demo-data",
                 "dataset": "prototype-demo-dataset",
@@ -334,7 +343,30 @@ def build_production_plan(client_id: str, root: Path = ROOT) -> tuple[dict[str, 
                 "target": "erp",
                 "verification": "trial balance and AR/AP opening balances reconcile",
             },
-        ],
+        ]
+    if marketplace_required:
+        migration_steps.extend([
+            {
+                "id": "migrate-marketplace-sellers",
+                "dataset": "sellers-offers-commission-rules",
+                "action": "migrate",
+                "target": "marketplace",
+                "verification": "seller identities, offers and commission rules read back from marketplace runtime",
+            },
+            {
+                "id": "load-opening-seller-settlements",
+                "dataset": "opening-seller-settlements",
+                "action": "load",
+                "target": "marketplace-and-erp",
+                "verification": "seller payable and settlement opening balances reconcile to ERP",
+            },
+        ])
+
+    migration = {
+        "migration_plan_id": f"MIGPLAN-{client_id}-v{version}",
+        "client_id": client_id,
+        "source_scope_ref": current["baseline_ref"],
+        "steps": migration_steps,
         "blocking_items": [],
         "status": "ready",
     }
