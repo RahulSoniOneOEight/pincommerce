@@ -1,0 +1,42 @@
+version: 1
+stage: design-runtime-automated-quality
+patterns:
+  product-card:
+    flutter: ProductCard
+    web: ProductCard
+    states: [default, loading, failure, out-of-stock, discounted]
+  category-rail:
+    flutter: CategoryRail
+    web: CategoryRail
+    states: [default, loading, empty, failure]
+  b2b-quick-order:
+    flutter: B2BQuickOrder
+    web: B2BQuickOrder
+    states: [default, loading, empty, failure, editing, validation-error]
+  dashboard-kpi:
+    flutter: DashboardKpi
+    web: DashboardKpi
+    states: [default, loading, empty, failure]
+  exception-table:
+    flutter: ExceptionTable
+    web: ExceptionTable
+    states: [default, loading, empty, failure, open, resolved]
+viewports:
+  - {id: mobile-390, width: 390, height: 844}
+  - {id: tablet-768, width: 768, height: 1024}
+  - {id: desktop-1440, width: 1440, height: 1000}
+catalogs:
+  flutter: apps/widgetbook/lib/main.dart
+  web: apps/storybook/stories
+runtime:
+  flutter: packages/agency_flutter_ui/lib/agency_flutter_ui.dart
+  web: packages/agency_web_ui/src/index.tsx
+quality:
+  requires:
+    - semantic-theme
+    - required-states
+    - catalog-coverage
+    - accessibility-semantics
+    - reduced-motion
+    - responsive-capture-targets
+  note: compile/test/build evidence is produced by Design Runtime Acceptance CI; screenshot image capture remains a separate runner concern.
