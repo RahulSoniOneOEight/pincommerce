@@ -1,0 +1,57 @@
+name: Design Runtime Acceptance
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - name: Validate Stage 1 runtime evidence
+        run: |
+          python -m unittest tests.test_design_runtime -v
+          python -m tooling.experience.runtime_acceptance
+
+  flutter-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Test shared Flutter UI
+        working-directory: packages/agency_flutter_ui
+        run: |
+          flutter pub get
+          flutter analyze
+          flutter test
+      - name: Analyze Widgetbook catalog
+        working-directory: apps/widgetbook
+        run: |
+          flutter pub get
+          flutter analyze
+
+  web-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Build Storybook catalog
+        run: npm --workspace apps/storybook run build-storybook
