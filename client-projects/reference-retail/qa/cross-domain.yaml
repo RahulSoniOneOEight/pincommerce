@@ -1,0 +1,51 @@
+qa_id: CDQA-reference-retail-v1
+client_id: reference-retail
+production_execution_ref: production/production-execution.yaml
+cases:
+  - id: CDQ-001
+    journey: browse-to-buy
+    domains: [experience, commerce, payments, erp]
+    checks: [order-id-continuity, payment-status, sales-order-command, idempotency]
+    evidence_refs:
+      - tests/test_integration_runtime.py
+      - tests/test_production_connectors.py
+      - production/integration/order-confirmed.event.yaml
+      - production/integration/create-sales-order.command.yaml
+    status: pass
+  - id: CDQ-002
+    journey: order-to-accounting
+    domains: [commerce, erp, finance]
+    checks: [canonical-order-id, total-match, reconciliation]
+    evidence_refs:
+      - production/integration/order-to-erp.reconciliation.yaml
+      - tests/test_integration_infrastructure.py
+    status: pass
+  - id: CDQ-003
+    journey: fulfilment-and-tracking
+    domains: [commerce, logistics, erp]
+    checks: [provider-adapter, retry, dead-letter, status-projection]
+    evidence_refs:
+      - connectors/logistics/shiprocket/adapter.yaml
+      - tests/test_production_connectors.py
+      - production/ops/dead-letter.yaml
+    status: pass
+  - id: CDQ-004
+    journey: return-refund
+    domains: [commerce, payments, erp]
+    checks: [refund-command, return-command, reconciliation]
+    evidence_refs:
+      - connectors/payments/razorpay/adapter.yaml
+      - platform/erp/tryton/adapter.yaml
+      - tests/test_provider_adapters.py
+    status: pass
+  - id: CDQ-005
+    journey: operational-exception
+    domains: [integration, ops, analytics]
+    checks: [exception-capture, replay-authority, observability]
+    evidence_refs:
+      - production/ops/exceptions.yaml
+      - tests/test_replay.py
+      - tests/test_control_plane.py
+    status: pass
+blocking_items: []
+status: passed
