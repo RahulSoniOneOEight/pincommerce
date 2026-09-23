@@ -1,0 +1,25 @@
+execution_id: PRODEXEC-example-v1
+client_id: ""
+production_plan_ref: production/production-plan.yaml
+production_readiness_ref: production/production-readiness.yaml
+runtimes: []
+provider_bindings: []
+migration:
+  plan_ref: production/data-migration.yaml
+  demo_data_replaced: false
+  master_data_strategy_validated: false
+  opening_inventory_strategy_validated: false
+  opening_finance_strategy_validated: false
+  evidence_ref: qa/migration-validation.yaml
+  status: blocked
+integration:
+  event_bus: nats
+  durable_store: postgresql
+  idempotency: false
+  retry: false
+  dead_letter: false
+  reconciliation: false
+  evidence_refs: []
+  status: blocked
+blocking_items: []
+status: blocked
