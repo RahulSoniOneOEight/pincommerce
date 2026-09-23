@@ -18,6 +18,9 @@ categories:
     - tailwind_css
     - shoelace
     - web_awesome
+    - thundrex_web_components
+    - kanso_protocol
+    - root_axis_design_system
   enterprise_erp_reference:
     - hubleto_react_ui
     - synap_ui
@@ -25,6 +28,7 @@ categories:
     - erpsquad_common
     - erp_pro_ui
     - erp_blocks
+    - frappe_ui_react
   palette_tools:
     - gpick
     - hue
