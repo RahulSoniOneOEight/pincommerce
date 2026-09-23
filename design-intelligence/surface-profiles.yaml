@@ -1,0 +1,39 @@
+version: 1
+profiles:
+  customer-storefront:
+    density: spacious
+    input_modes: [touch, mouse]
+    default_preset: premium-modern
+    adaptive_rules:
+      mobile: card-first
+      tablet: mixed-grid
+      desktop: grid-with-persistent-filters
+  b2b-ordering:
+    density: compact
+    input_modes: [touch, mouse, keyboard, barcode-scanner]
+    default_preset: compact-commerce
+    adaptive_rules:
+      mobile: stacked-lines
+      tablet: compact-table
+      desktop: dense-table
+  seller-portal:
+    density: compact
+    input_modes: [mouse, keyboard, touch]
+    default_preset: compact-commerce
+    adaptive_rules:
+      mobile: cards-for-summary-tables-for-drilldown
+      desktop: dense-table
+  admin-operations:
+    density: high
+    input_modes: [mouse, keyboard]
+    default_preset: compact-commerce
+    adaptive_rules:
+      mobile: exception-summary
+      desktop: dense-table
+  editorial-commerce:
+    density: medium
+    input_modes: [touch, mouse]
+    default_preset: editorial-commerce
+    adaptive_rules:
+      mobile: full-bleed-media
+      desktop: editorial-grid
