@@ -1,0 +1,14 @@
+version: 1
+accessibility:
+  critical_max: 0
+  serious_max: 0
+  unlabeled_interactive_max: 0
+  require_focusable_interactive: true
+performance:
+  storybook_harness_transfer_bytes_max: 4000000
+  dom_content_loaded_ms_max: 2500
+  component_runtime_budget_ms: 1500
+baseline:
+  authority: design-intelligence/approved-visual-baselines.yaml
+  mode: exact-png-hash
+  baseline_changes_require_human_approval: true
