@@ -43,7 +43,11 @@ def build_seed_bundle(dataset: dict[str, Any]) -> dict[str, dict[str, Any]]:
         "provider": "mercur",
         "source_dataset": dataset["dataset_id"],
         "sellers": masters.get("sellers", []),
+        "seller_offers": tx.get("seller_offers", []),
+        "marketplace_allocations": tx.get("marketplace_allocations", []),
+        "commission_ledger": tx.get("commission_ledger", []),
         "seller_settlements": tx.get("seller_settlements", []),
+        "seller_payout_reconciliations": tx.get("seller_payout_reconciliations", []),
         "orders": [o for o in tx.get("orders", []) if o.get("seller_id")],
     }
     tryton = {
