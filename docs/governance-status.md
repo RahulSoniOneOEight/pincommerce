@@ -129,3 +129,20 @@ Use `python -m tooling.validation.abc_seam --client <client> --direction a.yaml`
 | Production Readiness | `contracts/schemas/production-readiness.schema.json`, `client-projects/*/production/production-readiness.yaml` | Enforced now | Blocks D2 when scope, provider selection, runtime pinning, credentials, data ownership, migration or test planning is incomplete |
 
 Phase D1 consumes the immutable baseline referenced by `approved/current-scope.yaml`. It does not re-interpret the original brief. Multiple connector candidates require an explicit production selection; prototype runtimes with unpinned versions are deliberately blocked until a production version is selected.
+
+
+## Complete Phase D productionization
+
+Phase D is complete only when all D1–D6 gates pass with zero blockers.
+
+| Stage | Authority | Enforced result |
+|---|---|---|
+| D1 Production Plan | `production/production-plan.yaml` + `production/production-readiness.yaml` | Approved scope compiles without unresolved capabilities, runtimes, providers, credentials or migration/test strategy |
+| D2 Runtime Provisioning | `production/production-execution.yaml` | Every required runtime has a pinned version/source, provisioning mode, healthcheck and evidence |
+| D3 Provider Bindings | `production/production-execution.yaml` | Selected external providers map to governed adapters and credential references; live credential calls are deferred to staging rather than fabricated |
+| D4 Migration Readiness | `production/data-migration.yaml` + `qa/migration-validation.yaml` | Demo data is explicitly replaced and master/opening inventory/opening finance mechanics are validated |
+| D5 Cross-domain QA | `qa/cross-domain.yaml` | Commerce/payment/ERP/logistics/refund/ops flows pass idempotency, retry, dead-letter and reconciliation checks |
+| D6 Production QA | `qa/production-qa.yaml` | Contracts, tests, runtime health, migration safety, security and build evidence pass |
+| Phase D Completion | `production/phase-d-completion.yaml` | `python -m tooling.production.execution --client <client>` returns `status: complete` |
+
+Reference-retail is a governed reference acceptance. Contract-tested external provider bindings require real credential/live verification in Phase E staging. Phase D completion does not represent a real client production deployment and cannot bypass UAT or Production Authorization.
