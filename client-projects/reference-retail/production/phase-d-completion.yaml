@@ -1,0 +1,28 @@
+completion_id: PHASED-reference-retail-v1
+client_id: reference-retail
+approved_scope_ref: approved/current-scope.yaml
+production_plan_ref: production/production-plan.yaml
+production_readiness_ref: production/production-readiness.yaml
+production_execution_ref: production/production-execution.yaml
+cross_domain_qa_ref: qa/cross-domain.yaml
+checks:
+  - id: d1-production-plan
+    status: pass
+    details: []
+  - id: d2-runtime-provisioning-contract
+    status: pass
+    details: []
+  - id: d3-provider-bindings
+    status: pass
+    details: []
+  - id: d4-migration-readiness
+    status: pass
+    details: []
+  - id: d5-cross-domain-integration
+    status: pass
+    details: []
+  - id: d6-production-qa
+    status: pass
+    details: []
+blocking_items: []
+status: complete
