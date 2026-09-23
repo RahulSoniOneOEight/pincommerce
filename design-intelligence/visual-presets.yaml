@@ -1,0 +1,35 @@
+version: 1
+presets:
+  premium-modern:
+    best_for: [premium-d2c, beauty, wellness, lifestyle]
+    characteristics:
+      density: spacious
+      spacing_scale: generous
+      card_radius: large
+      control_size: comfortable
+      typography_emphasis: editorial
+      image_emphasis: high
+      elevation: subtle
+      motion_intensity: refined
+  compact-commerce:
+    best_for: [b2b, seller, admin, operations, finance]
+    characteristics:
+      density: compact
+      spacing_scale: tight
+      card_radius: medium
+      control_size: compact
+      typography_emphasis: information
+      image_emphasis: low
+      elevation: minimal
+      motion_intensity: restrained
+  editorial-commerce:
+    best_for: [fashion, content-led-d2c, premium-marketplace]
+    characteristics:
+      density: medium
+      spacing_scale: generous
+      card_radius: medium
+      control_size: comfortable
+      typography_emphasis: editorial
+      image_emphasis: very-high
+      elevation: subtle
+      motion_intensity: expressive
