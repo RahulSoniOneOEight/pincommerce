@@ -295,6 +295,42 @@
         },
         "additionalProperties": true
       }
+    },
+    "marketplace_requirements": {
+      "type": "object",
+      "properties": {
+        "seller_onboarding": {
+          "type": "string"
+        },
+        "seller_kyc": {
+          "type": "string"
+        },
+        "catalogue_ownership": {
+          "type": "string"
+        },
+        "inventory_ownership": {
+          "type": "string"
+        },
+        "fulfilment_ownership": {
+          "type": "string"
+        },
+        "returns_ownership": {
+          "type": "string"
+        },
+        "commission_model": {
+          "type": "string"
+        },
+        "settlement_cycle": {
+          "type": "string"
+        },
+        "payout_model": {
+          "type": "string"
+        },
+        "dispute_model": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
     }
   },
   "additionalProperties": true
