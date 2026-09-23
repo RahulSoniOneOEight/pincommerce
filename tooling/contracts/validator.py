@@ -60,6 +60,8 @@ CONTRACTS = {
     "recovery-record": ROOT / "contracts" / "schemas" / "recovery-record.schema.json",
     "observability-evidence": ROOT / "contracts" / "schemas" / "observability-evidence.schema.json",
     "staging-validation": ROOT / "contracts" / "schemas" / "staging-validation.schema.json",
+    "staging-manifest": ROOT / "contracts" / "schemas" / "staging-manifest.schema.json",
+    "provider-sandbox-evidence": ROOT / "contracts" / "schemas" / "provider-sandbox-evidence.schema.json",
     "data-contract": ROOT / "contracts" / "schemas" / "data-contract.schema.json",
     "business-contract": ROOT / "contracts" / "schemas" / "business-contract.schema.json",
     "ai-decision": ROOT / "contracts" / "schemas" / "ai-decision.schema.json",
