@@ -96,10 +96,14 @@ def build_design_intelligence(client_id: str, root: Path = ROOT) -> dict[str, di
     client_input = load_yaml(project / "input" / "client-input.yaml")
     surface_map = load_yaml(project / "derived" / "surface-map.yaml")
     capability_map = load_yaml(project / "derived" / "capability-map.yaml")
-    registry = load_yaml(root / "design-intelligence" / "component-registry.yaml")
-    presets = load_yaml(root / "design-intelligence" / "visual-presets.yaml")
-    asset_sources = load_yaml(root / "design-intelligence" / "asset-sources.yaml")
-    default_theme = load_yaml(root / "design-contract" / "themes" / "default.yaml")
+    def platform_yaml(relative: str) -> dict[str, Any]:
+        candidate = root / relative
+        return load_yaml(candidate if candidate.exists() else ROOT / relative)
+
+    registry = platform_yaml("design-intelligence/component-registry.yaml")
+    presets = platform_yaml("design-intelligence/visual-presets.yaml")
+    asset_sources = platform_yaml("design-intelligence/asset-sources.yaml")
+    default_theme = platform_yaml("design-contract/themes/default.yaml")
 
     surfaces = list(surface_map.get("required", []))
     capabilities = _unique(
