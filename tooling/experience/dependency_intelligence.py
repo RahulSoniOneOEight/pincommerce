@@ -72,6 +72,9 @@ def evaluate_dependencies(
                 reasons.append("maintenance-watch")
 
         vulnerabilities = row.get("vulnerabilities", []) or []
+        if row.get("security_status") == "unavailable" and status != "blocked":
+            status = "review"
+            reasons.append("security-evidence-unavailable")
         severities = {str(v.get("severity", "")).lower() for v in vulnerabilities if isinstance(v, dict)}
         if str(cfg["security"]["block_severity"]).lower() in severities:
             status = "blocked"
