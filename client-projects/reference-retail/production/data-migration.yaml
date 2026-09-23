@@ -1,0 +1,26 @@
+migration_plan_id: MIGPLAN-reference-retail-v1
+client_id: reference-retail
+source_scope_ref: approved/scope-baselines/BASE-reference-retail-v1.yaml
+steps:
+  - id: replace-demo-data
+    dataset: prototype-demo-dataset
+    action: replace-demo
+    target: all-production-runtimes
+    verification: no demo-only identities remain in production data
+  - id: migrate-master-data
+    dataset: customers-products-parties
+    action: migrate
+    target: canonical owners from data contract
+    verification: record counts and identity mapping reconcile
+  - id: load-opening-inventory
+    dataset: opening-inventory
+    action: load
+    target: erp
+    verification: warehouse/SKU quantities reconcile to approved opening snapshot
+  - id: load-opening-finance
+    dataset: opening-finance
+    action: load
+    target: erp
+    verification: trial balance and AR/AP opening balances reconcile
+blocking_items: []
+status: ready
