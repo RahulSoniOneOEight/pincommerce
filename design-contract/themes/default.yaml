@@ -10,6 +10,8 @@ semantic_roles:
   action.primary: "#17181A"
   action.secondary: "#ECEEF1"
   action.destructive: "#B42318"
+  border.default: "#E4E7EC"
+  border.strong: "#98A2B3"
   feedback.success: "#067647"
   feedback.warning: "#B54708"
   feedback.error: "#B42318"
