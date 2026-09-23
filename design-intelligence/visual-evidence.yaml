@@ -6,6 +6,10 @@ story_ids:
   b2b-quick-order: commerce-b2bquickorder--default
   dashboard-kpi: commerce-dashboardkpi--default
   exception-table: commerce-exceptiontable--default
+  filter-bar: commerce-filterbar--default
+  checkout-summary: commerce-checkoutsummary--default
+  navigation-menu: commerce-navigationmenu--default
+  form-section: commerce-formsection--default
 viewports:
   mobile-390: {width: 390, height: 844}
   tablet-768: {width: 768, height: 1024}
