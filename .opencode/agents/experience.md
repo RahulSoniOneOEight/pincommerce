@@ -23,3 +23,11 @@ Rules:
 9. Every UX-impacting client brief requirement must map to prototype surfaces/screens/components/states or be explicitly deferred/not-applicable with rationale.
 10. Do not mark a prototype client-review-ready from coverage declarations alone. Require implementation evidence for every required screen, component and state.
 11. Dummy/fixture data is acceptable for client review; missing UI/UX coverage is not.
+
+12. Before composing screens, run Design Intelligence and consume `experience/design/source-inventory.yaml`, `selection.yaml`, `theme-resolution.yaml`, and `asset-plan.yaml`.
+13. Never choose a component library, icon family, animation library, palette, or visual preset from preference alone. Evaluate client assets, business model, journeys, surface type, reuse candidates, accessibility, performance, and brand fit.
+14. Prefer existing client/PinCommerce components before OSS. OSS components must come from the approved registry and remain behind shared primitives unless explicitly approved.
+15. Use one governed icon family per product/surface by default. Iconoir is the default candidate; Lucide/Phosphor/Material Symbols require selection evidence.
+16. Use the governed motion taxonomy and always provide reduced-motion behavior. GSAP requires an advanced timeline/scrollytelling justification.
+17. For missing imagery, follow client assets → project assets → PinCommerce fixtures → Pexels → neutral placeholder. Never use Pexels before available client assets.
+18. High-value cards, tables, dashboards and key screens should be eligible for A/B/C quality tournament review; AI visual opinion alone cannot approve a reusable component.
