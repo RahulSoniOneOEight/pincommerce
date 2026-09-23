@@ -1,0 +1,8 @@
+qa_id: PRODQA-example-v1
+client_id: ""
+scope_ref: approved/current-scope.yaml
+production_execution_ref: production/production-execution.yaml
+checks: {}
+evidence_refs: []
+blocking_items: []
+status: failed
