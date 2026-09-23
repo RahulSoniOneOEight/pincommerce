@@ -101,15 +101,22 @@ def save_yaml(path: Path, value: dict[str, Any]) -> None:
     path.write_text(yaml.safe_dump(value, sort_keys=False), encoding="utf-8")
 
 
-def _selected_integrations(project: Path) -> dict[str, str]:
+def _production_selections(project: Path) -> tuple[dict[str, str], dict[str, str]]:
     path = project / "production" / "provider-selections.yaml"
     if not path.exists():
-        return {}
+        return {}, {}
     value = load_yaml(path)
-    selections = value.get("integrations", {})
-    if not isinstance(selections, dict):
-        raise ProductionCompileError("production/provider-selections.yaml integrations must be a mapping")
-    return {str(k): str(v) for k, v in selections.items()}
+    errors = validate_document(value, "production-provider-selections")
+    if errors:
+        raise ProductionCompileError(
+            "Invalid production/provider-selections.yaml: " + "; ".join(errors)
+        )
+    integrations = value.get("integrations", {})
+    runtime_versions = value.get("runtime_versions", {})
+    return (
+        {str(k): str(v) for k, v in integrations.items()},
+        {str(k): str(v) for k, v in runtime_versions.items()},
+    )
 
 
 def _approved_overlays(project: Path, baseline: dict[str, Any]) -> list[str]:
@@ -145,7 +152,7 @@ def build_production_plan(client_id: str, root: Path = ROOT) -> tuple[dict[str, 
     integration_map = load_yaml(project / "derived" / "integration-map.yaml")
     data_contract = load_yaml(project / "contracts" / "data-contract.yaml")
     business_contract = load_yaml(project / "contracts" / "business-contract.yaml")
-    selections = _selected_integrations(project)
+    selections, runtime_versions = _production_selections(project)
     overlays = _approved_overlays(project, baseline)
 
     blockers: list[str] = []
@@ -188,7 +195,7 @@ def build_production_plan(client_id: str, root: Path = ROOT) -> tuple[dict[str, 
             "production_mode": "real",
             "adapter_ref": adapter_ref,
             "baseline_ref": baseline_ref,
-            "version": value.get("version"),
+            "version": runtime_versions.get(domain_key) or value.get("version"),
             "overlays": list(value.get("extensions", [])),
             "status": status,
         })
