@@ -1,0 +1,38 @@
+name: Design Governance and Pattern Expansion Acceptance
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - run: python -m unittest tests.test_design_governance_expansion tests.test_visual_ai_security -v
+      - run: python -m tooling.experience.parity_gate
+      - name: Generate design debt evidence
+        run: |
+          mkdir -p artifacts/design-debt
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from tooling.experience.debt_report import build_report, to_markdown, to_html
+          report=build_report(Path("."))
+          Path("artifacts/design-debt/report.json").write_text(json.dumps(report,indent=2))
+          Path("artifacts/design-debt/report.md").write_text(to_markdown(report))
+          Path("artifacts/design-debt/index.html").write_text(to_html(report))
+          print(json.dumps(report,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: design-debt-report
+          path: artifacts/design-debt
