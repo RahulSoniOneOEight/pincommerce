@@ -1,0 +1,77 @@
+name: Phase E1 Staging Evidence Acceptance
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  phase-e1-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Validate E1 contracts and strict gates
+        run: |
+          python -m unittest tests.test_phase_e1_staging tests.test_staging_manifest -v
+          python tooling/validation/validate_repository.py
+
+      - name: Build exact candidate and staging manifest from this revision
+        run: |
+          rm -rf /tmp/e1
+          python -m tooling.staging.manifest             --client reference-retail             --source-revision "$GITHUB_SHA"             --created-by github-actions             --output-dir /tmp/e1
+
+      - name: Verify candidate identity and digest binding
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          import yaml
+
+          root = Path("/tmp/e1")
+          candidate_path = next(root.glob("RC-*.yaml"))
+          candidate = yaml.safe_load(candidate_path.read_text())
+          manifest = yaml.safe_load((root / "staging-manifest.yaml").read_text())
+          assert candidate["source_revision"] == os.environ["GITHUB_SHA"]
+          assert candidate["immutable"] is True
+          assert candidate["artifact_digest"]
+          assert manifest["candidate_id"] == candidate["candidate_id"]
+          assert manifest["candidate_digest"] == candidate["artifact_digest"]
+          assert manifest["source_revision"] == os.environ["GITHUB_SHA"]
+          print(candidate["candidate_id"], candidate["artifact_digest"])
+          PY
+
+      - name: Prove provider evidence blocks when staging bindings are absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          CANDIDATE_ID=$(python - <<'PY'
+          from pathlib import Path
+          import yaml
+          p = next(Path("/tmp/e1").glob("RC-*.yaml"))
+          print(yaml.safe_load(p.read_text())["candidate_id"])
+          PY
+          )
+          set +e
+          python -m tooling.staging.provider_probe             --candidate-id "$CANDIDATE_ID"             --output /tmp/e1/provider-evidence.yaml
+          CODE=$?
+          set -e
+          test "$CODE" -eq 2
+          python - <<'PY'
+          import yaml
+          value = yaml.safe_load(open("/tmp/e1/provider-evidence.yaml"))
+          assert value["status"] == "blocked"
+          assert all(item["status"] == "not-run" for item in value["providers"])
+          print("provider gate correctly blocked without environment bindings")
+          PY
