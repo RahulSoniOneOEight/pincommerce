@@ -1,0 +1,16 @@
+version: 1
+states:
+  - prototype
+  - candidate
+  - approved
+  - deprecated
+promotion_rules:
+  prototype_to_candidate:
+    requires: [functional-evidence, state-completeness, accessibility]
+  candidate_to_approved:
+    requires: [quality-threshold, visual-qa, performance-budget, human-review]
+  approved_to_deprecated:
+    requires: [replacement-path, affected-client-impact]
+versioning:
+  strategy: semantic
+  pin_client_consumers: true
