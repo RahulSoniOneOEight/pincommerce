@@ -19,3 +19,7 @@ Every provider decision must record:
 
 Preferred starting providers are examples, not hard requirements:
 Medusa (commerce), Mercur (marketplace), Tryton (ERP), Chatwoot (support), Meilisearch (search), Activepieces/Windmill (automation), PostgreSQL/Supabase (data), NATS/RabbitMQ (messaging), Valkey (cache), PostHog/GA4 (analytics), Superset/Metabase (BI).
+
+## UI/UX reuse decisions
+
+UI reuse decisions apply the same hierarchy at component level. A broad open-source/reference pool may be evaluated, but production dependencies are activated only when a governed design-selection record shows functional fit and the component remains behind PinCommerce shared primitives. Icon family, motion stack and theme preset are selected once per governed surface/product rather than mixed ad hoc.
