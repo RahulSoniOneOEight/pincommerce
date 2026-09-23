@@ -1,0 +1,23 @@
+version: 1
+reduced_motion_required: true
+classes:
+  micro-feedback:
+    duration_ms: [80, 160]
+    examples: [button-press, icon-state, toggle]
+  ui-transition:
+    duration_ms: [160, 240]
+    examples: [dropdown, modal, tab]
+  card-state-change:
+    duration_ms: [180, 300]
+    examples: [add-to-cart, expand, filter]
+  page-transition:
+    duration_ms: [250, 400]
+    examples: [navigation, route-change]
+  hero-story:
+    duration_ms: [400, 1200]
+    examples: [editorial-hero, campaign-story]
+rules:
+  - motion-must-explain-state-or-hierarchy
+  - avoid-animation-for-decoration-only-on-dense-operational-surfaces
+  - reduced-motion-variant-is-mandatory
+  - gsap-requires-advanced-timeline-justification
