@@ -61,9 +61,9 @@ export function B2BQuickOrder({ lines, state = "default", onQuantityChange }: {
           <tr key={line.sku}>
             <td>{line.sku}</td><td>{line.name}</td>
             <td><div className="agency-quantity">
-              <button aria-label={`Decrease \${line.name}`} onClick={() => onQuantityChange?.(line.sku, Math.max(0, line.quantity - 1))}>−</button>
+              <button aria-label={`Decrease ${line.name}`} onClick={() => onQuantityChange?.(line.sku, Math.max(0, line.quantity - 1))}>−</button>
               <span>{line.quantity}</span>
-              <button aria-label={`Increase \${line.name}`} onClick={() => onQuantityChange?.(line.sku, line.quantity + 1)}>+</button>
+              <button aria-label={`Increase ${line.name}`} onClick={() => onQuantityChange?.(line.sku, line.quantity + 1)}>+</button>
             </div></td>
           </tr>
         ))}</tbody>
@@ -77,7 +77,7 @@ export function DashboardKpi({ label, value, trendLabel, state = "default" }: {
 }) {
   if (state === "loading") return <div className="agency-card" role="status">Loading metric…</div>;
   if (state === "failure") return <div className="agency-card" role="alert">Metric unavailable</div>;
-  return <article className="agency-card" aria-label={`\${label} \${value}`}>
+  return <article className="agency-card" aria-label={`${label} ${value}`}>
     <div className="agency-muted">{label}</div>
     <div className="agency-metric">{value}</div>
     {trendLabel ? <div className="agency-muted">{trendLabel}</div> : null}
