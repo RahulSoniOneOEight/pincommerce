@@ -59,7 +59,17 @@ class ProductionPlanCompilerTests(unittest.TestCase):
                     "payment": "razorpay",
                     "logistics": "shiprocket",
                     "whatsapp": "meta-whatsapp-cloud",
-                }
+                },
+                "runtime_versions": {
+                    "experience_mobile": "acceptance-flutter-pin",
+                    "experience_web": "acceptance-nextjs-pin",
+                    "commerce": "acceptance-medusa-pin",
+                    "erp": "acceptance-tryton-pin",
+                    "search": "acceptance-meilisearch-pin",
+                    "support": "acceptance-chatwoot-pin",
+                    "automation": "acceptance-activepieces-pin",
+                    "database": "acceptance-postgresql-pin",
+                },
             }
             selection_path = dst / "production" / "provider-selections.yaml"
             selection_path.parent.mkdir(parents=True, exist_ok=True)
@@ -67,16 +77,8 @@ class ProductionPlanCompilerTests(unittest.TestCase):
                 yaml.safe_dump(selections, sort_keys=False), encoding="utf-8"
             )
 
-            # Production versions must be deliberately pinned; prototype-null versions
-            # are never silently promoted.
-            solution_path = dst / "solution" / "solution-contract.yaml"
-            solution = yaml.safe_load(solution_path.read_text(encoding="utf-8"))
-            for provider in solution["providers"].values():
-                provider["version"] = "acceptance-pinned"
-            solution_path.write_text(
-                yaml.safe_dump(solution, sort_keys=False), encoding="utf-8"
-            )
-
+            # Production version pins are D1 operational inputs. The approved
+            # Solution Contract remains unchanged.
             outputs = write_production_plan("reference-retail", root)
             self.assertEqual(len(outputs), 6)
             readiness = evaluate_readiness("reference-retail", root)
@@ -116,7 +118,8 @@ class ProductionPlanCompilerTests(unittest.TestCase):
                         "payment": "razorpay",
                         "logistics": "shiprocket",
                         "whatsapp": "meta-whatsapp-cloud",
-                    }
+                    },
+                    "runtime_versions": {},
                 }),
                 encoding="utf-8",
             )
