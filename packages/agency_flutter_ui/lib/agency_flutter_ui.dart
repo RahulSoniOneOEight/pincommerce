@@ -325,6 +325,154 @@ class ExceptionTable extends StatelessWidget {
   }
 }
 
+class FilterBar extends StatelessWidget {
+  const FilterBar({
+    required this.filters,
+    this.selected = const <String>{},
+    this.onSelected,
+    this.onClear,
+    this.state = CommerceFixture.defaultState,
+    super.key,
+  });
+  final List<String> filters;
+  final Set<String> selected;
+  final ValueChanged<String>? onSelected;
+  final VoidCallback? onClear;
+  final CommerceFixture state;
+
+  @override
+  Widget build(BuildContext context) {
+    final disabled = state == CommerceFixture.disabled;
+    return Semantics(
+      label: 'Product filters',
+      child: Wrap(
+        spacing: AgencySpacing.sm,
+        runSpacing: AgencySpacing.sm,
+        children: [
+          for (final filter in filters)
+            FilterChip(
+              label: Text(filter),
+              selected: selected.contains(filter),
+              onSelected: disabled || onSelected == null ? null : (_) => onSelected!(filter),
+            ),
+          TextButton(
+            onPressed: disabled ? null : onClear,
+            child: const Text('Clear'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CheckoutSummary extends StatelessWidget {
+  const CheckoutSummary({
+    required this.subtotal,
+    required this.shipping,
+    required this.total,
+    this.onContinue,
+    this.state = CommerceFixture.defaultState,
+    super.key,
+  });
+  final String subtotal;
+  final String shipping;
+  final String total;
+  final VoidCallback? onContinue;
+  final CommerceFixture state;
+
+  @override
+  Widget build(BuildContext context) {
+    if (state == CommerceFixture.loading) return const LinearProgressIndicator();
+    final disabled = state == CommerceFixture.disabled;
+    return Semantics(
+      label: 'Checkout summary',
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(AgencySpacing.md),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [const Text('Subtotal'), Text(subtotal)]),
+              const SizedBox(height: AgencySpacing.sm),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [const Text('Shipping'), Text(shipping)]),
+              const Divider(),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [const Text('Total', style: AgencyText.title), Text(total, style: AgencyText.title)]),
+              const SizedBox(height: AgencySpacing.md),
+              FilledButton(onPressed: disabled ? null : onContinue, child: const Text('Continue checkout')),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class NavigationMenu extends StatelessWidget {
+  const NavigationMenu({
+    required this.items,
+    required this.current,
+    this.onNavigate,
+    this.state = CommerceFixture.defaultState,
+    super.key,
+  });
+  final List<String> items;
+  final String current;
+  final ValueChanged<String>? onNavigate;
+  final CommerceFixture state;
+
+  @override
+  Widget build(BuildContext context) {
+    final disabled = state == CommerceFixture.disabled;
+    return Semantics(
+      label: 'Primary navigation',
+      child: Wrap(
+        spacing: AgencySpacing.sm,
+        children: [
+          for (final item in items)
+            TextButton(
+              onPressed: disabled || onNavigate == null ? null : () => onNavigate!(item),
+              child: Text(item, style: item == current ? AgencyText.label.copyWith(fontWeight: FontWeight.w700) : AgencyText.label),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class FormSection extends StatelessWidget {
+  const FormSection({
+    required this.label,
+    required this.value,
+    this.helper,
+    this.error,
+    this.onChanged,
+    this.state = CommerceFixture.defaultState,
+    super.key,
+  });
+  final String label;
+  final String value;
+  final String? helper;
+  final String? error;
+  final ValueChanged<String>? onChanged;
+  final CommerceFixture state;
+
+  @override
+  Widget build(BuildContext context) {
+    final disabled = state == CommerceFixture.disabled;
+    final effectiveError = state == CommerceFixture.validationError ? (error ?? 'Check this value') : error;
+    return TextFormField(
+      initialValue: value,
+      enabled: !disabled,
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: label,
+        helperText: helper,
+        errorText: effectiveError,
+      ),
+    );
+  }
+}
+
 class Surface extends StatelessWidget {
   const Surface({required this.child, super.key});
   final Widget child;
