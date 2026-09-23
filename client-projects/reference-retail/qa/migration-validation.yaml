@@ -1,0 +1,20 @@
+validation_id: MIGQA-reference-retail-v1
+client_id: reference-retail
+production_plan_ref: production/production-plan.yaml
+mode: reference-data-dry-run
+checks:
+  - id: demo-data-separation
+    status: pass
+    evidence: production/data-migration.yaml
+  - id: master-identity-mapping
+    status: pass
+    evidence: contracts/data-contract.yaml
+  - id: opening-inventory-reconciliation
+    status: pass
+    evidence: experience/fixtures/reference-retail-demo-dataset.yaml
+  - id: opening-finance-reconciliation
+    status: pass
+    evidence: experience/fixtures/reference-retail-demo-dataset.yaml
+notes:
+  - This validates migration mechanics with deterministic reference data; no real client production data is claimed to have been migrated.
+status: passed
