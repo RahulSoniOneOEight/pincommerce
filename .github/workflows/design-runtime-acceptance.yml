@@ -52,6 +52,6 @@ jobs:
         with:
           node-version: "22"
           cache: npm
-      - run: npm ci
+      - run: npm install
       - name: Build Storybook catalog
         run: npm --workspace apps/storybook run build-storybook
