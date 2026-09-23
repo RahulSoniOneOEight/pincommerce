@@ -1,0 +1,122 @@
+version: 1
+components:
+  shadcn_flutter:
+    platform: flutter
+    strengths: [owned-composition, theming, broad-primitives]
+    accessibility: high
+    responsive: high
+    design_freedom: high
+    information_density: medium
+    mobile_fit: high
+    maintenance_review: required
+    license_review: required
+  data_table_2:
+    platform: flutter
+    strengths: [dense-data, fixed-columns, operational-tables]
+    accessibility: medium
+    responsive: medium
+    design_freedom: medium
+    information_density: very-high
+    mobile_fit: medium
+    maintenance_review: required
+    license_review: required
+  flutter_form_builder:
+    platform: flutter
+    strengths: [form-composition, validation, field-variety]
+    accessibility: high
+    responsive: high
+    design_freedom: high
+    information_density: high
+    mobile_fit: high
+    maintenance_review: required
+    license_review: required
+  fl_chart:
+    platform: flutter
+    strengths: [charts, dashboard-visualization]
+    accessibility: medium
+    responsive: high
+    design_freedom: high
+    information_density: high
+    mobile_fit: high
+    maintenance_review: required
+    license_review: required
+  tanstack_table:
+    platform: web
+    strengths: [headless, sorting, filtering, grouping, dense-data]
+    accessibility: composable
+    responsive: composable
+    design_freedom: very-high
+    information_density: very-high
+    mobile_fit: medium
+    maintenance_review: required
+    license_review: required
+  tanstack_query:
+    platform: web
+    strengths: [server-state, cache, async-data]
+    accessibility: not-applicable
+    responsive: not-applicable
+    design_freedom: not-applicable
+    information_density: not-applicable
+    mobile_fit: not-applicable
+    maintenance_review: required
+    license_review: required
+  react_hook_form:
+    platform: web
+    strengths: [forms, validation, performance]
+    accessibility: composable
+    responsive: high
+    design_freedom: high
+    information_density: high
+    mobile_fit: high
+    maintenance_review: required
+    license_review: required
+  recharts:
+    platform: web
+    strengths: [analytics, dashboard-charts]
+    accessibility: medium
+    responsive: high
+    design_freedom: high
+    information_density: high
+    mobile_fit: high
+    maintenance_review: required
+    license_review: required
+  embla:
+    platform: web
+    strengths: [carousel, touch, composable-markup]
+    accessibility: composable
+    responsive: high
+    design_freedom: very-high
+    information_density: medium
+    mobile_fit: high
+    maintenance_review: required
+    license_review: required
+  iconoir:
+    platform: cross
+    strengths: [consistent-stroke, flutter-web-parity]
+    accessibility: semantic-wrapper-required
+    responsive: high
+    design_freedom: high
+    information_density: not-applicable
+    mobile_fit: high
+    maintenance_review: required
+    license_review: required
+  flutter_animate:
+    platform: flutter
+    strengths: [micro-motion, composability, state-transition]
+    accessibility: reduced-motion-wrapper-required
+    responsive: high
+    design_freedom: high
+    information_density: not-applicable
+    mobile_fit: high
+    maintenance_review: required
+    license_review: required
+  motion_react:
+    platform: web
+    strengths: [layout-motion, gesture, scroll, springs]
+    accessibility: reduced-motion-wrapper-required
+    responsive: high
+    design_freedom: high
+    information_density: not-applicable
+    mobile_fit: high
+    maintenance_review: required
+    license_review: required
