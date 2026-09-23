@@ -1,0 +1,16 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Component Benchmark",
+  "type":"object",
+  "required":["benchmark_id","client_id","pattern","candidates","viewports","states","status"],
+  "properties":{
+    "benchmark_id":{"type":"string"},
+    "client_id":{"type":"string"},
+    "pattern":{"type":"string"},
+    "candidates":{"type":"array","items":{"type":"string"},"minItems":2},
+    "viewports":{"type":"array","items":{"type":"string"}},
+    "states":{"type":"array","items":{"type":"string"}},
+    "status":{"enum":["planned","captured","evaluated","approved"]}
+  },
+  "additionalProperties":true
+}
