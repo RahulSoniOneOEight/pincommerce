@@ -36,10 +36,13 @@ jobs:
           python - <<'PY'
           import json
           from tooling.experience.visual_evidence import evaluate_evidence
+          from tooling.experience.visual_baseline import compare_hashes
           payload=json.load(open("artifacts/design-evidence/evidence.json"))
-          result=evaluate_evidence(payload)
+          quality=evaluate_evidence(payload)
+          baseline=compare_hashes(payload)
+          result={"quality": quality, "baseline": baseline}
           print(json.dumps(result, indent=2))
-          raise SystemExit(0 if result["status"]=="passed" else 2)
+          raise SystemExit(0 if quality["status"]=="passed" and baseline["status"]=="passed" else 2)
           PY
       - uses: actions/upload-artifact@v4
         if: always()
@@ -75,4 +78,4 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements-dev.txt
-      - run: python -m unittest tests.test_visual_evidence -v
+      - run: python -m unittest tests.test_visual_evidence tests.test_visual_baseline -v
