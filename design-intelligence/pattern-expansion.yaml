@@ -1,0 +1,26 @@
+version: 1
+patterns:
+  filter-bar:
+    flutter: FilterBar
+    web: FilterBar
+    states: [default, disabled]
+    actions: [select-filter, clear-filters]
+    data_fields: [filters, selected]
+  checkout-summary:
+    flutter: CheckoutSummary
+    web: CheckoutSummary
+    states: [default, loading, disabled]
+    actions: [continue-checkout]
+    data_fields: [subtotal, shipping, total]
+  navigation-menu:
+    flutter: NavigationMenu
+    web: NavigationMenu
+    states: [default, disabled]
+    actions: [navigate]
+    data_fields: [items, current]
+  form-section:
+    flutter: FormSection
+    web: FormSection
+    states: [default, disabled, validation-error]
+    actions: [change-field]
+    data_fields: [label, value, helper, error]
