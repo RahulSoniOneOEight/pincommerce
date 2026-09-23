@@ -1,0 +1,9 @@
+inventory_id: DSI-reference-retail
+client_id: reference-retail
+sources:
+  - id: source-ref-1
+    type: other
+    ref: brief:reference-retail
+    authority: client-authoritative
+    notes: existing onboarding source reference
+status: evaluated
