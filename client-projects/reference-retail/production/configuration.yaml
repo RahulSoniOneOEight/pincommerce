@@ -1,0 +1,14 @@
+client_id: reference-retail
+production_plan_ref: production/production-plan.yaml
+strategy: standard-baseline-plus-approved-overlays
+approved_overlays:
+  - solution/decisions/ADR-reference-retail-001.yaml
+  - solution/decisions/ADR-reference-retail-002.yaml
+  - solution/decisions/ADR-reference-retail-003.yaml
+  - solution/decisions/ADR-reference-retail-004.yaml
+  - solution/decisions/ADR-reference-retail-005.yaml
+  - solution/decisions/ADR-reference-retail-006.yaml
+  - solution/decisions/ADR-reference-retail-007.yaml
+  - solution/decisions/ADR-reference-retail-008.yaml
+deferred_capabilities: []
+excluded_capabilities: []
