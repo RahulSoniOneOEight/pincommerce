@@ -24,6 +24,7 @@ CONTRACTS = {
     "production-execution": ROOT / "contracts" / "schemas" / "production-execution.schema.json",
     "cross-domain-qa": ROOT / "contracts" / "schemas" / "cross-domain-qa.schema.json",
     "phase-d-completion": ROOT / "contracts" / "schemas" / "phase-d-completion.schema.json",
+    "production-qa": ROOT / "contracts" / "schemas" / "production-qa.schema.json",
     "solution": ROOT / "contracts" / "schemas" / "solution-contract.schema.json",
     "workflow-state": ROOT / "contracts" / "schemas" / "workflow-state.schema.json",
     "change": ROOT / "contracts" / "schemas" / "change-contract.schema.json",
