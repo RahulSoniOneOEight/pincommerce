@@ -1,0 +1,31 @@
+name: Design Intelligence Acceptance
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  design-intelligence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install validation dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Run design intelligence and quality tests
+        run: |
+          python -m unittest tests.test_design_intelligence tests.test_design_quality -v
+          python -m tooling.experience.design_intelligence --client reference-retail --print-only
+      - name: Validate committed reference-retail design artifacts
+        run: |
+          python -m tooling.contracts.validator design-source-inventory client-projects/reference-retail/experience/design/source-inventory.yaml
+          python -m tooling.contracts.validator design-selection client-projects/reference-retail/experience/design/selection.yaml
+          python -m tooling.contracts.validator theme-resolution client-projects/reference-retail/experience/design/theme-resolution.yaml
+          python -m tooling.contracts.validator asset-selection client-projects/reference-retail/experience/design/asset-plan.yaml
