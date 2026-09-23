@@ -1,0 +1,33 @@
+asset_plan_id: ASSET-reference-retail
+client_id: reference-retail
+source_order:
+  - client-supplied
+  - existing-project-assets
+  - pincommerce-approved-fixtures
+  - pexels
+  - generated-neutral-placeholder
+requests:
+  - id: homepage-hero
+    purpose: homepage-hero
+    provider_policy: client-assets-first; pexels-if-missing
+    query:
+      text: retail
+      orientation: landscape
+      candidate_count: 8
+    selected_asset: null
+    status: planned
+  - id: category-editorial
+    purpose: category-editorial
+    provider_policy: client-assets-first; pexels-if-missing
+    query:
+      text: retail
+      orientation: landscape
+      candidate_count: 8
+    selected_asset: null
+    status: planned
+client_media_present: false
+pexels:
+  enabled: true
+  api_key_ref: env:PEXELS_API_KEY
+  use_only_after: [client-supplied, existing-project-assets, pincommerce-approved-fixtures]
+status: ready
