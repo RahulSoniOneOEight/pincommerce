@@ -35,8 +35,8 @@ abstract final class AgencyTheme {
 }
 
 enum CommerceFixture {
-  defaultState, loading, empty, failure, disabled, validationError,
-  outOfStock, discounted, editing, open, resolved,
+  defaultState, loading, empty, failure, approvalPending, paymentFailed,
+  disabled, validationError, outOfStock, discounted, editing, open, resolved,
 }
 
 Widget _messageCard(String message) => Card(
