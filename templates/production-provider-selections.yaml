@@ -2,3 +2,12 @@ integrations:
   payment: razorpay
   logistics: shiprocket
   whatsapp: meta-whatsapp-cloud
+runtime_versions:
+  experience_mobile: "<pin-exact-flutter-version>"
+  experience_web: "<pin-exact-nextjs-version>"
+  commerce: "<pin-exact-medusa-version-or-artifact>"
+  erp: "<pin-exact-tryton-version>"
+  search: "<pin-exact-meilisearch-version>"
+  support: "<pin-exact-chatwoot-version>"
+  automation: "<pin-exact-activepieces-version>"
+  database: "<pin-exact-postgresql-version>"
