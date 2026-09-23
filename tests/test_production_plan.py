@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ProductionPlanCompilerTests(unittest.TestCase):
-    def test_reference_plan_exposes_real_d1_blockers(self):
+    def test_reference_plan_is_resolved_after_canonical_d1_selections(self):
         plan, _, _, _, migration = build_production_plan("reference-retail", ROOT)
 
         self.assertEqual(plan["scope"]["current_scope_ref"], "approved/current-scope.yaml")
@@ -27,11 +27,13 @@ class ProductionPlanCompilerTests(unittest.TestCase):
         self.assertEqual(plan["configuration"]["strategy"], "standard-baseline-plus-approved-overlays")
         self.assertEqual(validate_document(plan, "production-plan"), [])
         self.assertEqual(validate_document(migration, "production-migration-plan"), [])
+        self.assertEqual(plan["blocking_items"], [])
 
-        blockers = "\n".join(plan["blocking_items"])
-        self.assertIn("payment", blockers)
-        self.assertIn("logistics", blockers)
-        self.assertNotIn("whatsapp", blockers)
+        integrations = {item["integration_id"]: item for item in plan["integrations"]}
+        self.assertEqual(integrations["payment"]["selected_provider"], "razorpay")
+        self.assertEqual(integrations["logistics"]["selected_provider"], "shiprocket")
+        self.assertEqual(integrations["whatsapp"]["selected_provider"], "meta-whatsapp-cloud")
+        self.assertTrue(all(item["version"] for item in plan["runtimes"]))
 
         included = {item["id"] for item in plan["capabilities"]}
         self.assertIn("checkout", included)
