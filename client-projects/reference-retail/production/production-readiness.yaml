@@ -1,0 +1,17 @@
+readiness_id: PRODREADY-reference-retail-v1
+client_id: reference-retail
+production_plan_ref: production/production-plan.yaml
+checks:
+  - {id: approved-scope-resolved, status: pass, details: []}
+  - {id: capability-ownership, status: pass, details: []}
+  - {id: runtime-provider-mapping, status: pass, details: []}
+  - {id: runtime-version-pinning, status: pass, details: []}
+  - {id: surface-production-mapping, status: pass, details: []}
+  - {id: integration-provider-selection, status: pass, details: []}
+  - {id: credential-inventory, status: pass, details: []}
+  - {id: data-ownership, status: pass, details: []}
+  - {id: migration-strategy, status: pass, details: []}
+  - {id: deferred-scope-exclusion, status: pass, details: []}
+  - {id: production-test-plan, status: pass, details: []}
+blocking_items: []
+status: production-ready
