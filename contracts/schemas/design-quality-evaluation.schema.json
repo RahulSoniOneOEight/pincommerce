@@ -1,0 +1,28 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Design Quality Evaluation",
+  "type":"object",
+  "required":["evaluation_id","client_id","target","criteria","score","threshold","status"],
+  "properties":{
+    "evaluation_id":{"type":"string"},
+    "client_id":{"type":"string"},
+    "target":{"type":"string"},
+    "criteria":{"type":"array","items":{
+      "type":"object",
+      "required":["id","weight","score","evidence"],
+      "properties":{
+        "id":{"type":"string"},
+        "weight":{"type":"number","minimum":0},
+        "score":{"type":"number","minimum":0,"maximum":100},
+        "evidence":{"type":"array","items":{"type":"string"}},
+        "deterministic":{"type":"boolean"}
+      },
+      "additionalProperties":false
+    }},
+    "score":{"type":"number","minimum":0,"maximum":100},
+    "threshold":{"type":"number","minimum":0,"maximum":100},
+    "status":{"enum":["draft","failed","review-ready","approved"]},
+    "winner_of":{"type":["string","null"]}
+  },
+  "additionalProperties":false
+}
