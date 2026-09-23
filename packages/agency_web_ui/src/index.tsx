@@ -1,15 +1,16 @@
 import type { ReactNode } from "react";
+import { Plus, Minus, Search, WarningTriangle, CheckCircle, Xmark } from "iconoir-react";
 
 export type AgencyIconConcept = "increment" | "decrement" | "search" | "warning" | "success" | "error";
 
 export function AgencyIcon({ concept }: { concept: AgencyIconConcept }) {
-  const path = concept === "increment" ? "M12 5v14M5 12h14"
-    : concept === "decrement" ? "M5 12h14"
-    : concept === "search" ? "M11 4a7 7 0 1 0 0 14a7 7 0 0 0 0-14Zm5 12l4 4"
-    : concept === "warning" ? "M12 4l9 16H3L12 4Zm0 5v5m0 3h.01"
-    : concept === "success" ? "M5 12l4 4L19 6"
-    : "M6 6l12 12M18 6L6 18";
-  return <svg className="agency-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" data-semantic-icon={concept}><path d={path} /></svg>;
+  const props = { width: 20, height: 20, strokeWidth: 1.75, "aria-hidden": true as const };
+  return concept === "increment" ? <Plus {...props} />
+    : concept === "decrement" ? <Minus {...props} />
+    : concept === "search" ? <Search {...props} />
+    : concept === "warning" ? <WarningTriangle {...props} />
+    : concept === "success" ? <CheckCircle {...props} />
+    : <Xmark {...props} />;
 }
 
 export type CommerceFixture =

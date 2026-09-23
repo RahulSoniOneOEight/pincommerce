@@ -1,0 +1,5 @@
+version: 1
+rule: existing-debt-may-remain-but-no-new-debt-is-allowed
+allowed_findings:
+  - {type: raw-color, path: packages/agency_web_ui/src/styles.css}
+  - {type: raw-color, path: apps/review_mode/app/review.css}

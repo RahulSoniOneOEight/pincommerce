@@ -1,6 +1,6 @@
 version: 1
 approved_by: design-governance
-source_run: 35894716885
+source_run: 35897241351
 mode: exact-png-hash
 captures:
   product-card:
@@ -12,9 +12,9 @@ captures:
     tablet-768: sha256:1ac1a92f5722853a151a5d8b6a89c5fd8ac7211e42691bee3e1951e2c8034ff5
     desktop-1440: sha256:8fcbd9493b1f59a14da860e17ebefd065f8f13d89ab592e165199f9fc6c4660e
   b2b-quick-order:
-    mobile-390: sha256:5eab1fba2c50d602f2bdf4ba2f313064fd79e3992c6846e93f416dc8900a3999
-    tablet-768: sha256:a5eeab55f4d6d6c00d3b08a2c61555fd189f04628502d8652cda55a049f0a35c
-    desktop-1440: sha256:a409b4524332ee2a2578923fd0921bf814bfce470b4aa3566e44a2ec67cb0b13
+    mobile-390: sha256:0e62ca33b2c667b10351f8c7d5a8ba0dba960418c3e1d053cf26b27bd1da794e
+    tablet-768: sha256:04fb1ff4ee848fb169ed11f9d12632c150ece0ca0d3bd96201d4323eb7b6752c
+    desktop-1440: sha256:9a6db73ed2f5078a83cbd9a9a67d668d0cf2740cbf65c45be7452ac5018089d4
   dashboard-kpi:
     mobile-390: sha256:77c1db8668ac23a25b81b33a5e24afe00029dfb9524e0628dfbf7d159c8c93e0
     tablet-768: sha256:44d833695ed978e8f1f4aa996300a58caaf2f6bb804bc0b6d5bc8a38ac19d5aa

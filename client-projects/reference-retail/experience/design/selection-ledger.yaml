@@ -1,0 +1,38 @@
+version: 1
+client_id: reference-retail
+entries:
+  - pattern: product-card
+    candidate: shadcn_flutter
+    decision: selected
+    rationale: [functional fit, PinCommerce wrapper compatibility]
+    evidence: [experience/design/selection.yaml, design-intelligence/approved-visual-baselines.yaml]
+  - pattern: product-card
+    candidate: material
+    decision: rejected
+    rationale: [not selected as primary component source]
+    evidence: [experience/design/selection.yaml]
+  - pattern: b2b-quick-order
+    candidate: data_table_2
+    decision: selected
+    rationale: [dense transactional table fit]
+    evidence: [experience/design/selection.yaml]
+  - pattern: dashboard-kpi
+    candidate: fl_chart
+    decision: selected
+    rationale: [analytics specialist fit]
+    evidence: [experience/design/selection.yaml]
+  - pattern: checkout-section
+    candidate: flutter_form_builder
+    decision: selected
+    rationale: [structured form fit]
+    evidence: [experience/design/selection.yaml]
+  - pattern: web-core
+    candidate: shadcn_ui
+    decision: selected
+    rationale: [owned component source and wrapper fit]
+    evidence: [experience/design/selection.yaml]
+  - pattern: web-core
+    candidate: ant_design
+    decision: rejected
+    rationale: [larger runtime than required for current reference scope]
+    evidence: [experience/design/selection.yaml]

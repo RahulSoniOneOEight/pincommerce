@@ -17,8 +17,9 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements-dev.txt
-      - run: python -m unittest tests.test_design_governance_expansion tests.test_visual_ai_security -v
+      - run: python -m unittest tests.test_design_governance_expansion tests.test_visual_ai_security tests.test_component_governance_complete -v
       - run: python -m tooling.experience.parity_gate
+      - run: python -m tooling.experience.debt_gate
       - name: Generate design debt evidence
         run: |
           mkdir -p artifacts/design-debt

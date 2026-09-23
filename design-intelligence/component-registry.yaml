@@ -167,3 +167,14 @@ patterns:
     prefers:
       flutter: [flutter_form_builder, shadcn_flutter]
       web: [react_hook_form, shadcn_ui]
+
+lifecycle_records:
+  product-card: {status: approved, version: 1.0.0, history: [{from: evaluated, to: approved, evidence: [visual-baseline, runtime-quality], approver: design-governance}]}
+  category-rail: {status: approved, version: 1.0.0, history: [{from: evaluated, to: approved, evidence: [visual-baseline, runtime-quality], approver: design-governance}]}
+  b2b-quick-order: {status: approved, version: 1.0.0, history: [{from: evaluated, to: approved, evidence: [visual-baseline, runtime-quality], approver: design-governance}]}
+  dashboard-kpi: {status: approved, version: 1.0.0, history: [{from: evaluated, to: approved, evidence: [visual-baseline, runtime-quality], approver: design-governance}]}
+  exception-table: {status: approved, version: 1.0.0, history: [{from: evaluated, to: approved, evidence: [visual-baseline, runtime-quality], approver: design-governance}]}
+  filter-bar: {status: approved, version: 1.0.0, history: [{from: evaluated, to: approved, evidence: [visual-baseline, parity], approver: design-governance}]}
+  checkout-summary: {status: approved, version: 1.0.0, history: [{from: evaluated, to: approved, evidence: [visual-baseline, parity], approver: design-governance}]}
+  navigation-menu: {status: approved, version: 1.0.0, history: [{from: evaluated, to: approved, evidence: [visual-baseline, parity], approver: design-governance}]}
+  form-section: {status: approved, version: 1.0.0, history: [{from: evaluated, to: approved, evidence: [visual-baseline, parity], approver: design-governance}]}

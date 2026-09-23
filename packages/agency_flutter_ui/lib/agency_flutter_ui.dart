@@ -1,6 +1,7 @@
 library agency_flutter_ui;
 
 import 'package:flutter/material.dart';
+import 'package:iconoir_flutter/iconoir_flutter.dart' as iconoir;
 
 abstract final class AgencySpacing {
   static const double xs = 4;
@@ -48,17 +49,15 @@ class AgencyIcon extends StatelessWidget {
   final AgencyIconConcept concept;
   final double size;
 
-  IconData get _nativeFallback => switch (concept) {
-    AgencyIconConcept.increment => Icons.add,
-    AgencyIconConcept.decrement => Icons.remove,
-    AgencyIconConcept.search => Icons.search,
-    AgencyIconConcept.warning => Icons.warning_amber,
-    AgencyIconConcept.success => Icons.check_circle_outline,
-    AgencyIconConcept.error => Icons.cancel_outlined,
-  };
-
   @override
-  Widget build(BuildContext context) => Icon(_nativeFallback, size: size);
+  Widget build(BuildContext context) => switch (concept) {
+    AgencyIconConcept.increment => iconoir.Plus(width: size, height: size),
+    AgencyIconConcept.decrement => iconoir.Minus(width: size, height: size),
+    AgencyIconConcept.search => iconoir.Search(width: size, height: size),
+    AgencyIconConcept.warning => iconoir.WarningTriangle(width: size, height: size),
+    AgencyIconConcept.success => iconoir.CheckCircle(width: size, height: size),
+    AgencyIconConcept.error => iconoir.Xmark(width: size, height: size),
+  };
 }
 
 abstract final class AgencyTheme {

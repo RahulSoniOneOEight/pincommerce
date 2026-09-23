@@ -1,0 +1,15 @@
+version: 1
+cross_platform:
+  filter-bar:
+    actions: [select-filter, clear-filters]
+    required_states: [default, disabled]
+  b2b-quick-order:
+    actions: [change-quantity]
+    required_states: [default, loading, empty, failure]
+  navigation-menu:
+    actions: [navigate]
+    required_states: [default, disabled]
+  form-section:
+    actions: [change-field]
+    required_states: [default, disabled, validation-error]
+rule: Flutter and web must execute the same business action semantics; platform-native rendering differences are allowed.

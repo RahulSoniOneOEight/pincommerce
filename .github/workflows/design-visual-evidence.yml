@@ -31,6 +31,8 @@ jobs:
           for i in {1..30}; do curl -fsS http://127.0.0.1:6006 >/dev/null && break; sleep 1; done
       - name: Capture screenshots, accessibility and performance
         run: node tooling/experience/web_evidence.mjs
+      - name: Prove web behavioral parity
+        run: node tooling/experience/web_behavior.mjs
       - name: Validate rendered evidence
         run: |
           python - <<'PY'
