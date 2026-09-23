@@ -25,4 +25,9 @@ differentiators:
 - contextual discovery
 - business/operational efficiency emphasis
 fixture_set: commerce-baseline
+visual_preset: compact-commerce
+design_selection_ref: experience/design/selection.yaml
+theme_resolution_ref: experience/design/theme-resolution.yaml
+asset_plan_ref: experience/design/asset-plan.yaml
+motion_policy_ref: design-intelligence/motion-policy.yaml
 status: draft
