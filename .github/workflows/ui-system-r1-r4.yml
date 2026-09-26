@@ -1,0 +1,38 @@
+name: UI System R1-R4 Acceptance
+on:
+  pull_request:
+    paths:
+      - 'platform/ui/**'
+      - 'tooling/experience/ui_system.py'
+      - 'tooling/experience/ui_resolver.py'
+      - 'tooling/experience/design_build_qa.py'
+      - 'tooling/experience/penpot_automation.py'
+      - 'tooling/orchestrator/design_gate.py'
+      - 'contracts/schemas/master-design-system.schema.json'
+      - 'contracts/schemas/ui-implementation-registry.schema.json'
+      - 'contracts/schemas/icon-registry.schema.json'
+      - 'contracts/schemas/motion-registry.schema.json'
+      - 'contracts/schemas/design-build-evidence.schema.json'
+      - 'apps/review_mode/**'
+      - '.opencode/agents/ui-builder.md'
+      - 'tests/test_ui_system_r1_r4.py'
+      - '.github/workflows/ui-system-r1-r4.yml'
+  push:
+    branches: [main]
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements-dev.txt
+      - run: python -m unittest tests.test_ui_system_r1_r4 -v
+      - run: python tooling/validation/validate_all.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm install --ignore-scripts --no-audit --no-fund
+      - run: npm run review:build
