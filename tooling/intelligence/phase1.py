@@ -108,6 +108,11 @@ def generate(client_id:str,root:Path=ROOT,overwrite:bool=False)->list[Path]:
         p=project/rel
         if p.exists() and not overwrite: raise IntelligenceError(f"Refusing to overwrite: {p}")
         doc=builder(client_id,root); p.parent.mkdir(parents=True,exist_ok=True); p.write_text(yaml.safe_dump(doc,sort_keys=False),encoding="utf-8"); written.append(p)
+    mapped=load(project/"derived"/"journey-capability-map.yaml")
+    gap_path=project/"derived"/"implementation-gap.yaml"
+    if gap_path.exists() and not overwrite: raise IntelligenceError(f"Refusing to overwrite: {gap_path}")
+    gap_doc={"client_id":client_id,"gaps":mapped.get("gaps",[]),"status":"clear" if not mapped.get("gaps") else "action-required"}
+    gap_path.write_text(yaml.safe_dump(gap_doc,sort_keys=False),encoding="utf-8"); written.append(gap_path)
     return written
 
 def main()->int:
