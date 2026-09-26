@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Phase 2 Production and Operations Readiness",
+  "type": "object",
+  "required": ["client_id", "checks", "blocking_items", "status"],
+  "properties": {
+    "client_id": {"type": "string", "minLength": 1},
+    "candidate_id": {"type": ["string", "null"]},
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "status", "evidence"],
+        "properties": {
+          "id": {"type": "string"},
+          "status": {"enum": ["pass", "blocked", "not-ready"]},
+          "evidence": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "blocking_items": {"type": "array", "items": {"type": "string"}},
+    "human_gates": {
+      "type": "object",
+      "properties": {
+        "uat": {"type": "boolean"},
+        "production_authorization": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "status": {"enum": ["phase2-not-ready", "production-ready", "release-authorized", "operating"]}
+  },
+  "additionalProperties": false
+}
