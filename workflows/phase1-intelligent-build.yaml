@@ -1,0 +1,69 @@
+version: 1
+id: phase1-intelligent-build
+objective: "Produce a reference-informed, journey-complete, integrated working prototype while preserving reusable PinCommerce capabilities."
+stages:
+  - id: bootstrap-context
+    human_gate: false
+    required: [workflow-state, current-summary, handoff, active-decisions]
+  - id: capability-discovery
+    human_gate: false
+    inputs: [platform/capabilities/registry.yaml, platform/default-provider-rules.yaml, connectors/provider-registry.yaml]
+    outputs: [derived/capability-discovery.yaml]
+    completion: validator-pass
+  - id: normalize-client-truth
+    human_gate: false
+    outputs: [derived/truth-register.yaml]
+    completion: validator-pass
+  - id: detailed-journeys
+    human_gate: false
+    inputs: [derived/truth-register.yaml, derived/capability-map.yaml]
+    outputs: [derived/journey-graph.yaml]
+    completion: validator-pass
+  - id: reference-intelligence
+    human_gate: false
+    inputs: [input/client-input.yaml, derived/journey-graph.yaml]
+    outputs: [experience/references/pattern-inventory.yaml, experience/references/adaptation.yaml]
+    completion: validator-pass
+  - id: domain-capability-intelligence
+    human_gate: false
+    inputs: [derived/journey-graph.yaml, derived/capability-discovery.yaml]
+    outputs: [derived/journey-capability-map.yaml, derived/implementation-gap.yaml]
+    completion: validator-pass
+  - id: experience-strategy
+    human_gate: false
+    outputs: [experience/strategy.yaml, experience/directions]
+    completion: validator-pass
+  - id: design-system-and-penpot
+    human_gate: false
+    inputs: [experience/strategy.yaml, design-system/components, design-system/tokens]
+    outputs: [experience/design/design-brief.yaml, experience/design/design-ir.yaml]
+    completion: validator-pass
+  - id: experience-approval
+    human_gate: true
+    completion: explicit-human-approval
+  - id: multi-surface-build
+    human_gate: false
+    outputs: [experience/prototypes]
+    completion: validator-pass
+  - id: core-runtime-integration
+    human_gate: false
+    required_runtimes: [medusa, mercur, nats-jetstream, tryton]
+    allow_mock_external_providers: true
+    completion: validator-pass
+  - id: integrated-qa
+    human_gate: false
+    critics: [design, journey, runtime]
+    completion: all-critics-pass
+  - id: integrated-prototype-ready
+    human_gate: false
+    required_vertical_slices:
+      - browse-to-buy
+      - payment-failure-recovery
+      - order-to-erp
+      - order-to-shipment
+      - return-refund
+      - seller-settlement
+      - reconciliation
+    completion: validator-pass
+  - id: client-review
+    human_gate: true
