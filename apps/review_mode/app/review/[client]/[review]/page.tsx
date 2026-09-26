@@ -44,6 +44,10 @@ export default async function ReviewPage({params}:{params:Promise<{client:string
   const synthesis=loadYaml(path.join(root,"experience","synthesis.yaml"));
   const theme=loadYaml(path.join(root,"experience","design","theme-resolution.yaml"));
   const components=loadYaml(path.join(root,"experience","design","component-contract-registry.yaml"));
+  const masterDesign=loadYaml(path.join(root,"experience","design","master-design-system.yaml"));
+  const implementationRegistry=loadYaml(path.join(root,"experience","design","ui-implementation-registry.yaml"));
+  const iconRegistry=loadYaml(path.join(root,"experience","design","icon-registry.yaml"));
+  const motionRegistry=loadYaml(path.join(root,"experience","design","motion-registry.yaml"));
   const designIr=loadYaml(path.join(root,"experience","design","design-ir.yaml"));
   const journeys=loadYaml(path.join(root,"derived","journey-graph.yaml"));
   const refs=loadYaml(path.join(root,"experience","references","adaptation.yaml"));
@@ -87,7 +91,7 @@ export default async function ReviewPage({params}:{params:Promise<{client:string
       <div className="summary-grid">
         <article className="agency-card"><h3>Semantic colors</h3><div className="token-list">{Object.entries(theme?.semantic_roles||{}).map(([k,v])=><div className="token-row" key={k}><span>{k}</span><code>{String(v)}</code></div>)}</div></article>
         <article className="agency-card"><h3>Typography & imagery</h3><p>Fonts: {(theme?.overrides?.fonts||[]).join(", ")||"default tokens"}</p><p>Image direction: {(theme?.overrides?.image_direction||[]).join(", ")||"not specified"}</p><p>Motion: {theme?.overrides?.motion_preference||"balanced"}</p></article>
-        <article className="agency-card wide"><h3>Components</h3><div className="component-grid">{(components?.components||[]).map((c:any)=><div className="component-cell" key={c.id}><strong>{c.id}</strong><span>{(c.variants||[]).join(", ")}</span><small>{(c.states||[]).join(" · ")}</small><small>Flutter: {c.implementation?.flutter} · Web: {c.implementation?.web}</small></div>)}</div></article>
+        <article className="agency-card"><h3>Master tokens</h3><p>{Object.keys(masterDesign?.tokens||{}).join(" · ")||"not materialized"}</p><p>Breakpoints: {Object.entries(masterDesign?.breakpoints||{}).map(([k,v])=>`${k}:${v}`).join(" · ")}</p></article><article className="agency-card"><h3>Icons & motion</h3><p>Icons: {iconRegistry?.policy ? `${iconRegistry.policy.primary} → ${iconRegistry.policy.secondary} → ${iconRegistry.policy.fallback}` : "not materialized"}</p><p>Motion contracts: {(motionRegistry?.motions||[]).length}</p></article><article className="agency-card wide"><h3>Components & implementation mapping</h3><div className="component-grid">{(implementationRegistry?.components||[]).map((m:any)=><div className="component-cell" key={m.semantic_id}><strong>{m.semantic_id}</strong><span>Penpot: {m.penpot?.component}</span><small>Flutter: {m.flutter?.owned_component} · {m.flutter?.primitive}</small><small>Web: {m.web?.owned_component} · {m.web?.primitive}</small></div>)}</div>{!implementationRegistry&&<div className="component-grid">{(components?.components||[]).map((x:any)=><div className="component-cell" key={x.id}><strong>{x.id}</strong><span>{(x.variants||[]).join(", ")}</span><small>{(x.states||[]).join(" · ")}</small></div>)}</div>}</article>
       </div>
     </section>
 
