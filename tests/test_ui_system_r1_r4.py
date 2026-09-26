@@ -24,7 +24,7 @@ class UISystemTests(unittest.TestCase):
 
     def test_component_resolver_is_deterministic(self):
         value=resolve_component("commerce.product-card","flutter",root=ROOT)
-        self.assertEqual(value["flutter"]["owned_component"],"PinProductCard")
+        self.assertEqual(value["flutter"]["owned_component"],"ProductCard")
         self.assertEqual(value["flutter"]["primitive"],"shadcn_flutter")
         web=resolve_component("data.table","web",root=ROOT)
         self.assertEqual(web["web"]["primitive"],"TanStack Table")
