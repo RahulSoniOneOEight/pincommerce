@@ -82,6 +82,11 @@ CONTRACTS = {
     "journey-graph": ROOT / "contracts" / "schemas" / "journey-graph.schema.json",
     "reference-adaptation": ROOT / "contracts" / "schemas" / "reference-adaptation.schema.json",
     "journey-capability-map": ROOT / "contracts" / "schemas" / "journey-capability-map.schema.json",
+    "experience-strategy": ROOT / "contracts" / "schemas" / "experience-strategy.schema.json",
+    "component-contract-registry": ROOT / "contracts" / "schemas" / "component-contract-registry.schema.json",
+    "design-ir": ROOT / "contracts" / "schemas" / "design-ir.schema.json",
+    "critic-evidence": ROOT / "contracts" / "schemas" / "critic-evidence.schema.json",
+    "integrated-prototype-readiness": ROOT / "contracts" / "schemas" / "integrated-prototype-readiness.schema.json",
 }
 
 
