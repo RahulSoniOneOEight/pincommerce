@@ -4,7 +4,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { parse, stringify } from "yaml";
 
 type Doc=Record<string,any>;
+type UserAuth={role:"reviewer"|"approver"|"admin";token:string};
 const SAFE=/^[A-Za-z0-9._-]+$/;
+
+function resolveAuth(identity:string, suppliedToken:string):UserAuth|null{
+  const raw=process.env.REVIEW_MODE_USERS_JSON;
+  if(raw){
+    try{
+      const users=JSON.parse(raw) as Record<string,UserAuth>;
+      const user=users[identity];
+      if(user && ["reviewer","approver","admin"].includes(user.role) && user.token===suppliedToken) return user;
+      return null;
+    }catch{return null;}
+  }
+  const legacy=process.env.REVIEW_MODE_WRITE_TOKEN;
+  if(legacy && legacy===suppliedToken) return {role:"reviewer",token:legacy};
+  return null;
+}
 
 function root(client:string){
   if(!SAFE.test(client)) throw new Error("invalid client");
@@ -37,14 +53,15 @@ export async function POST(req:NextRequest){
   try{
     const form=await req.formData();
     const client=safeText(form.get("client")), review=safeText(form.get("review"));
-    const reviewer=safeText(form.get("reviewer")), role=safeText(form.get("role")), token=safeText(form.get("token"));
+    const reviewer=safeText(form.get("reviewer")), requestedRole=safeText(form.get("role")), token=safeText(form.get("token"));
     const surface=safeText(form.get("surface")), journey=safeText(form.get("journey"));
     const comment=safeText(form.get("comment")), action=safeText(form.get("action"));
-    if(!client||!review||!reviewer||!role||!surface||!comment) throw new Error("Missing required review fields");
+    if(!client||!review||!reviewer||!surface||!comment) throw new Error("Missing required review fields");
     if(!SAFE.test(review)||!SAFE.test(reviewer)) throw new Error("Invalid review/reviewer identifier");
-    const expected=process.env.REVIEW_MODE_WRITE_TOKEN;
-    if(!expected||token!==expected) return NextResponse.json({error:"Review Mode write access denied"},{status:403});
-    if(!["reviewer","approver","admin"].includes(role)) return NextResponse.json({error:"Unknown review role"},{status:403});
+    const auth=resolveAuth(reviewer,token);
+    if(!auth) return NextResponse.json({error:"Review Mode identity or credential denied"},{status:403});
+    const role=auth.role;
+    if(requestedRole && requestedRole!==role) return NextResponse.json({error:"Requested role does not match configured identity role"},{status:403});
     if(!["approve","request-change"].includes(action)) throw new Error("Unsupported review action");
     if(action==="approve" && !["approver","admin"].includes(role)) return NextResponse.json({error:"Role cannot approve review targets"},{status:403});
 
