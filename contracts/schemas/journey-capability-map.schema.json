@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "client_id",
+    "mappings",
+    "gaps",
+    "status"
+  ],
+  "properties": {
+    "client_id": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "complete",
+        "gaps-present"
+      ]
+    },
+    "mappings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "journey",
+          "node",
+          "capability",
+          "classification"
+        ],
+        "properties": {
+          "journey": {
+            "type": "string"
+          },
+          "node": {
+            "type": "string"
+          },
+          "capability": {
+            "type": "string"
+          },
+          "domain": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "runtime": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "classification": {
+            "enum": [
+              "RETAIN",
+              "REUSE",
+              "ADAPT",
+              "UPGRADE",
+              "REPLACE",
+              "BUILD"
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "additionalProperties": false
+}
