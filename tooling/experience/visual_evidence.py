@@ -73,8 +73,8 @@ def evaluate_evidence(payload: dict[str, Any], policy: dict[str, Any] | None = N
         if transfer > int(policy["performance"]["max_transfer_bytes"]):
             blockers.append(f"performance-transfer:{row.get('pattern')}:{row.get('viewport_id')}")
         # End-to-end capture wall time includes Playwright/CI scheduling, screenshot
-        # encoding and axe execution, so it is not a component performance metric.
-        # Component performance is gated by browser navigation/resource timings above.
+        # encoding and axe execution, so it is diagnostic only. Component performance
+        # is gated by browser navigation/resource timings above.
 
     return {
         "status": "passed" if not blockers else "blocked",
