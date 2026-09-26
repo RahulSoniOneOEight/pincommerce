@@ -79,6 +79,9 @@ CONTRACTS = {
     "design-outcome": ROOT / "contracts" / "schemas" / "design-outcome.schema.json",
     "design-contract": ROOT / "contracts" / "schemas" / "design-contract.schema.json",
     "integration-contract": ROOT / "contracts" / "schemas" / "integration-contract.schema.json",
+    "journey-graph": ROOT / "contracts" / "schemas" / "journey-graph.schema.json",
+    "reference-adaptation": ROOT / "contracts" / "schemas" / "reference-adaptation.schema.json",
+    "journey-capability-map": ROOT / "contracts" / "schemas" / "journey-capability-map.schema.json",
 }
 
 
