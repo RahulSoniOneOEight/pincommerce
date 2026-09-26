@@ -18,6 +18,10 @@ FLUTTER_PACKAGE_MAP = {
     "cached_network_image": "cached_network_image",
     "carousel_slider": "carousel_slider",
     "flutter_animate": "flutter_animate",
+    "phosphor_flutter": "phosphor_flutter",
+    "rive": "rive",
+    "lottie": "lottie",
+    "flutter_staggered_grid_view": "flutter_staggered_grid_view",
 }
 WEB_PACKAGE_MAP = {
     "base_ui": "@base-ui-components/react",
@@ -28,6 +32,11 @@ WEB_PACKAGE_MAP = {
     "embla": "embla-carousel-react",
     "motion_react": "motion",
     "iconoir": "iconoir-react",
+    "phosphor": "@phosphor-icons/react",
+    "hugeicons": "@hugeicons/react",
+    "sonner": "sonner",
+    "rive": "@rive-app/react-canvas",
+    "lottie": "lottie-react",
 }
 
 
