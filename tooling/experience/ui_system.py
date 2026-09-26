@@ -69,3 +69,22 @@ def required_semantics(client_id: str, root: Path = ROOT) -> set[str]:
         if role:
             ids.add(role)
     return ids
+
+
+def main() -> int:
+    import argparse
+    ap = argparse.ArgumentParser(description="Materialize governed UI system contracts for a client")
+    ap.add_argument("--client", required=True)
+    ap.add_argument("--root", type=Path, default=ROOT)
+    ap.add_argument("--overwrite", action="store_true")
+    args = ap.parse_args()
+    try:
+        for item in materialize(args.client, root=args.root, overwrite=args.overwrite):
+            print(item.relative_to(args.root))
+        return 0
+    except UISystemError as exc:
+        print(f"ui-system-error: {exc}")
+        return 2
+
+if __name__ == "__main__":
+    raise SystemExit(main())
