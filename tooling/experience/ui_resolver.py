@@ -26,7 +26,7 @@ def resolve_component(semantic_id: str, platform: str, *, root: Path = ROOT, cli
     if platform not in {"flutter", "web"}:
         raise ResolverError("platform must be flutter or web")
     registry = _registry(root, client_id)
-    item = next((x for x in registry.get("components", []) if x.get("semantic_id") == semantic_id), None)
+    item = next((x for x in registry.get("components", []) if x.get("semantic_id") == semantic_id or semantic_id in x.get("aliases", [])), None)
     if not item:
         raise ResolverError(f"No approved mapping for {semantic_id}")
     return {"semantic_id": semantic_id, "penpot": item["penpot"], platform: item[platform], "qa": item["qa"]}
