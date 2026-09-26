@@ -1,0 +1,17 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Design Review Package","type":"object",
+  "required":["package_id","client_id","design_revision","source_revision","penpot_ref","sections","surface_refs","journey_refs","qa_refs","status"],
+  "properties":{
+    "package_id":{"type":"string","pattern":"^DRP-[A-Za-z0-9._-]+$"},
+    "client_id":{"type":"string","minLength":1},
+    "design_revision":{"type":"string","minLength":1},
+    "source_revision":{"type":"string","minLength":1},
+    "penpot_ref":{"type":"string","minLength":1},
+    "sections":{"type":"array","minItems":9,"items":{"type":"object","required":["id","title","evidence_refs"],"properties":{"id":{"enum":["overview","directions","design-system","screens","journeys","responsive","states","references","qa","feedback","approval"]},"title":{"type":"string"},"evidence_refs":{"type":"array","items":{"type":"string"}}},"additionalProperties":false}},
+    "surface_refs":{"type":"array","minItems":1,"items":{"type":"string"}},
+    "journey_refs":{"type":"array","minItems":1,"items":{"type":"string"}},
+    "qa_refs":{"type":"array","minItems":1,"items":{"type":"string"}},
+    "status":{"enum":["draft","review-ready","approved","changes-requested"]}
+  },"additionalProperties":false
+}
