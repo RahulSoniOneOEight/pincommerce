@@ -1,0 +1,20 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Experience Approval","type":"object",
+  "required":["approval_id","client_id","review_package_ref","design_revision","source_revision","prototype_revision_ref","review_round_ref","surface_decisions","journey_decisions","decision","approved_by","approved_at","immutable"],
+  "properties":{
+    "approval_id":{"type":"string","pattern":"^EXP-[A-Za-z0-9._-]+$"},
+    "client_id":{"type":"string","minLength":1},
+    "review_package_ref":{"type":"string","minLength":1},
+    "design_revision":{"type":"string","minLength":1},
+    "source_revision":{"type":"string","minLength":1},
+    "prototype_revision_ref":{"type":"string","minLength":1},
+    "review_round_ref":{"type":"string","minLength":1},
+    "surface_decisions":{"type":"array","minItems":1,"items":{"type":"object","required":["surface","status"],"properties":{"surface":{"type":"string"},"status":{"const":"approved"}},"additionalProperties":false}},
+    "journey_decisions":{"type":"array","minItems":1,"items":{"type":"object","required":["journey","status"],"properties":{"journey":{"type":"string"},"status":{"const":"approved"}},"additionalProperties":false}},
+    "decision":{"const":"approved"},
+    "approved_by":{"type":"string","minLength":1},
+    "approved_at":{"type":"string","minLength":1},
+    "immutable":{"const":true}
+  },"additionalProperties":false
+}
