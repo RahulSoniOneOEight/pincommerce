@@ -1,0 +1,6 @@
+version: 1
+client_id: reference-retail
+decisions: []
+policy:
+  current_truth: "governed contracts + active decisions + workflow state"
+  history_is_not_authority: true
