@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Design Build Evidence",
+  "type": "object",
+  "required": [
+    "client_id",
+    "design_revision",
+    "platform",
+    "checks",
+    "status"
+  ],
+  "properties": {
+    "client_id": {
+      "type": "string"
+    },
+    "design_revision": {
+      "type": "string"
+    },
+    "platform": {
+      "enum": [
+        "flutter",
+        "web"
+      ]
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "passed",
+          "evidence"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "passed": {
+            "type": "boolean"
+          },
+          "evidence": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "status": {
+      "enum": [
+        "passed",
+        "blocked"
+      ]
+    }
+  },
+  "additionalProperties": true
+}
