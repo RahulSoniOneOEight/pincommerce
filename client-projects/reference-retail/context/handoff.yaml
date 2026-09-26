@@ -1,0 +1,11 @@
+version: 1
+client_id: reference-retail
+resume:
+  first_action: validate-workflow-state
+  load:
+    - workflow/workflow-state.yaml
+    - context/CURRENT.md
+    - context/decisions.yaml
+warnings: []
+blockers: []
+do_not_repeat: []
