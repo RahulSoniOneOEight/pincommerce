@@ -14,6 +14,13 @@ All AI/engineering agents must:
 11. Keep integrations idempotent and auditable.
 12. Add or update validation evidence for any changed contract, integration, critical journey, or AI-governance artifact.
 13. Promote only the exact candidate validated in staging.
+14. References inform; client objectives and governed truth decide. Every declared reference must end in REUSE, ADAPT, COMBINE, MODERNIZE, REJECT, or BUILD_NEW; silent non-use is forbidden.
+15. A screen, YAML file, successful build, or agent assertion is not evidence of a completed journey. Completion requires the stage validator and required evidence.
+16. Never change an approved upstream contract merely to make a downstream validator pass; invalidate and regenerate affected downstream artifacts instead.
+17. Before designing or building, discover existing PinCommerce capabilities and classify them RETAIN, REUSE, ADAPT, UPGRADE, REPLACE, or BUILD.
+18. Penpot/design components must be implementation-aware: semantic ID, tokens, states, responsive rules, Flutter/Web mapping, accessibility intent, and QA evidence are required before approval.
+19. Builders do not approve their own work. Use independent design, journey, and runtime acceptance where the stage requires it.
+20. Session/chat history is not project memory. Update workflow state, active decisions, CURRENT summary, checkpoint/handoff, and validation evidence at governed boundaries.
 
 ## Model-role policy
 
