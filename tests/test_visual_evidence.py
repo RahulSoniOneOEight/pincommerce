@@ -22,6 +22,18 @@ class VisualEvidenceTests(unittest.TestCase):
         }]}, self.policy())
         self.assertEqual(result["status"], "passed")
 
+    def test_ci_capture_wall_time_is_not_a_component_performance_gate(self):
+        payload = {"captures": [{
+            "pattern": "product-card", "viewport_id": "mobile-390",
+            "screenshot_sha256": "sha256:abc", "dom_fingerprint": "sha256:def",
+            "accessibility": {"critical": 0, "serious": 0},
+            "performance": {"dom_content_loaded_ms": 500, "transfer_bytes": 10000},
+            "elapsed_ms": 999999,
+        }]}
+        policy = self.policy()
+        policy["performance"]["max_component_runtime_ms"] = 1
+        self.assertEqual(evaluate_evidence(payload, policy)["status"], "passed")
+
     def test_tournament_filters_ineligible_and_requires_human_review(self):
         result = select_review_winner([
             {"id": "a", "dependency_eligibility": "eligible", "deterministic_evidence": True,
