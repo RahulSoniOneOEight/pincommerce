@@ -1,0 +1,38 @@
+version: 1
+id: phase1-steps-1-45
+objective: "Complete the design-first authority chain before production UI implementation."
+policy:
+  production_ui_before_experience_freeze: forbidden
+  unresolved_reference_source: blocker
+  missing_penpot_revision: blocker
+  self_approval_by_builder: forbidden
+  silent_upstream_mutation_to_pass_downstream: forbidden
+groups:
+  - id: client-intelligence
+    steps: [1,2,3,4,5,6,7,8]
+    exit: client-truth-and-reuse-ready
+  - id: solution-intelligence
+    steps: [9,10,11,12,13,14]
+    exit: executable-multi-surface-journeys-and-solution-ready
+  - id: reference-experience
+    steps: [15,16,17,18,19]
+    exit: all-references-decided-and-direction-selected
+  - id: design
+    steps: [20,21,22,23,24,25,26,27,28]
+    exit: penpot-backed-interactive-design-ready
+  - id: independent-qa
+    steps: [29,30,31,32]
+    exit: independent-critics-and-visual-qa-pass
+  - id: human-review-freeze
+    steps: [33,34,35,36,37,38,39,40,41,42,43,44,45]
+    exit: immutable-experience-baseline
+human_gates:
+  - step: 19
+    decision: direction-selection
+  - step: 42
+    decision: experience-decision
+  - step: 45
+    decision: experience-freeze
+completion:
+  command: "python -m tooling.orchestrator.phase1_45 --client <client> --check"
+  rule: "all 45 steps must pass; missing evidence is blocking"
