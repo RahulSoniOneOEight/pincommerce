@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Master Design System",
+  "type": "object",
+  "required": [
+    "system_id",
+    "client_id",
+    "tokens",
+    "breakpoints",
+    "themes",
+    "status"
+  ],
+  "properties": {
+    "system_id": {
+      "type": "string"
+    },
+    "client_id": {
+      "type": "string"
+    },
+    "tokens": {
+      "type": "object",
+      "required": [
+        "color",
+        "typography",
+        "spacing",
+        "radius",
+        "elevation",
+        "motion"
+      ],
+      "additionalProperties": true
+    },
+    "breakpoints": {
+      "type": "object",
+      "required": [
+        "phone",
+        "tablet",
+        "desktop",
+        "wide"
+      ],
+      "additionalProperties": {
+        "type": [
+          "integer",
+          "number",
+          "string"
+        ]
+      }
+    },
+    "themes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "enum": [
+        "generated",
+        "review-ready",
+        "approved"
+      ]
+    }
+  },
+  "additionalProperties": true
+}
