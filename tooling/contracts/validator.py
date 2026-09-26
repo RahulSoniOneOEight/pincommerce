@@ -90,6 +90,11 @@ CONTRACTS = {
     "phase2-readiness": ROOT / "contracts" / "schemas" / "phase2-readiness.schema.json",
     "design-review-package": ROOT / "contracts" / "schemas" / "design-review-package.schema.json",
     "experience-approval": ROOT / "contracts" / "schemas" / "experience-approval.schema.json",
+    "master-design-system": ROOT / "contracts" / "schemas" / "master-design-system.schema.json",
+    "ui-implementation-registry": ROOT / "contracts" / "schemas" / "ui-implementation-registry.schema.json",
+    "icon-registry": ROOT / "contracts" / "schemas" / "icon-registry.schema.json",
+    "motion-registry": ROOT / "contracts" / "schemas" / "motion-registry.schema.json",
+    "design-build-evidence": ROOT / "contracts" / "schemas" / "design-build-evidence.schema.json",
 }
 
 
