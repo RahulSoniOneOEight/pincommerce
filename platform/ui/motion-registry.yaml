@@ -1,0 +1,27 @@
+motions:
+  - semantic_id: commerce.add-to-cart
+    trigger: tap
+    effect: scale
+    from: 1.0
+    to: 0.96
+    duration_ms: 120
+    curve: easeOut
+    flutter: {runtime: flutter_animate}
+    web: {runtime: Motion}
+  - semantic_id: navigation.page-enter
+    trigger: route-enter
+    effect: fade-slide
+    from: 0
+    to: 1
+    duration_ms: 200
+    curve: easeOut
+    flutter: {runtime: flutter_animate}
+    web: {runtime: Motion}
+  - semantic_id: feedback.success-rich
+    trigger: success
+    effect: rich-animation
+    duration_ms: 800
+    curve: easeOut
+    flutter: {runtime: Rive/Lottie}
+    web: {runtime: Rive/Lottie}
+status: review-ready
