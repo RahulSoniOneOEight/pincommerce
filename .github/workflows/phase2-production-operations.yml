@@ -31,6 +31,4 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements-dev.txt
-      - run: python -m unittest tests.test_phase2_orchestrator -v
-      - run: python -m tooling.contracts.validator phase2-readiness /tmp/does-not-exist
-        continue-on-error: true
+      - run: python -m unittest tests.test_phase2_orchestrator tests.test_release_gates tests.test_phase_e1_staging tests.test_staging_manifest tests.test_staging_execution -v
