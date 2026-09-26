@@ -34,6 +34,7 @@ def ingest(source_type: str, source_id: str, payload: dict[str, Any], *, capture
             "source_ref": payload.get("file_key") or payload.get("source_ref"),
             "components": _list(payload.get("components")) or _list(payload.get("componentSets")),
             "tokens": _mapping(payload.get("variables")) or _mapping(payload.get("tokens")),
+            "patterns": _list(payload.get("patterns")),
             "assets": _list(payload.get("assets")),
             "notes": _list(payload.get("notes")),
         }
@@ -44,6 +45,9 @@ def ingest(source_type: str, source_id: str, payload: dict[str, Any], *, capture
             "tokens": _mapping(payload.get("tokens")),
             "colors": _mapping(payload.get("colors")),
             "typography": _mapping(payload.get("typography")),
+            "spacing": _mapping(payload.get("spacing")),
+            "radii": _mapping(payload.get("radii")),
+            "patterns": _list(payload.get("patterns")),
             "assets": _list(payload.get("assets")),
             "notes": _list(payload.get("notes")),
         }
