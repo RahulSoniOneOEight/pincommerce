@@ -2,136 +2,140 @@ import fs from "node:fs";
 import path from "node:path";
 import { parse } from "yaml";
 
+type AnyDoc = Record<string, any>;
 type ReviewArtifact = {
-  artifact_id: string;
-  surface: string;
-  route_or_screen?: string;
-  environment: string;
-  build_identity: string;
-  journey?: string;
-  viewport?: string;
-  preview_url?: string;
-  screenshot_ref?: string;
-  approval_status: string;
+  artifact_id: string; surface: string; route_or_screen?: string; environment: string;
+  build_identity: string; journey?: string; viewport?: string; preview_url?: string;
+  screenshot_ref?: string; approval_status: string;
 };
+type ReviewSession = { review_id:string; client_id:string; build_id:string; direction_id:string; artifacts:ReviewArtifact[]; status:string };
 
-type ReviewSession = {
-  review_id: string;
-  client_id: string;
-  build_id: string;
-  direction_id: string;
-  artifacts: ReviewArtifact[];
-  status: string;
-};
-
-type LiveEdit = {
-  edit_id: string;
-  category: string;
-  summary: string;
-  classification: string;
-  route: string;
-  status: string;
-};
-
-type LiveReviewSession = {
-  session_id: string;
-  review_id: string;
-  source_build_id: string;
-  tool: "nowa";
-  edits: LiveEdit[];
-  resulting_revision?: string | null;
-  status: string;
-};
-
-function loadReview(client: string, review: string): ReviewSession {
-  const file = path.resolve(
-    process.cwd(),
-    "../../client-projects",
-    client,
-    "feedback",
-    `${review}.yaml`,
-  );
-  if (!fs.existsSync(file)) {
-    throw new Error(`Review session not found: ${review}`);
-  }
-  return parse(fs.readFileSync(file, "utf8")) as ReviewSession;
+function projectRoot(client:string) {
+  return path.resolve(process.cwd(), "../../client-projects", client);
+}
+function loadYaml(file:string):AnyDoc|null {
+  if (!fs.existsSync(file)) return null;
+  const value=parse(fs.readFileSync(file,"utf8"));
+  return value && typeof value==="object" ? value as AnyDoc : null;
+}
+function loadReview(client:string, review:string):ReviewSession {
+  const value=loadYaml(path.join(projectRoot(client),"feedback",review+".yaml"));
+  if(!value) throw new Error(`Review session not found: ${review}`);
+  return value as ReviewSession;
+}
+function latestYaml(dir:string, prefix=""):AnyDoc|null {
+  if(!fs.existsSync(dir)) return null;
+  const files=fs.readdirSync(dir).filter(x=>x.endsWith(".yaml")&&x.startsWith(prefix)).sort();
+  return files.length ? loadYaml(path.join(dir,files[files.length-1])) : null;
+}
+function bySurface(artifacts:ReviewArtifact[]) {
+  return artifacts.reduce<Record<string,ReviewArtifact[]>>((acc,a)=>{(acc[a.surface]??=[]).push(a);return acc;},{});
+}
+function coverage(artifacts:ReviewArtifact[], required:string[]) {
+  return required.map(surface=>({surface,count:artifacts.filter(x=>x.surface===surface).length,complete:artifacts.some(x=>x.surface===surface&&Boolean(x.screenshot_ref||x.preview_url))}));
 }
 
-function loadLiveReviewSessions(client: string, reviewId: string): LiveReviewSession[] {
-  const feedbackDir = path.resolve(process.cwd(), "../../client-projects", client, "feedback");
-  if (!fs.existsSync(feedbackDir)) return [];
-  return fs.readdirSync(feedbackDir)
-    .filter((name) => name.startsWith("LIVE-") && name.endsWith(".yaml"))
-    .map((name) => parse(fs.readFileSync(path.join(feedbackDir, name), "utf8")) as LiveReviewSession)
-    .filter((item) => item.review_id === reviewId && item.tool === "nowa");
-}
+export default async function ReviewPage({params}:{params:Promise<{client:string;review:string}>}) {
+  const {client,review}=await params;
+  const root=projectRoot(client);
+  const session=loadReview(client,review);
+  const pkg=latestYaml(path.join(root,"experience","review"),"DRP-");
+  const strategy=loadYaml(path.join(root,"experience","strategy.yaml"));
+  const synthesis=loadYaml(path.join(root,"experience","synthesis.yaml"));
+  const theme=loadYaml(path.join(root,"experience","design","theme-resolution.yaml"));
+  const components=loadYaml(path.join(root,"experience","design","component-contract-registry.yaml"));
+  const designIr=loadYaml(path.join(root,"experience","design","design-ir.yaml"));
+  const journeys=loadYaml(path.join(root,"derived","journey-graph.yaml"));
+  const refs=loadYaml(path.join(root,"experience","references","adaptation.yaml"));
+  const selection=loadYaml(path.join(root,"experience","design","selection.yaml"));
+  const grouped=bySurface(session.artifacts||[]);
+  const required=(pkg?.surface_refs||Object.keys(grouped)) as string[];
+  const matrix=coverage(session.artifacts||[],required);
+  const directions=["a","b","c"].map(id=>loadYaml(path.join(root,"experience","directions",id+".yaml"))).filter(Boolean) as AnyDoc[];
+  const states=Array.from(new Set((designIr?.journeys||[]).flatMap((j:any)=>(j.nodes||[]).flatMap((n:any)=>n.state_refs||[])))) as string[];
+  const viewports=Array.from(new Set((session.artifacts||[]).map(x=>x.viewport||"default")));
+  const designRevision=pkg?.design_revision||"not packaged";
 
-export default async function ReviewPage({
-  params,
-}: {
-  params: Promise<{ client: string; review: string }>;
-}) {
-  const { client, review } = await params;
-  const session = loadReview(client, review);
-  const liveSessions = loadLiveReviewSessions(client, session.review_id);
+  return <main className="agency-page review-page">
+    <header className="review-header">
+      <div><p className="eyebrow">PinCommerce Experience Review</p><h1>{client} · {session.direction_id}</h1><p>Build {session.build_id} · Design {designRevision}</p></div>
+      <span className="status-chip">{session.status}</span>
+    </header>
 
-  return (
-    <main className="agency-page review-page">
-      <header className="review-header">
-        <div>
-          <p className="eyebrow">Review Mode</p>
-          <h1>{session.direction_id}</h1>
-          <p>{session.build_id}</p>
-        </div>
-        <span className="status-chip">{session.status}</span>
-      </header>
+    <nav className="review-tabs" aria-label="Review sections">
+      {["overview","directions","design-system","screens","journeys","responsive-states","references","qa","feedback","approval"].map(x=><a key={x} href={"#"+x}>{x.replace("-"," ")}</a>)}
+    </nav>
 
-      {liveSessions.length > 0 && (
-        <section>
-          <h2>Live client review</h2>
-          <div className="review-grid">
-            {liveSessions.map((live) => (
-              <article className="agency-card review-card" key={live.session_id}>
-                <div className="artifact-meta">
-                  <strong>Nowa</strong>
-                  <span>{live.status}</span>
-                </div>
-                <p>{live.session_id}</p>
-                <small>Source build: {live.source_build_id}</small>
-                <small>Resulting revision: {live.resulting_revision || "QA / source sync pending"}</small>
-                <ul>
-                  {live.edits.map((edit) => (
-                    <li key={edit.edit_id}>
-                      <strong>{edit.category}</strong>: {edit.summary} — {edit.classification} / {edit.status}
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            ))}
-          </div>
-        </section>
-      )}
+    <section id="overview" className="review-section">
+      <h2>Experience overview</h2>
+      <div className="summary-grid">
+        <article className="agency-card"><h3>Goals & principles</h3><ul>{(synthesis?.principles||strategy?.principles||[]).map((x:string)=><li key={x}>{x}</li>)}</ul></article>
+        <article className="agency-card"><h3>Users & surfaces</h3><p>{required.join(" · ")||"No required surfaces recorded"}</p><p>{(journeys?.journeys||[]).map((x:any)=>x.actor).filter((x:string,i:number,a:string[])=>a.indexOf(x)===i).join(" · ")}</p></article>
+        <article className="agency-card"><h3>Key journeys</h3><ul>{(journeys?.journeys||[]).map((x:any)=><li key={x.id}>{x.id} — {(x.surfaces||[]).join(" → ")}</li>)}</ul></article>
+        <article className="agency-card"><h3>Decision baseline</h3><p>Direction: {session.direction_id}</p><p>Penpot: {pkg?.penpot_ref||"required"}</p><p>Source revision: {pkg?.source_revision||"not packaged"}</p></article>
+      </div>
+    </section>
 
-      <section className="review-grid">
-        {session.artifacts.map((artifact) => (
-          <article className="agency-card review-card" key={artifact.artifact_id}>
-            <div className="artifact-meta">
-              <strong>{artifact.surface}</strong>
-              <span>{artifact.viewport || "default"}</span>
-            </div>
-            <p>{artifact.route_or_screen || artifact.journey || "Review artifact"}</p>
-            <code>{artifact.screenshot_ref || "Screenshot pending"}</code>
-            <div className="review-actions">
-              <button type="button">Approve</button>
-              <button type="button">Request changes</button>
-            </div>
-            <small>
-              UI actions are review affordances; repository decisions are persisted
-              through governed Review/BugDrop tooling.
-            </small>
-          </article>
-        ))}
-      </section>
-    </main>
-  );
+    <section id="directions" className="review-section">
+      <h2>A / B / C directions</h2>
+      <div className="direction-grid">{directions.map((d:any)=><article className="agency-card" key={d.direction_id}><div className="artifact-meta"><strong>{d.direction_id}</strong><span>{d.status}</span></div><h3>{d.strategy}</h3><p>{(d.differentiators||[]).join(" · ")}</p><p><strong>Journey emphasis</strong>: {(d.journey_emphasis||[]).join(", ")}</p><details><summary>Design intent</summary><pre>{JSON.stringify(d.design_intent||{},null,2)}</pre></details></article>)}</div>
+      <p className="review-note">Selection or mixing must be persisted as a governed decision; visual comparison is advisory until the human decision is recorded.</p>
+    </section>
+
+    <section id="design-system" className="review-section">
+      <div className="section-heading"><h2>Design system</h2>{pkg?.penpot_ref&&<span className="status-chip">Penpot {pkg.penpot_ref}</span>}</div>
+      <div className="summary-grid">
+        <article className="agency-card"><h3>Semantic colors</h3><div className="token-list">{Object.entries(theme?.semantic_roles||{}).map(([k,v])=><div className="token-row" key={k}><span>{k}</span><code>{String(v)}</code></div>)}</div></article>
+        <article className="agency-card"><h3>Typography & imagery</h3><p>Fonts: {(theme?.overrides?.fonts||[]).join(", ")||"default tokens"}</p><p>Image direction: {(theme?.overrides?.image_direction||[]).join(", ")||"not specified"}</p><p>Motion: {theme?.overrides?.motion_preference||"balanced"}</p></article>
+        <article className="agency-card wide"><h3>Components</h3><div className="component-grid">{(components?.components||[]).map((c:any)=><div className="component-cell" key={c.id}><strong>{c.id}</strong><span>{(c.variants||[]).join(", ")}</span><small>{(c.states||[]).join(" · ")}</small><small>Flutter: {c.implementation?.flutter} · Web: {c.implementation?.web}</small></div>)}</div></article>
+      </div>
+    </section>
+
+    <section id="screens" className="review-section">
+      <h2>Screen gallery</h2>
+      <div className="coverage-row">{matrix.map(x=><span className={"coverage-chip "+(x.complete?"ok":"missing")} key={x.surface}>{x.surface}: {x.count} {x.complete?"✓":"missing preview"}</span>)}</div>
+      {Object.entries(grouped).map(([surface,items])=><div key={surface} className="surface-group"><h3>{surface}</h3><div className="review-grid">{items.map(a=><article className="agency-card review-card" key={a.artifact_id}><div className="artifact-meta"><strong>{a.route_or_screen||a.journey||a.artifact_id}</strong><span>{a.viewport||"default"}</span></div>{a.preview_url?<iframe title={a.artifact_id} src={a.preview_url}/>:a.screenshot_ref?<code>{a.screenshot_ref}</code>:<div className="missing-preview">Preview evidence missing</div>}<small>{a.journey||"No journey mapped"} · {a.approval_status}</small></article>)}</div></div>)}
+    </section>
+
+    <section id="journeys" className="review-section">
+      <h2>Interactive journey review</h2>
+      {(journeys?.journeys||[]).map((j:any)=><article className="agency-card journey-card" key={j.id}><div className="artifact-meta"><strong>{j.id}</strong><span>{j.actor}</span></div><p>{j.objective||""}</p><div className="journey-track">{(j.nodes||[]).map((n:any,i:number)=><details className="journey-node" key={n.id} open={i===0}><summary>{i+1}. {n.action} <small>{n.surface}</small></summary><p>Screen: {n.screen||"—"} · Capability: {n.capability||"—"}</p><p>Backend: {n.backend_operation||"—"} · Event: {n.event||"—"}</p><p>Success: {n.success_state} · Error: {n.error_state}</p><p>Next: {(n.next||[]).join(", ")||"complete"}</p>{n.handoff?.required&&<strong>Handoff: {n.handoff.from} → {n.handoff.to}</strong>}</details>)}</div></article>)}
+    </section>
+
+    <section id="responsive-states" className="review-section">
+      <h2>Responsive & state matrix</h2>
+      <div className="matrix-wrap"><table><thead><tr><th>Surface</th>{viewports.map(v=><th key={v}>{v}</th>)}</tr></thead><tbody>{required.map(s=><tr key={s}><th>{s}</th>{viewports.map(v=><td key={v}>{session.artifacts.some(a=>a.surface===s&&(a.viewport||"default")===v&&(a.screenshot_ref||a.preview_url))?"✓":"—"}</td>)}</tr>)}</tbody></table></div>
+      <h3>Required states</h3><div className="coverage-row">{states.map(s=><span className="coverage-chip ok" key={s}>{s}</span>)}</div>
+    </section>
+
+    <section id="references" className="review-section">
+      <h2>Reference adaptation</h2>
+      {(refs?.sources||[]).map((s:any)=><article className="agency-card" key={s.source_id}><h3>{s.source_id}</h3><code>{s.ref}</code><div className="component-grid">{(s.patterns||[]).map((p:any)=><div className="component-cell" key={p.id}><strong>{p.id}</strong><span>{p.decision||"DECISION REQUIRED"}</span><small>{p.reason}</small><small>{(p.journeys||[]).join(", ")}</small></div>)}</div></article>)}
+    </section>
+
+    <section id="qa" className="review-section">
+      <h2>QA & completeness</h2>
+      <div className="summary-grid"><article className="agency-card"><h3>Review package</h3><p>{pkg?.status||"missing"}</p><p>{(pkg?.qa_refs||[]).length} QA evidence references</p></article><article className="agency-card"><h3>Selection</h3><p>{selection?.status||"missing"}</p><p>{selection?.preset||"No preset"}</p></article></div>
+    </section>
+
+    <section id="feedback" className="review-section">
+      <h2>Feedback</h2>
+      <p>Actions below write governed review evidence only when Review Mode write access is enabled.</p>
+      <form className="decision-form" action="/api/review/decision" method="post">
+        <input type="hidden" name="client" value={client}/><input type="hidden" name="review" value={session.review_id}/>
+        <label>Reviewer <input name="reviewer" required/></label>
+        <label>Write token <input name="token" type="password" required/></label>
+        <label>Surface <select name="surface" required>{required.map(s=><option key={s}>{s}</option>)}</select></label>
+        <label>Journey <select name="journey"><option value="">—</option>{(journeys?.journeys||[]).map((j:any)=><option key={j.id}>{j.id}</option>)}</select></label>
+        <label>Comment <textarea name="comment" required/></label>
+        <div className="review-actions"><button name="action" value="approve">Approve target</button><button name="action" value="request-change">Request changes</button></div>
+      </form>
+    </section>
+
+    <section id="approval" className="review-section">
+      <h2>Experience decision</h2>
+      <p>Final experience approval remains a hard human gate and is valid only after all required surfaces and journeys are approved, feedback is resolved, QA is recorded and the exact design/prototype revisions are bound.</p>
+      <code>{pkg ? `Package ${pkg.package_id} · Penpot ${pkg.penpot_ref}` : "Review package not yet generated"}</code>
+    </section>
+  </main>;
 }
