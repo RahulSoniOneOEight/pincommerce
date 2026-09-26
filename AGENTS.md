@@ -21,6 +21,10 @@ All AI/engineering agents must:
 18. Penpot/design components must be implementation-aware: semantic ID, tokens, states, responsive rules, Flutter/Web mapping, accessibility intent, and QA evidence are required before approval.
 19. Builders do not approve their own work. Use independent design, journey, and runtime acceptance where the stage requires it.
 20. Session/chat history is not project memory. Update workflow state, active decisions, CURRENT summary, checkpoint/handoff, and validation evidence at governed boundaries.
+21. Client-facing UI code must resolve semantic components through the governed UI Implementation Registry; ad-hoc library selection is forbidden.
+22. Penpot defines design intent; Design IR and semantic component contracts mediate implementation. Direct Penpot-to-production-code export is forbidden.
+23. Icons resolve through the governed icon registry (Phosphor primary, Iconoir secondary, Hugeicons fallback unless an approved client registry overrides it); motion/layout/table/chart/carousel choices resolve through the UI registry.
+24. Production UI generation requires the hard design gate and post-build design-build QA; drift from the approved Penpot/design revision is blocking.
 
 ## Model-role policy
 
