@@ -37,20 +37,52 @@ def assert_build_allowed(client_id: str, root: Path = ROOT) -> dict[str, Any]:
     penpot_ref = package.get("penpot_ref")
     if not penpot_ref:
         raise DesignGateError("Approved review package has no Penpot revision")
-    design_ir = _load(p / "experience" / "design" / "design-ir.yaml")
-    component_registry = _load(p / "experience" / "design" / "component-contract-registry.yaml")
+    design_ir_path = p / "experience" / "design" / "design-ir.yaml"
+    component_registry_path = p / "experience" / "design" / "component-contract-registry.yaml"
+    master_design_path = p / "experience" / "design" / "master-design-system.yaml"
+    implementation_registry_path = p / "experience" / "design" / "ui-implementation-registry.yaml"
+    icon_registry_path = p / "experience" / "design" / "icon-registry.yaml"
+    motion_registry_path = p / "experience" / "design" / "motion-registry.yaml"
+    penpot_manifest_path = p / "experience" / "design" / "penpot-manifest.yaml"
+    penpot_observed_path = p / "experience" / "design" / "penpot-observed.yaml"
+    design_ir = _load(design_ir_path)
+    component_registry = _load(component_registry_path)
+    master_design = _load(master_design_path)
+    implementation_registry = _load(implementation_registry_path)
+    icon_registry = _load(icon_registry_path)
+    motion_registry = _load(motion_registry_path)
     if design_ir.get("status") not in {"review-ready","approved"}:
         raise DesignGateError("Design IR is not review-ready/approved")
     if component_registry.get("status") not in {"review-ready","approved"}:
         raise DesignGateError("Component contracts are not review-ready/approved")
+    if master_design.get("status") not in {"review-ready","approved"}:
+        raise DesignGateError("Master design system is not review-ready/approved")
+    if implementation_registry.get("status") not in {"review-ready","approved"}:
+        raise DesignGateError("UI implementation registry is not review-ready/approved")
+    if icon_registry.get("status") not in {"review-ready","approved"}:
+        raise DesignGateError("Icon registry is not review-ready/approved")
+    if motion_registry.get("status") not in {"review-ready","approved"}:
+        raise DesignGateError("Motion registry is not review-ready/approved")
+    if not penpot_manifest_path.exists() or not penpot_observed_path.exists():
+        raise DesignGateError("Penpot manifest/observed revision evidence is required")
+    penpot_manifest = _load(penpot_manifest_path)
+    penpot_observed = _load(penpot_observed_path)
+    if penpot_manifest.get("revision_ref") != penpot_observed.get("revision_ref"):
+        raise DesignGateError("Observed Penpot revision does not match approved manifest")
     return {
         "client_id": client_id,
         "allowed": True,
         "approval_id": approval["approval_id"],
         "design_revision": approval["design_revision"],
         "penpot_ref": penpot_ref,
-        "design_ir_sha256": _sha(p / "experience" / "design" / "design-ir.yaml"),
-        "component_registry_sha256": _sha(p / "experience" / "design" / "component-contract-registry.yaml"),
+        "design_ir_sha256": _sha(design_ir_path),
+        "component_registry_sha256": _sha(component_registry_path),
+        "master_design_system_sha256": _sha(master_design_path),
+        "implementation_registry_sha256": _sha(implementation_registry_path),
+        "icon_registry_sha256": _sha(icon_registry_path),
+        "motion_registry_sha256": _sha(motion_registry_path),
+        "penpot_manifest_sha256": _sha(penpot_manifest_path),
+        "penpot_observed_sha256": _sha(penpot_observed_path),
     }
 
 def main() -> int:
