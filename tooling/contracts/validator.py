@@ -87,6 +87,7 @@ CONTRACTS = {
     "design-ir": ROOT / "contracts" / "schemas" / "design-ir.schema.json",
     "critic-evidence": ROOT / "contracts" / "schemas" / "critic-evidence.schema.json",
     "integrated-prototype-readiness": ROOT / "contracts" / "schemas" / "integrated-prototype-readiness.schema.json",
+    "phase2-readiness": ROOT / "contracts" / "schemas" / "phase2-readiness.schema.json",
 }
 
 
