@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "UI Implementation Registry",
+  "type": "object",
+  "required": [
+    "registry_id",
+    "version",
+    "components",
+    "specialists",
+    "status"
+  ],
+  "properties": {
+    "registry_id": {
+      "type": "string"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "semantic_id",
+          "penpot",
+          "flutter",
+          "web",
+          "qa"
+        ],
+        "properties": {
+          "semantic_id": {
+            "type": "string"
+          },
+          "penpot": {
+            "type": "object"
+          },
+          "flutter": {
+            "type": "object",
+            "required": [
+              "owned_component",
+              "primitive"
+            ]
+          },
+          "web": {
+            "type": "object",
+            "required": [
+              "owned_component",
+              "primitive"
+            ]
+          },
+          "qa": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "specialists": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "review-ready",
+        "approved"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
