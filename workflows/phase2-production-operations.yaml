@@ -1,0 +1,50 @@
+version: 1
+id: phase2-production-operations
+objective: >-
+  Take an approved Phase 1 integrated prototype through production hardening,
+  staging, UAT, exact-candidate release, operations, recovery and governed learning.
+principles:
+  - reuse-existing-production-and-release-tooling
+  - never-fabricate-production-evidence
+  - exact-candidate-through-staging-and-production
+  - human-uat-and-production-authorization
+  - recovery-before-release
+  - observable-and-reconcilable-operations
+  - learning-never-overwrites-client-truth
+stages:
+  - id: phase1-handoff
+    requires: [experience/integrated-prototype-readiness.yaml]
+    gate: integrated-prototype-ready
+  - id: production-readiness
+    requires: [production/production-plan.yaml, production/production-readiness.yaml]
+  - id: hardening
+    requires: [release/hardening]
+    checks: [contracts, tests, security, authz, tenant-isolation, dependencies, performance, accessibility, migration, backup-recovery, observability, reconciliation, provider-health]
+  - id: staging
+    requires: [release/staging, release/observability]
+    exact_candidate: true
+  - id: uat
+    requires: [uat]
+    human_gate: true
+  - id: production-authorization
+    requires: [release/production-authorization.yaml]
+    human_gate: true
+  - id: release
+    requires: [release/releases]
+    exact_candidate: true
+  - id: production-smoke
+    requires: [release/releases]
+  - id: operate
+    requires: [production/ops, release/observability]
+  - id: recovery
+    requires: [release/recovery]
+  - id: continuous-improvement
+    requires: [production/ops]
+    rule: proposals-only-until-governed-approval
+acceptance:
+  statuses: [phase2-not-ready, production-ready, release-authorized, operating]
+  forbidden:
+    - infer-human-approval
+    - treat-mock-runtime-as-production
+    - promote-different-candidate-than-staging
+    - fabricate-observability-or-provider-evidence
