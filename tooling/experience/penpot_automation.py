@@ -8,6 +8,8 @@ from typing import Any, Callable
 import urllib.request
 import yaml
 
+from tooling.experience.penpot_bridge import build_manifest
+
 ROOT=Path(__file__).resolve().parents[2]
 
 class PenpotAutomationError(RuntimeError): pass
@@ -58,11 +60,29 @@ def push(client_id:str,*,project_id:str,root:Path=ROOT,endpoint:str|None=None,to
         raise PenpotAutomationError("Penpot bridge response must contain revision_ref")
     return {"project_ref":project_id,"revision_ref":result["revision_ref"],"components":result.get("components",[]),"interactive_journeys":result.get("interactive_journeys",[]),"status":"written"}
 
+def push_and_record(client_id:str, *, project_id:str, root:Path=ROOT, endpoint:str|None=None, token:str|None=None, opener:Callable[...,Any]=urllib.request.urlopen)->dict[str,Any]:
+    result=push(client_id,project_id=project_id,root=root,endpoint=endpoint,token=token,opener=opener)
+    p=root/"client-projects"/client_id/"experience"/"design"
+    observed={
+        "project_ref":result["project_ref"],
+        "revision_ref":result["revision_ref"],
+        "components":result.get("components",[]),
+        "interactive_journeys":result.get("interactive_journeys",[]),
+        "status":"observed",
+    }
+    manifest=build_manifest(client_id,project_ref=result["project_ref"],revision_ref=result["revision_ref"],root=root)
+    p.mkdir(parents=True,exist_ok=True)
+    (p/"penpot-observed.yaml").write_text(yaml.safe_dump(observed,sort_keys=False),encoding="utf-8")
+    (p/"penpot-manifest.yaml").write_text(yaml.safe_dump(manifest,sort_keys=False),encoding="utf-8")
+    return {**result,"manifest_ref":"experience/design/penpot-manifest.yaml","observed_ref":"experience/design/penpot-observed.yaml"}
+
 def main()->int:
-    ap=argparse.ArgumentParser();ap.add_argument("--client",required=True);ap.add_argument("--project");ap.add_argument("--root",type=Path,default=ROOT);ap.add_argument("--push",action="store_true")
+    ap=argparse.ArgumentParser();ap.add_argument("--client",required=True);ap.add_argument("--project");ap.add_argument("--root",type=Path,default=ROOT);ap.add_argument("--push",action="store_true");ap.add_argument("--record",action="store_true")
     a=ap.parse_args()
     try:
-        value=push(a.client,project_id=a.project,root=a.root) if a.push else build_operations(a.client,a.root)
+        if a.record: value=push_and_record(a.client,project_id=a.project,root=a.root)
+        elif a.push: value=push(a.client,project_id=a.project,root=a.root)
+        else: value=build_operations(a.client,a.root)
         print(yaml.safe_dump(value,sort_keys=False));return 0
     except PenpotAutomationError as exc:
         print(f"penpot-automation-error: {exc}");return 2
