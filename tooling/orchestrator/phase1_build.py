@@ -5,6 +5,7 @@ from typing import Any
 import yaml
 from tooling.contracts.validator import validate_document
 from tooling.prototype.core_runtime import assert_core_runtime_ready, CoreRuntimeError
+from tooling.experience.ui_system import materialize as materialize_ui_system
 
 ROOT=Path(__file__).resolve().parents[2]
 SLICES=["browse-to-buy","payment-failure-recovery","order-to-erp","order-to-shipment","return-refund","seller-settlement","reconciliation"]
@@ -87,6 +88,7 @@ def generate(client:str,root:Path=ROOT,overwrite:bool=False)->list[Path]:
         path=p/rel
         if path.exists() and not overwrite: raise Phase1BuildError(f"Refusing to overwrite: {path}")
         path.parent.mkdir(parents=True,exist_ok=True); path.write_text(yaml.safe_dump(doc,sort_keys=False),encoding="utf-8"); written.append(path)
+    written.extend(materialize_ui_system(client, root=root, overwrite=overwrite))
     for kind in ("design","journey","runtime"):
         path=p/"experience"/"qa"/f"{kind}-critic.yaml"; path.parent.mkdir(parents=True,exist_ok=True); path.write_text(yaml.safe_dump(critic(client,kind,root),sort_keys=False),encoding="utf-8"); written.append(path)
     path=p/"experience"/"integrated-prototype-readiness.yaml"; path.write_text(yaml.safe_dump(readiness(client,root),sort_keys=False),encoding="utf-8"); written.append(path)
