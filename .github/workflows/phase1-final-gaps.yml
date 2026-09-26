@@ -1,0 +1,38 @@
+name: Phase 1 Final Gaps Acceptance
+on:
+  pull_request:
+    paths:
+      - 'tooling/intelligence/best_practice_engine.py'
+      - 'tooling/intelligence/research_connector.py'
+      - 'tooling/experience/deep_reference.py'
+      - 'tooling/experience/direction_synthesis.py'
+      - 'tooling/experience/asset_intelligence.py'
+      - 'tooling/experience/visual_critic.py'
+      - 'tooling/experience/source_connectors.py'
+      - 'tooling/experience/source_ingestion.py'
+      - 'tooling/experience/penpot_automation.py'
+      - 'tooling/review/regeneration.py'
+      - 'tooling/review/authz.py'
+      - 'apps/review_mode/**'
+      - 'contracts/schemas/review-feedback.schema.json'
+      - 'tests/test_phase1_final_gaps.py'
+      - '.github/workflows/phase1-final-gaps.yml'
+  push:
+    branches: [main]
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements-dev.txt
+      - run: python -m unittest tests.test_phase1_final_gaps -v
+      - run: python tooling/validation/validate_all.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm install --ignore-scripts --no-audit --no-fund
+      - run: npm run review:build
