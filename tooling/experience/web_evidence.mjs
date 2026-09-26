@@ -32,7 +32,6 @@ for (const [pattern, storyId] of cases) {
     const context = await browser.newContext({ viewport });
     const page = await context.newPage();
     const url = `${base}/iframe.html?id=${storyId}&viewMode=story`;
-    const started = Date.now();
     await page.goto(url, { waitUntil: "networkidle" });
     const file = `${pattern}__${viewportId}.png`;
     const filePath = path.join(outDir, file);
@@ -100,7 +99,6 @@ for (const [pattern, storyId] of cases) {
       dom_fingerprint: domFingerprint,
       accessibility: { ...impact, ...interaction },
       performance: perf,
-      elapsed_ms: Date.now() - started,
     });
     await context.close();
   }
