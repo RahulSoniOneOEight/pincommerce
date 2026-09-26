@@ -128,6 +128,7 @@ export default async function ReviewPage({params}:{params:Promise<{client:string
       <form className="decision-form" action="/api/review/decision" method="post">
         <input type="hidden" name="client" value={client}/><input type="hidden" name="review" value={session.review_id}/>
         <label>Reviewer <input name="reviewer" required/></label>
+        <label>Role <select name="role" required><option value="reviewer">Reviewer</option><option value="approver">Approver</option><option value="admin">Admin</option></select></label>
         <label>Write token <input name="token" type="password" required/></label>
         <label>Surface <select name="surface" required>{required.map(s=><option key={s}>{s}</option>)}</select></label>
         <label>Journey <select name="journey"><option value="">—</option>{(journeys?.journeys||[]).map((j:any)=><option key={j.id}>{j.id}</option>)}</select></label>
