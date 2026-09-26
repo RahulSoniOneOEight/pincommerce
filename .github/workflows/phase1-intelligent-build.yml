@@ -1,0 +1,28 @@
+name: Phase 1 Intelligent Build Acceptance
+on:
+  pull_request:
+    paths:
+      - "tooling/orchestrator/**"
+      - "tooling/intelligence/**"
+      - "contracts/schemas/**"
+      - "workflows/phase1-intelligent-build.yaml"
+      - "tests/test_phase1_*.py"
+  push:
+    branches: [main]
+    paths:
+      - "tooling/orchestrator/**"
+      - "tooling/intelligence/**"
+      - "contracts/schemas/**"
+      - "workflows/phase1-intelligent-build.yaml"
+      - "tests/test_phase1_*.py"
+jobs:
+  phase1-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - name: Phase 1 contract and orchestration tests
+        run: python -m unittest tests.test_phase1_capability_discovery tests.test_phase1_intelligence tests.test_phase1_complete_build -v
