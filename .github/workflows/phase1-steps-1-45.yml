@@ -26,5 +26,6 @@ jobs:
         with:
           node-version: '22'
           cache: npm
-      - run: npm ci
+      - name: Install workspace dependencies and refresh stale lock metadata locally
+        run: npm install --ignore-scripts --no-audit --no-fund
       - run: npm run review:build
