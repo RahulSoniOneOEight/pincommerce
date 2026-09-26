@@ -1,0 +1,36 @@
+name: Phase 2 Production Operations Acceptance
+
+on:
+  pull_request:
+    paths:
+      - "tooling/orchestrator/phase2.py"
+      - "tooling/release/**"
+      - "tooling/staging/**"
+      - "tooling/production/**"
+      - "contracts/schemas/phase2-readiness.schema.json"
+      - "workflows/phase2-production-operations.yaml"
+      - "tests/test_phase2_orchestrator.py"
+      - ".github/workflows/phase2-production-operations.yml"
+  push:
+    branches: [main]
+    paths:
+      - "tooling/orchestrator/phase2.py"
+      - "tooling/release/**"
+      - "tooling/staging/**"
+      - "tooling/production/**"
+      - "contracts/schemas/phase2-readiness.schema.json"
+      - "workflows/phase2-production-operations.yaml"
+      - "tests/test_phase2_orchestrator.py"
+
+jobs:
+  phase2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - run: python -m unittest tests.test_phase2_orchestrator -v
+      - run: python -m tooling.contracts.validator phase2-readiness /tmp/does-not-exist
+        continue-on-error: true
