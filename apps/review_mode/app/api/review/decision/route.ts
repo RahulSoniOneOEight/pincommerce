@@ -37,14 +37,16 @@ export async function POST(req:NextRequest){
   try{
     const form=await req.formData();
     const client=safeText(form.get("client")), review=safeText(form.get("review"));
-    const reviewer=safeText(form.get("reviewer")), token=safeText(form.get("token"));
+    const reviewer=safeText(form.get("reviewer")), role=safeText(form.get("role")), token=safeText(form.get("token"));
     const surface=safeText(form.get("surface")), journey=safeText(form.get("journey"));
     const comment=safeText(form.get("comment")), action=safeText(form.get("action"));
-    if(!client||!review||!reviewer||!surface||!comment) throw new Error("Missing required review fields");
+    if(!client||!review||!reviewer||!role||!surface||!comment) throw new Error("Missing required review fields");
     if(!SAFE.test(review)||!SAFE.test(reviewer)) throw new Error("Invalid review/reviewer identifier");
     const expected=process.env.REVIEW_MODE_WRITE_TOKEN;
     if(!expected||token!==expected) return NextResponse.json({error:"Review Mode write access denied"},{status:403});
+    if(!["reviewer","approver","admin"].includes(role)) return NextResponse.json({error:"Unknown review role"},{status:403});
     if(!["approve","request-change"].includes(action)) throw new Error("Unsupported review action");
+    if(action==="approve" && !["approver","admin"].includes(role)) return NextResponse.json({error:"Role cannot approve review targets"},{status:403});
 
     const project=root(client);
     const found=findRound(project,review);
@@ -62,6 +64,7 @@ export async function POST(req:NextRequest){
       route:action==="approve"?"none":"nowa",action,
       status:action==="approve"?"accepted":"open",evidence_ref:null,
       live_review_ref:null,change_contract_ref:null,created_by:reviewer,
+      reviewer_role:role,
       created_at:new Date().toISOString()
     };
     const itemDir=path.join(project,"feedback","items"); fs.mkdirSync(itemDir,{recursive:true});
