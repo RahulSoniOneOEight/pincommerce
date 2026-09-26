@@ -1,0 +1,30 @@
+policy:
+  primary: Phosphor
+  secondary: Iconoir
+  fallback: Hugeicons
+icons:
+  - semantic_id: commerce.cart
+    family: Phosphor
+    name: shopping-cart
+    weight: regular
+    size: 20
+    flutter: {package: phosphor_flutter, symbol: PhosphorIcons.shoppingCart}
+    web: {package: "@phosphor-icons/react", symbol: ShoppingCart}
+    penpot: {source: phosphor-svg, name: shopping-cart}
+  - semantic_id: commerce.search
+    family: Phosphor
+    name: magnifying-glass
+    weight: regular
+    size: 20
+    flutter: {package: phosphor_flutter, symbol: PhosphorIcons.magnifyingGlass}
+    web: {package: "@phosphor-icons/react", symbol: MagnifyingGlass}
+    penpot: {source: phosphor-svg, name: magnifying-glass}
+  - semantic_id: commerce.account
+    family: Phosphor
+    name: user
+    weight: regular
+    size: 20
+    flutter: {package: phosphor_flutter, symbol: PhosphorIcons.user}
+    web: {package: "@phosphor-icons/react", symbol: User}
+    penpot: {source: phosphor-svg, name: user}
+status: review-ready
