@@ -1,0 +1,45 @@
+version: 1
+policy:
+  discovery_first: true
+  reuse_actions: [RETAIN, REUSE, ADAPT, UPGRADE, REPLACE, BUILD]
+  rule: "Do not build a capability until existing implementation and provider support have been evaluated."
+capabilities:
+  commerce:
+    runtime: medusa
+    adapter: platform/commerce/medusa/adapter.yaml
+    surfaces: [customer-app, web-store, b2b, commerce-admin]
+    capabilities: [catalogue, pricing, cart, checkout, orders, return-refund]
+  marketplace:
+    runtime: mercur
+    adapter: platform/marketplace/mercur/adapter.yaml
+    surfaces: [seller-portal, commerce-admin]
+    capabilities: [seller-onboarding, seller-catalogue, seller-inventory, marketplace-orders, commissions, settlements]
+  erp:
+    runtime: tryton
+    adapter: platform/erp/tryton/adapter.yaml
+    surfaces: [erp, commerce-admin]
+    experience_policy: "PinCommerce ERP/Accounting UX -> ERP domain contract -> Tryton adapter -> Tryton"
+    capabilities: [accounting, journals, ledger, inventory, receivables, payables, settlement-accounting, reconciliation]
+  messaging:
+    runtime: nats-jetstream
+    surfaces: []
+    capabilities: [canonical-events, durable-delivery, retry, dead-letter, replay, correlation]
+  payments:
+    runtime: provider-adapter
+    candidates: [razorpay, cashfree]
+    surfaces: [customer-app, web-store, commerce-admin, erp]
+    capabilities: [payment, payment-status, refund]
+  logistics:
+    runtime: provider-adapter
+    candidates: [shiprocket, delhivery]
+    surfaces: [customer-app, web-store, seller-portal, commerce-admin]
+    capabilities: [shipment, tracking, reverse-logistics]
+  search:
+    runtime: meilisearch
+    adapter: platform/search/meilisearch/adapter.yaml
+    surfaces: [customer-app, web-store, b2b, commerce-admin]
+    capabilities: [search]
+  reconciliation:
+    runtime: pinaka
+    surfaces: [commerce-admin, erp]
+    capabilities: [order-payment, order-erp, settlement, payout]
