@@ -8,6 +8,9 @@ dependencies:
     sdk: flutter
   agency_flutter_ui:
     path: ../../packages/agency_flutter_ui
+  flutter_riverpod: ^3.4.3
+  go_router: ^18.0.1
+  dio: ^5.11.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

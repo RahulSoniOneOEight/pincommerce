@@ -1,14 +1,37 @@
-import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:prototype_app/main.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:prototype_app/app.dart';
+import 'package:prototype_app/data/medusa_api.dart';
+import 'package:prototype_app/domain/models.dart';
+
+/// Fakes the Medusa client so the smoke test runs without a backend.
+class _FakeMedusaStoreClient extends MedusaStoreClient {
+  _FakeMedusaStoreClient() : super(Dio());
+
+  @override
+  Future<List<Product>> listProducts({int limit = 20, int offset = 0}) async {
+    return const <Product>[];
+  }
+
+  @override
+  Future<Cart> createCart() async => const Cart(id: 'cart_test');
+}
 
 void main() {
-  testWidgets('prototype renders expanded reference retail experience', (tester) async {
-    await tester.pumpWidget(const PrototypeApp());
+  testWidgets('app renders the empty catalog', (tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          medusaClientProvider.overrideWithValue(_FakeMedusaStoreClient()),
+        ],
+        child: const PinCommerceApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
 
-    expect(find.text('Reference Retail · Direction A'), findsOneWidget);
-    expect(find.text('Reference Product A'), findsOneWidget);
-    expect(find.textContaining('Available credit'), findsOneWidget);
-    expect(find.byType(DropdownButton<String>), findsNWidgets(2));
+    expect(find.text('PinCommerce'), findsOneWidget);
+    expect(find.text('No products yet — seed your Medusa catalog.'),
+        findsOneWidget);
   });
 }
