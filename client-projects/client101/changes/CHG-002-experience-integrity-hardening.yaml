@@ -1,0 +1,40 @@
+change_id: CHG-002
+request: >-
+  Harden the Phase 1 experience lifecycle so journey, surface, Design IR, Penpot,
+  visual-QA and approval evidence must agree semantically before Client101 or any
+  client can claim prototype/design completion.
+type: ux
+affected_capabilities:
+  - journey-design
+  - design-ir
+  - penpot-integration
+  - visual-qa
+  - experience-approval
+affected_domains:
+  - experience
+  - review
+  - orchestration
+affected_surfaces:
+  - customer-app
+  - web-store
+  - b2b
+  - seller-portal
+  - commerce-admin
+  - ops-console
+  - analytics
+  - erp
+affected_entities: []
+affected_events: []
+required_tests:
+  - cross-artifact journey and surface integrity
+  - Design IR node coverage
+  - Penpot manifest observed verification
+  - mandatory visual QA completion
+  - approved artifact hash invalidation
+approval_required: true
+status: in-progress
+rationale:
+  - Client101 journey graph contains richer multi-surface journeys than its approved Design IR.
+  - Penpot manifest currently inherits stale Design IR surface coverage.
+  - Visual QA can pass milestone gates while mandatory checks remain not-run.
+  - Existing approval can remain internally consistent after relevant upstream artifacts change.
