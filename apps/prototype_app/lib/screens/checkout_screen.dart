@@ -4,12 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../data/medusa_api.dart';
+import '../data/payment_gateway.dart';
 import '../domain/models.dart';
+import '../domain/payment_models.dart';
 import '../providers/cart_providers.dart';
 
-/// Checkout form: captures contact + shipping address and persists them to the
-/// cart. Payment is intentionally mocked here — the production payment flow is
-/// wired through the governed payment connector in staging.
+/// Checkout form: contact + shipping address + payment method.
+///
+/// Payment goes through the governed [PaymentGateway]. In staging this is the
+/// mock gateway; the live Razorpay/Cashfree gateways are swapped in once a
+/// payment backend exists.
 class CheckoutScreen extends ConsumerStatefulWidget {
   const CheckoutScreen({super.key});
 
@@ -24,6 +28,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   String _address1 = '';
   String _city = '';
   String _postalCode = '';
+  PaymentProvider _paymentMethod = PaymentProvider.razorpay;
   bool _submitting = false;
 
   Future<void> _placeOrder() async {
@@ -47,8 +52,18 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           countryCode: 'IN',
         ),
       );
+
+      PaymentResult? payment;
+      if (_paymentMethod != PaymentProvider.cod) {
+        payment = await ref.read(paymentGatewayProvider).createAndCapture(
+              amount: cart.total ?? const Money(amount: 0, currencyCode: 'INR'),
+              orderRef: cart.id,
+            );
+      }
+
       if (!mounted) return;
-      _show('Order placed — payment is mocked in staging');
+      final note = payment != null ? ' · ${payment.id}' : ' · pay on delivery';
+      _show('Order placed$note');
       context.go('/');
     } catch (error) {
       if (!mounted) return;
@@ -64,6 +79,13 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       ..showSnackBar(SnackBar(content: Text(message)));
   }
 
+  String _paymentLabel(PaymentProvider provider) => switch (provider) {
+        PaymentProvider.razorpay => 'Card — Razorpay (mock in staging)',
+        PaymentProvider.cashfree => 'Cashfree (mock in staging)',
+        PaymentProvider.cod => 'Pay on delivery',
+        PaymentProvider.mock => 'Mock payment',
+      };
+
   @override
   Widget build(BuildContext context) {
     final cart = ref.watch(cartProvider).value;
@@ -76,6 +98,27 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             subtotal: cart?.total?.formatted ?? '—',
             shipping: 'Free',
             total: cart?.total?.formatted ?? '—',
+          ),
+          const SizedBox(height: AgencySpacing.md),
+          Text('Payment method', style: AgencyText.title),
+          const SizedBox(height: AgencySpacing.sm),
+          RadioGroup<PaymentProvider>(
+            groupValue: _paymentMethod,
+            onChanged: (v) =>
+                setState(() => _paymentMethod = v ?? _paymentMethod),
+            child: Column(
+              children: [
+                for (final provider in const <PaymentProvider>[
+                  PaymentProvider.razorpay,
+                  PaymentProvider.cashfree,
+                  PaymentProvider.cod,
+                ])
+                  RadioListTile<PaymentProvider>(
+                    value: provider,
+                    title: Text(_paymentLabel(provider)),
+                  ),
+              ],
+            ),
           ),
           const SizedBox(height: AgencySpacing.md),
           FormSection(
