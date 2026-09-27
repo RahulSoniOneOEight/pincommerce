@@ -22,6 +22,11 @@ class ProductListScreen extends ConsumerWidget {
         title: const Text('PinCommerce'),
         actions: <Widget>[
           IconButton(
+            tooltip: 'B2B account',
+            onPressed: () => context.push('/account'),
+            icon: const Icon(Icons.business_outlined),
+          ),
+          IconButton(
             tooltip: 'Cart',
             onPressed: () => context.push('/cart'),
             icon: Badge(
