@@ -4,6 +4,7 @@ from tooling.orchestrator.phase1_45 import (
     _reference_ok, _journey_graph_ok, _icons_motion_ok, _visual_qa_run,
     _critic_independent,
 )
+from tooling.review.visual_qa import REQUIRED_CHECKS
 
 class Phase1QualityTests(unittest.TestCase):
     def test_reference_requires_reason(self):
@@ -52,16 +53,18 @@ class Phase1QualityTests(unittest.TestCase):
         self.assertFalse(_critic_independent({"status":"passed"}))  # no reviewer = self-approved
         self.assertFalse(_critic_independent({"status":"blocked","reviewed_by":"r"}))
 
-    def test_visual_qa_must_be_run(self):
+    def test_visual_qa_requires_every_mandatory_check_to_pass(self):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
             vqa = root/"experience"/"visual-qa"
             vqa.mkdir(parents=True)
             def y(rel):
                 return yaml.safe_load((root/rel).read_text(encoding="utf-8"))
-            (vqa/"VQA-1.yaml").write_text(yaml.safe_dump({"checks":[{"id":"c","status":"not-run"}]}))
+            partial={"checks":[{"id":check,"status":"pass" if i==0 else "not-run"} for i,check in enumerate(REQUIRED_CHECKS)],"status":"review-ready"}
+            (vqa/"VQA-1.yaml").write_text(yaml.safe_dump(partial))
             self.assertFalse(_visual_qa_run(root, y))
-            (vqa/"VQA-1.yaml").write_text(yaml.safe_dump({"checks":[{"id":"c","status":"pass"}]}))
+            complete={"checks":[{"id":check,"status":"pass"} for check in REQUIRED_CHECKS],"status":"passed"}
+            (vqa/"VQA-1.yaml").write_text(yaml.safe_dump(complete))
             self.assertTrue(_visual_qa_run(root, y))
 
 if __name__ == "__main__":
