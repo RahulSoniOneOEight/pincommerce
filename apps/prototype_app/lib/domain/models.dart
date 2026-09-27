@@ -32,6 +32,11 @@ class Money {
         return '${currencyCode.toUpperCase()} $text';
     }
   }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'amount': amount,
+        'currency_code': currencyCode,
+      };
 }
 
 /// A sellable product, flattened to a single default variant for the
@@ -98,6 +103,32 @@ class Product {
   final String? thumbnail;
   final String? variantId;
   final Money? price;
+
+  /// Compact serialization for the local catalog cache (round-trips with
+  /// [Product.fromCacheJson]).
+  Map<String, dynamic> toCacheJson() => <String, dynamic>{
+        'id': id,
+        'title': title,
+        'description': description,
+        'thumbnail': thumbnail,
+        'variant_id': variantId,
+        'price_amount': price?.amount,
+        'price_currency': price?.currencyCode,
+      };
+
+  static Product fromCacheJson(Map<String, dynamic> json) => Product(
+        id: json['id'] as String? ?? '',
+        title: json['title'] as String? ?? '',
+        description: json['description'] as String?,
+        thumbnail: json['thumbnail'] as String?,
+        variantId: json['variant_id'] as String?,
+        price: json['price_amount'] == null
+            ? null
+            : Money(
+                amount: (json['price_amount'] as num).toInt(),
+                currencyCode: json['price_currency'] as String? ?? 'INR',
+              ),
+      );
 }
 
 /// A line item within a [Cart].
@@ -129,6 +160,15 @@ class CartLineItem {
   final int quantity;
   final Money? unitPrice;
   final Money? total;
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'title': title,
+        'quantity': quantity,
+        'unit_price': unitPrice?.amount,
+        'total': total?.amount,
+        'currency_code': unitPrice?.currencyCode ?? total?.currencyCode,
+      };
 }
 
 /// A Medusa shopping cart with its line items and totals.
@@ -158,6 +198,13 @@ class Cart {
   final Money? total;
 
   int get itemCount => items.fold(0, (sum, item) => sum + item.quantity);
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'items': items.map((e) => e.toJson()).toList(),
+        'total': total?.amount,
+        'currency_code': total?.currencyCode,
+      };
 }
 
 /// A shipping/billing address sent to Medusa.

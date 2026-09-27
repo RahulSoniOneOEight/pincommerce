@@ -2,8 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:prototype_app/app.dart';
+import 'package:prototype_app/data/local_store.dart';
 import 'package:prototype_app/data/medusa_api.dart';
 import 'package:prototype_app/domain/models.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Fakes the Medusa client so the smoke test runs without a backend.
 class _FakeMedusaStoreClient extends MedusaStoreClient {
@@ -20,9 +22,13 @@ class _FakeMedusaStoreClient extends MedusaStoreClient {
 
 void main() {
   testWidgets('app renders the empty catalog', (tester) async {
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+    final prefs = await SharedPreferences.getInstance();
+
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          sharedPreferencesProvider.overrideWithValue(prefs),
           medusaClientProvider.overrideWithValue(_FakeMedusaStoreClient()),
         ],
         child: const PinCommerceApp(),
