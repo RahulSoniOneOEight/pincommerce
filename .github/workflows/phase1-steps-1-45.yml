@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -r requirements-dev.txt
-      - run: python -m unittest tests.test_phase1_45 tests.test_phase1_intelligence_review_v2 -v
+      - run: python -m unittest tests.test_phase1_45 tests.test_phase1_intelligence_review_v2 tests.test_phase1_quality tests.test_experience_integrity -v
       - run: python tooling/validation/validate_all.py
       - uses: actions/setup-node@v4
         with:
