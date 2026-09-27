@@ -6,6 +6,8 @@ from typing import Any
 import hashlib
 import yaml
 
+from tooling.experience.integrity import evaluate as evaluate_experience_integrity
+
 ROOT = Path(__file__).resolve().parents[2]
 
 class DesignGateError(RuntimeError):
@@ -69,6 +71,10 @@ def assert_build_allowed(client_id: str, root: Path = ROOT) -> dict[str, Any]:
     penpot_observed = _load(penpot_observed_path)
     if penpot_manifest.get("revision_ref") != penpot_observed.get("revision_ref"):
         raise DesignGateError("Observed Penpot revision does not match approved manifest")
+    integrity = evaluate_experience_integrity(client_id, root)
+    if integrity.get("status") != "passed":
+        detail = "; ".join(integrity.get("blockers", [])[:8])
+        raise DesignGateError("Experience integrity blocked: " + detail)
     return {
         "client_id": client_id,
         "allowed": True,
@@ -83,6 +89,7 @@ def assert_build_allowed(client_id: str, root: Path = ROOT) -> dict[str, Any]:
         "motion_registry_sha256": _sha(motion_registry_path),
         "penpot_manifest_sha256": _sha(penpot_manifest_path),
         "penpot_observed_sha256": _sha(penpot_observed_path),
+        "experience_integrity": integrity,
     }
 
 def main() -> int:
