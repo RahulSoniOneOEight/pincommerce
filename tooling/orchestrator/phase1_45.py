@@ -4,6 +4,9 @@ from pathlib import Path
 from typing import Any
 import yaml
 
+from tooling.experience.integrity import evaluate as evaluate_experience_integrity
+from tooling.review.visual_qa import REQUIRED_CHECKS
+
 ROOT=Path(__file__).resolve().parents[2]
 class Phase145Error(RuntimeError): pass
 
@@ -68,16 +71,20 @@ def _direction_selected(selection:dict[str,Any], p:Path, y)->bool:
     return False
 
 def _visual_qa_run(p:Path, y)->bool:
-    """Visual QA is only 'done' if at least one VQA record has a run check
-    (pass/fail), not merely 'not-run'."""
+    """Visual QA is complete only when every required check in every VQA record
+    has actually passed. A single pass/fail check can no longer green the gate."""
     vqa_dir=p/"experience"/"visual-qa"
     if not vqa_dir.exists(): return False
-    records=[f for f in vqa_dir.glob("*.yaml") if not f.name.startswith("CAP-")]
+    records=[f for f in vqa_dir.glob("VQA-*.yaml")]
     if not records: return False
-    return any(
-        any(c.get("status") in {"pass","fail"} for c in y(f"experience/visual-qa/{f.name}").get("checks",[]))
-        for f in records
-    )
+    required=set(REQUIRED_CHECKS)
+    for f in records:
+        doc=y(f"experience/visual-qa/{f.name}")
+        checks={str(c.get("id")):str(c.get("status")) for c in doc.get("checks",[])}
+        if set(checks) != required: return False
+        if any(checks.get(check)!="pass" for check in required): return False
+        if doc.get("status")!="passed": return False
+    return True
 
 def _critic_independent(rec:dict[str,Any])->bool:
     """Critic must be passed AND carry an independent reviewer identity
@@ -109,6 +116,12 @@ def assess(client:str,root:Path=ROOT)->dict[str,Any]:
     direction_selected=_direction_selected(selection,p,y)
 
     visual_ok=_visual_qa_run(p,y)
+    try:
+        integrity=evaluate_experience_integrity(client,root)
+    except Exception as exc:
+        integrity={"status":"blocked","checks":{"surfaces":False,"journeys":False,"design_ir":False,"penpot":False,"visual_qa":False},"blockers":[str(exc)]}
+    integrity_ok=integrity.get("status")=="passed"
+    integrity_checks=integrity.get("checks",{})
 
     critics={k:_critic_independent(y(f"experience/qa/{k}-critic.yaml")) for k in ("design","journey")}
 
@@ -148,17 +161,17 @@ def assess(client:str,root:Path=ROOT)->dict[str,Any]:
       (19,direction_selected,"direction selected (human)"),
       (20,ex("contracts/design-contract.yaml") or ex("experience/design/theme-resolution.yaml"),"design system"),
       (21,bool(component.get("components")),"component contracts"),
-      (22,design_ok,"implementation-aware Design IR"),
+      (22,design_ok and integrity_checks.get("design_ir",False),"implementation-aware Design IR with journey/node integrity"),
       (23,asset_plan_ok and icons_motion_ok,f"icons/imagery/motion plan (>= {MIN_ICONS} icons, >= {MIN_MOTIONS} motions)"),
-      (24,package_ok,"Penpot-backed design revision"),
-      (25,design_ok,"screen composition represented in Design IR"),
+      (24,package_ok and integrity_checks.get("penpot",False),"Penpot-backed design revision verified against manifest"),
+      (25,design_ok and integrity_checks.get("design_ir",False),"screen composition represented in Design IR for every journey node"),
       (26,all(n.get("state_refs") for j in design_ir.get("journeys",[]) for n in j.get("nodes",[])) if design_ir.get("journeys") else False,"state design"),
-      (27,visual_ok,"responsive evidence (visual QA run)"),
-      (28,ex("experience/prototypes") and any_yaml(p/"experience"/"prototypes"),"interactive prototype evidence"),
-      (29,visual_ok,"automated design QA (run)"),
+      (27,visual_ok and integrity_checks.get("visual_qa",False),"responsive evidence (all mandatory visual QA checks passed)"),
+      (28,ex("experience/prototypes") and any_yaml(p/"experience"/"prototypes") and integrity_checks.get("penpot",False),"interactive prototype evidence verified against journeys"),
+      (29,visual_ok and integrity_checks.get("visual_qa",False),"automated design QA (all mandatory checks passed)"),
       (30,critics["design"],"independent design critic"),
       (31,critics["journey"],"independent journey critic"),
-      (32,visual_ok,"visual QA (run)"),
+      (32,visual_ok and integrity_checks.get("visual_qa",False),"visual QA complete across required surfaces"),
       (33,package_ok,"human review package"),
       (34,package_ok and any(s.get("id")=="overview" for s in package.get("sections",[])),"experience overview"),
       (35,package_ok and any(s.get("id")=="directions" for s in package.get("sections",[])),"A/B/C review"),
@@ -171,10 +184,10 @@ def assess(client:str,root:Path=ROOT)->dict[str,Any]:
       (42,approved_round is not None,"human experience decision"),
       (43,ex("changes") or feedback_ok,"change loop"),
       (44,approved_round is not None and bool(approved_round.get("qa_refs")),"re-QA after review"),
-      (45,approval_ok and scope_ok,"immutable experience approval and scope baseline")
+      (45,approval_ok and scope_ok and integrity_ok,"immutable experience approval, scope baseline, and current experience integrity")
     ]
     rows=[{"step":n,"passed":ok,"evidence":desc} for n,ok,desc in checks]
-    return {"client_id":client,"passed":sum(1 for x in rows if x["passed"]),"total":45,"steps":rows,"status":"complete" if all(x["passed"] for x in rows) else "blocked","blockers":[x["step"] for x in rows if not x["passed"]]}
+    return {"client_id":client,"passed":sum(1 for x in rows if x["passed"]),"total":45,"steps":rows,"status":"complete" if all(x["passed"] for x in rows) else "blocked","blockers":[x["step"] for x in rows if not x["passed"]],"experience_integrity":integrity}
 
 def main()->int:
     ap=argparse.ArgumentParser();ap.add_argument("--client",required=True);ap.add_argument("--root",type=Path,default=ROOT);ap.add_argument("--check",action="store_true");a=ap.parse_args()
