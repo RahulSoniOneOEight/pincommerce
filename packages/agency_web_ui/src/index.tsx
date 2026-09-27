@@ -1,3 +1,5 @@
+"use client";
+
 import type { ReactNode } from "react";
 
 export type AgencyIconConcept = "increment" | "decrement" | "search" | "warning" | "success" | "error";
